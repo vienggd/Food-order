@@ -67,6 +67,7 @@ model Order {
   total      Int // satang, calculated by the server (BR-04)
   createdAt  DateTime    @default(now()) @map("created_at")
   updatedAt  DateTime    @updatedAt @map("updated_at")
+  acceptedAt DateTime?   @map("accepted_at") // set by F-04 accept
   lines      OrderLine[]
 
   @@index([status, createdAt])
