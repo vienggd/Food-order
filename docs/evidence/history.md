@@ -41,5 +41,8 @@ Examples of substantive review findings that led to changes:
 
 ## Known exceptions
 
-- PR #13 (final UI design, docs only) was merged by its author without a review, before `sprint-1` was protected. All later PRs were reviewed and approved by the other student.
+All of these happened during setup (6 Nov, 02:18–02:48), before the review rule and branch protection were in use, and touch documents only — no application code. Every PR from #16 on was reviewed and approved by the other student.
+- PR #13 (final UI design, into `sprint-1`) was merged by its author without a review, before `sprint-1` was protected.
+- PR #15 (CLAUDE.md link command, into `main`) was merged by its author without a review.
+- Direct pushes by the repo owner that skipped a PR: `5f85976` (UI wireframes, README, .gitignore) and `810c7e3` (CLAUDE.md) to `main` before it was protected; `2797462` (PLAN.md, review rule) to `main` with the owner bypass; `d92baf0` (merge of `main` into `sprint-1` to start the sprint from the same docs) with the owner bypass.
 - `feature/F-03-e2e` is linked to #10 through PR #27; the branch itself still needs linking under "Development" on the website (GitHub does not allow linking an existing branch by command).
