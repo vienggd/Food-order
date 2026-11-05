@@ -40,7 +40,7 @@ ordersRouter.post("/", async (req, res) => {
   }
 
   // One transaction: check every item, then write the order and its lines, or write nothing (BR-03, NFR-04).
-  // ponytail: items are read without a row lock; an item marked sold out in the same millisecond can slip
+  // shortcut: items are read without a row lock; an item marked sold out in the same millisecond can slip
   // through. Add SELECT ... FOR UPDATE if F-05 makes sold-out changes frequent.
   const order = await prisma.$transaction(async (tx) => {
     const found = await tx.menuItem.findMany({ where: { id: { in: [...seen] } } });
