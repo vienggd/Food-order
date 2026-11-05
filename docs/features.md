@@ -9,10 +9,10 @@ Roles: **CUSTOMER** (orders food), **OPERATOR** (café staff; one shop, sees all
 
 | ID | Feature | Sprint | Roles | Requirements | Business rules | Status |
 |---|---|---|---|---|---|---|
-| F-01 | Login, logout, "who am I" | 1 | anyone → CUSTOMER / OPERATOR | FR-01..FR-04, NFR-01, NFR-02 | — | Planned |
-| F-02 | Browse menu | 1 | CUSTOMER | FR-05 | BR-03 (sold-out shown) | Planned |
-| F-03 | Place order, my orders, order detail | 1 | CUSTOMER | FR-06..FR-08, NFR-04 | BR-01, BR-02, BR-03, BR-04, BR-05 | Planned |
-| F-04 | Operator queue + accept order | 1 | OPERATOR | FR-09, FR-10, NFR-04 | BR-06, BR-07 | Planned |
+| F-01 | Login, logout, "who am I" | 1 | anyone → CUSTOMER / OPERATOR | FR-01..FR-04, NFR-01, NFR-02 | — | Verified |
+| F-02 | Browse menu | 1 | CUSTOMER | FR-05 | BR-03 (sold-out shown) | Verified |
+| F-03 | Place order, my orders, order detail | 1 | CUSTOMER | FR-06..FR-08, NFR-04 | BR-01, BR-02, BR-03, BR-04, BR-05 | Verified |
+| F-04 | Operator queue + accept order | 1 | OPERATOR | FR-09, FR-10, NFR-04 | BR-06, BR-07 | Verified |
 | F-05 | Menu management + sold-out toggle | 2 | OPERATOR | FR-11 | to specify in Sprint 2 | Not started |
 | F-06 | Customer cancel / operator reject with reason | 2 | CUSTOMER, OPERATOR | FR-12, FR-13 | to specify in Sprint 2 | Not started |
 | F-07 | Fulfilment: PREPARING → READY → PICKED_UP | 2 | OPERATOR | FR-14 | to specify in Sprint 2 | Not started |
@@ -67,3 +67,4 @@ Status values: Not started → Planned (in a sprint plan) → Specified (contrac
 | Date | Change | Why |
 |---|---|---|
 | 6 Nov 2026 | First draft | Deliverable 1 part B |
+| 6 Nov 2026 | F-01..F-04 status Verified: all tests pass on `sprint-1` (see traceability.md) (#28) | AC-B3 |
