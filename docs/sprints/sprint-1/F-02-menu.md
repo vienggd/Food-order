@@ -61,15 +61,13 @@ Request: no body, no query. Session cookie required.
 Response 200:
 
 ```json
-{
-  "items": [
-    { "id": 1, "name": "Latte", "price": 6500, "isAvailable": true },
-    { "id": 4, "name": "Croissant", "price": 4500, "isAvailable": false }
-  ]
-}
+[
+  { "id": 1, "name": "Latte", "price": 6500, "isAvailable": true },
+  { "id": 4, "name": "Croissant", "price": 4500, "isAvailable": false }
+]
 ```
 
-- `items` is ordered by `id` ascending; empty array when there are no rows.
+- A plain array (same list style as F-03/F-04), ordered by `id` ascending; `[]` when there are no rows.
 - Only these four fields are returned.
 
 Errors (shared shape `{ error: { code, message, details } }`):
@@ -92,7 +90,7 @@ No schema change. Reads `menu_items` (`id`, `name`, `price` Int satang, `is_avai
 | AC-F02-02 | Given an item marked sold out, when the menu is requested, then that item is still in the list with `isAvailable: false`. |
 | AC-F02-03 | Given no session (or an expired one), when the menu is requested, then the server answers 401 `UNAUTHENTICATED` in the shared error shape. |
 | AC-F02-04 | Given a logged-in operator, when they request the menu, then the server answers 403 `FORBIDDEN`. |
-| AC-F02-05 | Given an empty `menu_items` table, when a customer requests the menu, then they get 200 with `items: []`. |
+| AC-F02-05 | Given an empty `menu_items` table, when a customer requests the menu, then they get 200 with `[]`. |
 | AC-F02-06 | Given the customer opens `/menu`, then each item shows its name and price as `฿xx.xx`, and a sold-out item is greyed with a **Sold out** badge and a disabled + button. |
 | AC-F02-07 | Given the menu request fails (network or 500), then the page shows "Couldn't load the menu. Check your connection." and **Reload menu** loads it again. |
 
@@ -105,7 +103,7 @@ No schema change. Reads `menu_items` (`id`, `name`, `price` Int satang, `is_avai
 | TEST-F02-03 | AC-F02-03 | API | No cookie | `GET /api/menu` | 401, `error.code = UNAUTHENTICATED`, `message` is a string |
 | TEST-F02-04 | AC-F02-03 | API | Session row with `expiresAt` in the past | `GET /api/menu` with that cookie | 401 `UNAUTHENTICATED` |
 | TEST-F02-05 | AC-F02-04 | API | Logged in as staff (OPERATOR) | `GET /api/menu` | 403, `error.code = FORBIDDEN` |
-| TEST-F02-06 | AC-F02-05 | API | Users seeded, `menu_items` empty; logged in as alice | `GET /api/menu` | 200, `{ items: [] }` |
+| TEST-F02-06 | AC-F02-05 | API | Users seeded, `menu_items` empty; logged in as alice | `GET /api/menu` | 200, `[]` |
 | TEST-F02-07 | AC-F02-06 | unit | `formatBaht(6500)`, `formatBaht(15500)`, `formatBaht(0)`, `formatBaht(5)` | call | `฿65.00`, `฿155.00`, `฿0.00`, `฿0.05` |
 | TEST-F02-08 | AC-F02-06 | E2E | Seeded DB; log in as alice in the browser | open `/menu` | Latte shows `฿65.00`; Croissant shows **Sold out** and its "Add Croissant" button is disabled |
 | TEST-F02-09 | AC-F02-07 | E2E | Logged in as alice; `/api/menu` answered with 500 (route mocked) | open `/menu`, then click **Reload menu** after the mock is removed | Error text shown; after reload the menu list appears |
@@ -121,3 +119,4 @@ Shared checklist: [`definition-of-done.md`](definition-of-done.md). F-02 extra e
 | Version | Date | Change | By |
 |---|---|---|---|
 | 1 | 6 Nov 2026 | First version, before implementation | ninja |
+| 1.1 | 6 Nov 2026 | Response is a plain array (list style agreed with F-03/F-04 in chat). Still before implementation | ninja |
