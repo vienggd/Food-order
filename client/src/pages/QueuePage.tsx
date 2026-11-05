@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { api, ApiError, NETWORK_MESSAGE } from "../api";
 import { formatBaht as baht } from "../lib/money";
+import { formatPlacedTime } from "../lib/time";
 
 type QueueOrder = {
   id: number;
@@ -10,8 +11,6 @@ type QueueOrder = {
   lines: { name: string; quantity: number }[];
 };
 
-// shortcut: local time format; switch to the shared time helper if F-03 adds one.
-const time = (iso: string) => new Date(iso).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 const items = (o: QueueOrder) => o.lines.map((l) => `${l.name} ×${l.quantity}`).join(", ");
 
 export function QueuePage() {
@@ -118,7 +117,7 @@ export function QueuePage() {
                 <span className="pill placed">PLACED</span>
               </div>
               <p className="order-who">
-                {o.customer.name} · {time(o.createdAt)}
+                {o.customer.name} · {formatPlacedTime(o.createdAt)}
               </p>
               <p className="muted">{items(o)}</p>
               <div className="order-bottom">
