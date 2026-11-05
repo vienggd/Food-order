@@ -54,8 +54,14 @@ Left to right: Backlog, Specified, Started, PR Review, Fixing, Done.
    - Branch linked: `gh issue develop --list <number>`
    - Pull request linked: `gh api graphql -f query='{repository(owner:"<owner>",name:"<repo>"){issue(number:<n>){closedByPullRequestsReferences(first:5){nodes{number}}}}}'`
    Do not call the task finished until both links show on GitHub.
-7. Another person reviews and merges. Never merge my own pull request.
-8. If the reviewer asks for changes, move the card to Fixing. Fix on the same branch, push, reply to each comment, then move the card back to PR Review.
+7. The partner reviews, approves and merges. The author never approves or merges their own pull request.
+   - The partner reads the changes and leaves comments, then either approves or requests changes:
+     `gh pr review <n> --approve --body "What I checked: ..."` or `gh pr review <n> --request-changes --body "..."`
+   - Merge only after the approval, and only by the partner, with a merge commit (never squash): `gh pr merge <n> --merge`
+   - After merging, the partner comments on the pull request with what was checked and anything to follow up: `gh pr comment <n> --body "..."`
+   - The author replies to every review comment, even when no change is needed (for example "Done in <commit>" or "Kept as is because ...").
+   - Check the approval is on GitHub before merging: `gh pr view <n> --json reviewDecision,reviews` must show `APPROVED`.
+8. If the reviewer asks for changes, move the card to Fixing. Fix on the same branch, push, reply to each comment, ask the partner to review again, then move the card back to PR Review.
 9. After the merge, check on GitHub that it really merged (`gh pr view <n> --json state,mergedAt`). Comment on the issue, move the card to Done and close the issue.
 10. At the end, open a pull request from staging into main. After it is merged, tag the release on the main commit.
 
@@ -77,4 +83,5 @@ Left to right: Backlog, Specified, Started, PR Review, Fixing, Done.
 - `gh issue create`, `gh issue develop`, `gh issue close`
 - `gh pr create --base <staging> --head <branch>`, `gh pr view <n> --json state,mergedAt`
 - `gh pr comment <n> --body "..."`
+- `gh pr review <n> --approve --body "..."`, `gh pr merge <n> --merge`
 - `gh project item-list`, `gh project item-edit`
