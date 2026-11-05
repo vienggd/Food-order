@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "concurrently -n api,web -c blue,green \"npm run dev -w server\" \"npm run dev -w client\"",
     "build": "npm run build -w server && npm run build -w client",
-    "test": "npm test -w server",
+    "test": "npm test --workspaces",
     "test:e2e": "playwright test",
     "db:up": "docker compose up -d",
     "db:migrate": "npm run db:migrate -w server",
