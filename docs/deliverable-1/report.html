@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Deliverable 1 — Campus Café Pre-order</title>
+<style>
+  @page { size: A4; margin: 16mm 14mm; }
+  body { font: 10.5pt/1.45 "Segoe UI", system-ui, sans-serif; color: #2b1b14; }
+  h1 { font-size: 20pt; color: #2f4a3a; margin: 0 0 4px; }
+  h2 { font-size: 13pt; color: #2f4a3a; border-bottom: 2px solid #e0b07a; padding-bottom: 2px; margin: 18px 0 6px; break-after: avoid; }
+  h3 { font-size: 11pt; margin: 12px 0 4px; break-after: avoid; }
+  table { width: 100%; border-collapse: collapse; margin: 6px 0 10px; font-size: 9pt; break-inside: auto; }
+  th, td { border: 1px solid #d9cbb8; padding: 4px 6px; text-align: left; vertical-align: top; }
+  th { background: #f3ebdd; }
+  tr { break-inside: avoid; }
+  code { font: 8.5pt Consolas, monospace; background: #f6efe4; padding: 0 3px; border-radius: 3px; }
+  pre { font: 8.5pt Consolas, monospace; background: #f6efe4; padding: 8px; border-radius: 6px; white-space: pre-wrap; }
+  a { color: #2f4a3a; }
+  .meta td:first-child { width: 28%; font-weight: 600; }
+  .muted { color: #6e5e4f; }
+  .todo { background: #fde3e0; color: #7a1c12; font-weight: 600; padding: 0 3px; }
+  .shots { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .shots figure { margin: 0; break-inside: avoid; }
+  .shots img { width: 100%; border: 1px solid #d9cbb8; border-radius: 6px; }
+  .shots figcaption { font-size: 8pt; color: #6e5e4f; }
+  .page-break { break-before: page; }
+</style>
+</head>
+<body>
+
+<h1>CPE 334 — Project Deliverable 1</h1>
+<p class="muted">Engineering baseline + working Sprint 1 · Theme 4 (E-Commerce / Ordering) · Campus Café Pre-order</p>
+
+<table class="meta">
+  <tr><td>Team</td><td>vieng (GitHub <code>vienggg</code>) — <span class="todo">full name, student ID</span><br>ninja (GitHub <code>NinjoMUDA</code>) — <span class="todo">full name, student ID</span></td></tr>
+  <tr><td>Repository</td><td><a href="https://github.com/vienggg/Food-order">github.com/vienggg/Food-order</a> (public)</td></tr>
+  <tr><td>Submitted version</td><td>Branch <code>sprint-1</code>, commit <code>__COMMIT__</code>. Release on <code>main</code> / tag: <span class="todo">filled in when vieng merges the release</span></td></tr>
+  <tr><td>Project board</td><td><a href="https://github.com/users/vienggg/projects/4">github.com/users/vienggg/projects/4</a> (Backlog → Specified → Started → PR Review → Fixing → Done)</td></tr>
+  <tr><td>Test result</td><td>Server unit + API 63/63, client unit 5/5, end-to-end 20/20 (phone 375 px + desktop 1280 px), build OK; 46/46 acceptance criteria Pass — <a href="https://github.com/vienggg/Food-order/blob/sprint-1/docs/evidence/test-run.md">test-run.md</a>, <a href="https://github.com/vienggg/Food-order/blob/sprint-1/docs/evidence/ac-results.md">ac-results.md</a></td></tr>
+</table>
+
+<h2>1. Evidence index</h2>
+<p>All documents live in the repository; links point to branch <code>sprint-1</code>. This PDF is an index, not a copy.</p>
+<table>
+  <tr><th style="width:17%">Rubric part (points)</th><th style="width:30%">Artifact / link</th><th>IDs / what to look at</th><th style="width:17%">Status</th></tr>
+  <tr><td>A. SRS and product scope (10)</td><td><a href="https://github.com/vienggg/Food-order/blob/sprint-1/docs/srs.md">docs/srs.md</a></td><td>Actors §2; scope + exclusions §3; FR-01..FR-18 §4; BR-01..BR-07 §5; NFR-01..NFR-09 with measurable targets §6; assumptions AS-01..06, decisions DEC-01..08, questions Q-01..06 §7–9</td><td>Merged (PR #19), reviewed</td></tr>
+  <tr><td>B. Feature inventory and traceability (10)</td><td><a href="https://github.com/vienggg/Food-order/blob/sprint-1/docs/features.md">docs/features.md</a>, <a href="https://github.com/vienggg/Food-order/blob/sprint-1/docs/traceability.md">docs/traceability.md</a></td><td>F-01..F-12 with sprint and requirements; every FR/BR/NFR → feature → sprint → AC → test → result; coverage check §4</td><td>Merged (PR #17, #29); F-01..F-04 Verified</td></tr>
+  <tr><td>C. System-level SDS (15)</td><td><a href="https://github.com/vienggg/Food-order/blob/sprint-1/docs/system-sds.md">docs/system-sds.md</a></td><td>Architecture + where each rule is enforced §1; UI §2; data model §3; API conventions + shared JSON §4; role/permission matrix §5.2; sessions §6; configuration + GCP plan §7</td><td>Merged (PR #20, #21)</td></tr>
+  <tr><td>D. Three-sprint plan (5)</td><td><a href="https://github.com/vienggg/Food-order/blob/sprint-1/docs/sprints/plan.md">docs/sprints/plan.md</a></td><td>Goals and dates per sprint; F-01..F-12 allocation; dependencies; Sprint 1 feasibility; remaining work; risks</td><td>Merged (PR #16)</td></tr>
+  <tr><td>E. Sprint 1 contracts (20)</td><td><a href="https://github.com/vienggg/Food-order/tree/sprint-1/docs/sprints/sprint-1">docs/sprints/sprint-1/</a></td><td>F-01-auth, F-02-menu, F-03-orders, F-04-accept: feature SDS, UI, API, data, AC (46), test spec (58 test IDs), DoD link, version history. Shared <a href="https://github.com/vienggg/Food-order/blob/sprint-1/docs/sprints/sprint-1/definition-of-done.md">definition-of-done.md</a>. Committed before code: see §3</td><td>Merged with each feature PR</td></tr>
+  <tr><td>F. Working Sprint 1 and verification (20)</td><td><a href="https://github.com/vienggg/Food-order/tree/sprint-1/docs/evidence">docs/evidence/</a></td><td>test-run.md (every test, tested commit), ac-results.md (46/46), history.md (contract → red → green, PR/review table), <code>tdd/</code> red + green outputs, screenshots; §2–§4 below</td><td>All Pass</td></tr>
+</table>
+
+<h2>2. Run it and test it</h2>
+<p>Needs Node 24 and Docker Desktop. Full steps: <a href="https://github.com/vienggg/Food-order/blob/sprint-1/README.md">README.md</a>.</p>
+<pre>npm install
+cp server/.env.example server/.env      # set your own SEED_PASSWORD (never committed)
+npm run db:up && npm run db:migrate && npm run db:seed
+npm run dev                              # app http://localhost:5173, API :3000
+npm test                                 # server 63 + client 5
+npx playwright install chromium && npm run test:e2e   # 20 end-to-end (phone + desktop)
+npm run evidence                         # re-runs everything and rewrites docs/evidence/*.md for the current commit</pre>
+<p>Seeded accounts: <code>alice@cafe.test</code>, <code>bob@cafe.test</code> (CUSTOMER), <code>staff@cafe.test</code> (OPERATOR); password = your <code>SEED_PASSWORD</code>.</p>
+
+<h3>Demo sequence (about 3 minutes)</h3>
+<table>
+  <tr><th style="width:4%">#</th><th>Step</th><th style="width:30%">Shows</th></tr>
+  <tr><td>1</td><td>Log in as alice with a wrong password → "Incorrect email or password."; then the right password → <code>/menu</code></td><td>F-01, FR-01, DEC-02</td></tr>
+  <tr><td>2</td><td>Croissant is greyed "Sold out" with a disabled +. Add Latte twice and Thai Milk Tea → one Latte line ×2, estimated ฿180.00</td><td>F-02, BR-03, BR-02 (+1 on same line)</td></tr>
+  <tr><td>3</td><td>Place order → <code>/orders/N</code> "Order #N placed!", total ฿180.00 from the server, status PLACED</td><td>F-03, BR-04, BR-05</td></tr>
+  <tr><td>4</td><td>Rejected case: in another tab mark an item sold out (or run TEST-F03-20); Place order → "Order not placed. 'Latte' is no longer available.", cart kept, nothing saved</td><td>BR-03, NFR-04</td></tr>
+  <tr><td>5</td><td>Access case: as alice open <code>/operator/orders</code> → back to <code>/menu</code> "You don't have access to that page."; API answers 403</td><td>FR-04, role matrix</td></tr>
+  <tr><td>6</td><td>Log out, log in as staff → queue oldest first → Accept → "Order #N accepted."; alice's order now ACCEPTED</td><td>F-04, FR-09, FR-10</td></tr>
+  <tr><td>7</td><td>Race: TEST-F04-07 sends 20 accepts at once → exactly one 200 (run <code>npm test</code>)</td><td>BR-07</td></tr>
+</table>
+
+<h2>3. Engineering process evidence</h2>
+<h3>Contract → failing test → code (from <a href="https://github.com/vienggg/Food-order/blob/sprint-1/docs/evidence/history.md">history.md</a>)</h3>
+<table>
+  <tr><th>Feature (owner)</th><th>Contract</th><th>Tests fail [red]</th><th>Code passes [green]</th><th>Pull request (reviewer)</th></tr>
+  <tr><td>F-01 Login (vieng)</td><td><code>e187cf8</code></td><td><code>d0d4eb9</code> 11 failed</td><td><code>eebaf41</code> 11 passed</td><td>#22 (ninja)</td></tr>
+  <tr><td>F-02 Menu (ninja)</td><td><code>6e25979</code></td><td><code>3376cd3</code> 6 failed</td><td><code>2816f63</code> 6 passed</td><td>#23 (vieng)</td></tr>
+  <tr><td>F-03 Orders (ninja)</td><td><code>3178514</code></td><td><code>e922626</code> 29 failed</td><td><code>13a2651</code> 29 passed</td><td>#26 (vieng)</td></tr>
+  <tr><td>F-04 Accept (vieng)</td><td><code>92470d8</code></td><td><code>463f459</code> 10 failed</td><td><code>f729818</code> 10 passed</td><td>#24 (ninja)</td></tr>
+</table>
+<p>Workflow: Issue on the board → branch from the Issue (<code>gh issue develop</code>) → PR into <code>sprint-1</code> → the other student reviews with a written check, approves and merges (merge commit, never squash); the author replies to each review. Examples of review findings that changed code: setup tests needed <code>prisma generate</code> (#18 → <code>bd502d0</code>); Vite cache committed on the F-04 branch (removed before #24); comment style on #26.</p>
+
+<h3>Contribution</h3>
+<table>
+  <tr><th>Area</th><th>vieng</th><th>ninja</th></tr>
+  <tr><td>Requirements and design</td><td>SRS (Doc A); SDS §1, 2, 5, 6, 7 (architecture, UI, roles, auth, config)</td><td>Feature inventory + traceability (Doc B); SDS §3, 4 (data model, API); sprint plan (Doc D)</td></tr>
+  <tr><td>Features (contract, tests, code)</td><td>Setup skeleton (#1), F-01 login, F-04 accept</td><td>F-02 menu, F-03 orders, client test setup</td></tr>
+  <tr><td>Testing</td><td>Playwright setup, E2E for F-01, F-02, F-04; evidence script</td><td>E2E for F-03; traceability results; cross-review runs of every vieng PR</td></tr>
+  <tr><td>Reviews</td><td>Reviewed and merged #16, #17, #21, #23, #26, #27, #29</td><td>Reviewed and merged #18, #19, #20, #22, #24, #25, #30</td></tr>
+</table>
+
+<h3>AI-use declaration</h3>
+<p>Both students used Claude Code (Anthropic) as a coding and documentation assistant, each in their own session, working on bounded GitHub Issues with the feature contract as input. Tasks assisted: drafting documents (SRS, SDS, plan, contracts, traceability), writing failing tests first and then implementation, UI screens, running tests, opening PRs and drafting review comments. The two AI sessions coordinated through a private chat relay; each student's AI reviewed the other student's PRs by running the code and tests. Both students are responsible for the result and can explain every part; decisions were recorded in Issues, PR reviews and the documents above.</p>
+
+<h2>4. Known limitations and open items</h2>
+<ul>
+  <li>During setup (6 Nov, 02:18–02:48, documents only): PRs #13 and #15 were merged by their author without review, and four commits were pushed directly (<code>5f85976</code>, <code>810c7e3</code>, <code>2797462</code>, <code>d92baf0</code>). Every PR from #16 on was reviewed and merged by the other student. Details: history.md "Known exceptions".</li>
+  <li>Branch <code>feature/F-03-e2e</code> is linked to Issue #10 through PR #27; the branch link under "Development" is added on the website.</li>
+  <li>F-03 reads menu items without a row lock inside the order transaction; in Sprint 1 nothing changes availability at runtime, so no race exists yet. Revisit with F-05 (menu management).</li>
+  <li>UI debt: desktop operator queue uses cards instead of a table; desktop My orders and Order detail are two pages instead of side by side.</li>
+  <li>Release to <code>main</code>, tag <code>v0.1.0-sprint1</code> and GCP deployment are not done yet (deployment is Lab 5).</li>
+</ul>
+
+<h2 class="page-break">5. Screenshots (from the end-to-end run)</h2>
+<div class="shots">
+  <figure><img src="../evidence/screenshots/F01-login-wrong-password-phone.png"><figcaption>F-01 wrong password (phone)</figcaption></figure>
+  <figure><img src="../evidence/screenshots/F02-menu-sold-out-phone.png"><figcaption>F-02 menu, Croissant sold out</figcaption></figure>
+  <figure><img src="../evidence/screenshots/F03-cart-phone.png"><figcaption>F-03 cart, Latte ×2, ฿180.00</figcaption></figure>
+  <figure><img src="../evidence/screenshots/F03-order-detail-phone.png"><figcaption>F-03 order placed, server total</figcaption></figure>
+  <figure><img src="../evidence/screenshots/F03-rejected-sold-out-phone.png"><figcaption>F-03 rejected: item sold out (BR-03)</figcaption></figure>
+  <figure><img src="../evidence/screenshots/F01-forbidden-redirect-phone.png"><figcaption>F-01 customer on operator page → own home</figcaption></figure>
+  <figure><img src="../evidence/screenshots/F04-queue-phone.png"><figcaption>F-04 operator queue</figcaption></figure>
+  <figure><img src="../evidence/screenshots/F04-409-already-accepted-phone.png"><figcaption>F-04 already accepted (BR-07, 409)</figcaption></figure>
+</div>
+<div class="shots">
+  <figure style="grid-column: span 2"><img src="../evidence/screenshots/F03-cart-desktop.png"><figcaption>F-03 menu + cart (desktop 1280 px)</figcaption></figure>
+  <figure style="grid-column: span 2"><img src="../evidence/screenshots/F04-queue-desktop.png"><figcaption>F-04 queue (desktop 1280 px)</figcaption></figure>
+</div>
+
+</body>
+</html>
