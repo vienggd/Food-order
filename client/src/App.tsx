@@ -1,28 +1,31 @@
-import { useEffect, useState } from "react";
-import { Link, Route, Routes } from "react-router-dom";
+import { Link, Navigate, Route, Routes } from "react-router-dom";
+import { homeFor, useAuth } from "./auth";
+import { RequireRole } from "./Layout";
+import { LoginPage } from "./pages/LoginPage";
 
-// Skeleton only. Screens S1-S5 (docs/ui/ui-spec.md) are added by F-01..F-04.
-function Home() {
-  const [api, setApi] = useState("checking…");
-  useEffect(() => {
-    fetch("/api/health")
-      .then((r) => (r.ok ? "API is up" : "API error"))
-      .catch(() => "API is not reachable")
-      .then(setApi);
-  }, []);
+// Placeholder until the feature that owns the screen replaces it (F-02/F-03: ninja, F-04: vieng).
+function Coming({ feature }: { feature: string }) {
   return (
-    <main>
-      <h1>Campus Café</h1>
-      <p>{api}</p>
-    </main>
+    <div className="empty">
+      <p className="empty-title">Coming soon</p>
+      <p>This screen is built in {feature}.</p>
+    </div>
   );
+}
+
+function Home() {
+  const { user, loading } = useAuth();
+  if (loading) return <div className="loading-page" aria-busy="true" />;
+  return <Navigate to={user ? homeFor(user.role) : "/login"} replace />;
 }
 
 function NotFound() {
   return (
-    <main>
-      <h1>Page not found</h1>
-      <Link to="/">Go home</Link>
+    <main className="content center">
+      <h1 className="page-title">Page not found</h1>
+      <Link className="btn inline" to="/">
+        Go home
+      </Link>
     </main>
   );
 }
@@ -31,6 +34,11 @@ export function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/menu" element={<RequireRole role="CUSTOMER" title="Menu"><Coming feature="F-02" /></RequireRole>} />
+      <Route path="/orders" element={<RequireRole role="CUSTOMER" title="My orders"><Coming feature="F-03" /></RequireRole>} />
+      <Route path="/orders/:id" element={<RequireRole role="CUSTOMER" title="Order"><Coming feature="F-03" /></RequireRole>} />
+      <Route path="/operator/orders" element={<RequireRole role="OPERATOR" title="Order queue"><Coming feature="F-04" /></RequireRole>} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

@@ -1,0 +1,29 @@
+# F-01 [green] run - 2026-11-06T03:39:36+07:00 - branch feature/F-01-auth, code at the commit tagged [green]
+# command: npm test -w server -- tests/auth.test.ts
+
+> test
+> vitest run tests/auth.test.ts
+
+
+ RUN  v3.2.7 C:/Users/User/OneDrive/Desktop/se-lab/server
+
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "cafe_test", schema "public" at "localhost:5433"
+
+1 migration found in prisma/migrations
+
+
+No pending migrations to apply.
+ ✓ tests/auth.test.ts (11 tests) 2783ms
+   ✓ F-01 login / logout / me > TEST-F01-01 valid login returns the user, sets a safe cookie and stores an 8 h session  351ms
+   ✓ F-01 login / logout / me > TEST-F01-02 wrong password: 401, no cookie, no session  372ms
+   ✓ F-01 login / logout / me > TEST-F01-03 unknown email gives exactly the same answer as a wrong password  314ms
+   ✓ F-01 login / logout / me > TEST-F01-10 requireRole: wrong role 403, no session 401, right role 200  309ms
+
+ Test Files  1 passed (1)
+      Tests  11 passed (11)
+   Start at  03:39:38
+   Duration  8.60s (transform 128ms, setup 9ms, collect 1.04s, tests 2.78s, environment 0ms, prepare 122ms)
+
