@@ -110,11 +110,150 @@ Full screen-by-screen states are in [`ui/ui-spec.md`](ui/ui-spec.md); final desi
 
 ## 3. Data model
 
-*Section owner: B (ninja). Filled in a follow-up PR.* The tables already exist in `server/prisma/schema.prisma` (Issue #1): `users`, `sessions`, `menu_items`, `orders`, `order_lines`.
+Source of truth: `server/prisma/schema.prisma` and `server/prisma/migrations/` (Issue #1). Table and column names are snake_case in the database, camelCase in code.
+
+### 3.1 Entities and relationships
+
+```
+users 1 ──── * sessions          (a user can be logged in on several devices)
+users 1 ──── * orders            (customer_id; only CUSTOMER users place orders)
+orders 1 ─── * order_lines       (1–20 lines per order, BR-02)
+menu_items 1 ─ * order_lines     (menu_item_id; name and price are copied, BR-05)
+```
+
+### 3.2 Tables
+
+| Table | Column | Type | Constraint / note |
+|---|---|---|---|
+| `users` | `id` | int | PK, auto |
+| | `email` | text | **unique**; login looks it up case-insensitive |
+| | `name` | text | shown in header and operator queue |
+| | `password_hash` | text | bcrypt only, never plain text (NFR-01) |
+| | `role` | enum `Role` | `CUSTOMER` \| `OPERATOR` |
+| | `created_at` | timestamp | default now |
+| `sessions` | `id` | text | PK; 32 random bytes, base64url; the cookie value |
+| | `user_id` | int | FK → `users.id`, **on delete cascade**; indexed |
+| | `expires_at` | timestamp | login + 8 h; expired rows are refused and deleted |
+| | `created_at` | timestamp | default now |
+| `menu_items` | `id` | int | PK, auto |
+| | `name` | text | **unique** (seed upserts by name) |
+| | `price` | int | satang, > 0 (seed and F-05 validation) |
+| | `is_available` | boolean | default true; false = sold out (DEC-04) |
+| `orders` | `id` | int | PK, auto; shown to users as `#id` |
+| | `customer_id` | int | FK → `users.id`; indexed; ownership check (FR-08) |
+| | `status` | enum `OrderStatus` | default `PLACED`; values below |
+| | `total` | int | satang; written once by the server (BR-04) |
+| | `created_at` | timestamp | default now; queue and list ordering |
+| | `updated_at` | timestamp | set by Prisma on every update |
+| | `accepted_at` | timestamp, null | set by F-04 when accepted (migration in F-04) |
+| `order_lines` | `id` | int | PK, auto |
+| | `order_id` | int | FK → `orders.id`, on delete cascade |
+| | `menu_item_id` | int | FK → `menu_items.id` |
+| | `name` | text | copy of the menu name at order time (BR-05) |
+| | `unit_price` | int | copy of the menu price at order time, satang (BR-05) |
+| | `quantity` | int | 1–10 (BR-01, checked by the API schema) |
+| | | | **unique (`order_id`, `menu_item_id`)** — no duplicate item in one order (BR-02) |
+
+Indexes: `orders (status, created_at)` for the operator queue (PLACED, oldest first); `orders (customer_id)` for "my orders"; `sessions (user_id)`.
+
+### 3.3 Order status
+
+```
+PLACED ──accept──► ACCEPTED ──► PREPARING ──► READY ──► PICKED_UP     (F-04, then F-07)
+PLACED ──reject──► REJECTED                                           (F-06)
+PLACED ──cancel──► CANCELLED                                          (F-06)
+```
+
+The enum already holds every status so later sprints need no enum migration. Allowed moves live in one transition table read by `canTransition(from, to)` (DEC-05); Sprint 1 allows only `PLACED → ACCEPTED`. Payment status (F-08) will be a separate column (DEC-08).
+
+### 3.4 Integrity rules kept by the database
+
+| Rule | How |
+|---|---|
+| One account per email | unique `users.email` |
+| Order line copies survive menu changes (BR-05) | `name` and `unit_price` stored on `order_lines`; never updated |
+| No duplicate item per order (BR-02) | unique (`order_id`, `menu_item_id`) |
+| No partial order (BR-03, NFR-04) | order + lines inserted in one transaction |
+| Accept at most once (BR-07) | `UPDATE orders SET status='ACCEPTED' … WHERE id=? AND status='PLACED'`; 0 rows → 409 |
+| Money exact (DEC-03) | integer satang everywhere; no floats |
+
+### 3.5 Migrations and seed
+
+- Every schema change is a Prisma migration committed with the feature (`prisma migrate dev` locally; `prisma migrate deploy` in tests and production). Migrations only add things, so an older app version still runs on a newer schema.
+- Seed (`server/prisma/seed.ts`, upsert, safe to repeat): users alice, bob (CUSTOMER), staff (OPERATOR) with password from `SEED_PASSWORD`; menu Latte 6500, Americano 5500, Thai Milk Tea 5000, Croissant 4500 (sold out), Ham & Cheese Sandwich 7500, Basil Chicken Rice 8000.
+- Tests use a separate local `*_test` database, emptied before each test (`resetDb`).
 
 ## 4. API conventions
 
-*Section owner: B (ninja). Filled in a follow-up PR.* Error format and codes are already fixed: `{ error: { code, message, details } }` with VALIDATION_ERROR 400, UNAUTHENTICATED 401, FORBIDDEN 403, NOT_FOUND 404, INVALID_STATE 409 (`server/src/errors.ts`).
+### 4.1 General
+
+| Topic | Convention |
+|---|---|
+| Base path | Everything under `/api`, same origin as the web app (no CORS) |
+| Format | JSON request and response bodies, UTF-8; field names camelCase |
+| Auth | `sid` httpOnly cookie (section 6); no tokens in headers or URLs |
+| Money | Integer satang (`6500` = ฿65.00); the client only formats it |
+| Time | ISO 8601 UTC strings (`2026-11-07T03:15:00.000Z`); the client shows local time |
+| Ids | Positive integers in paths; anything else → 400 `VALIDATION_ERROR` |
+| Lists | Plain JSON arrays, in a fixed documented order |
+| Input checks | Zod schemas with `.strict()`: unknown fields are rejected (stops clients sending `price`, `total`, `role`, `customerId` — BR-04, NFR-02) |
+| Success codes | 200 read/update, 201 created, 204 no content (logout) |
+| Unknown `/api/*` path | 404 `NOT_FOUND` |
+
+### 4.2 Errors
+
+Every error body is `{ "error": { "code", "message", "details" } }` (NFR-03). `message` is safe to show to the user; `details` is `null` or structured data the UI uses to mark fields or lines. No stack traces or SQL text are ever sent.
+
+| HTTP | `code` | When | Example `details` |
+|---|---|---|---|
+| 400 | `VALIDATION_ERROR` | Bad JSON, schema failure, bad id, business-rule failure on create (BR-01..BR-04) | Zod issues `[{ path, message }]`, or `{ items: [{ menuItemId, reason: "SOLD_OUT" \| "NOT_FOUND" \| "DUPLICATE" }] }` |
+| 401 | `UNAUTHENTICATED` | No / unknown / expired session; wrong email or password | `null` |
+| 403 | `FORBIDDEN` | Logged in with the wrong role | `null` |
+| 404 | `NOT_FOUND` | Record missing **or** owned by another customer (DEC-07); unknown path | `null` |
+| 409 | `INVALID_STATE` | Status change not allowed now (BR-06, BR-07) | `{ status }` current status |
+| 500 | `INTERNAL_ERROR` | Anything unexpected (logged on the server only) | `null` |
+
+### 4.3 Shared JSON shapes
+
+```jsonc
+// User (login, me)
+{ "id": 1, "name": "Alice", "role": "CUSTOMER" }
+
+// Menu item
+{ "id": 1, "name": "Latte", "price": 6500, "isAvailable": true }
+
+// Order (POST /api/orders, GET /api/orders/:id, accept)
+{
+  "id": 7, "status": "PLACED", "total": 18000,
+  "createdAt": "2026-11-07T03:15:00.000Z", "acceptedAt": null,
+  "lines": [ { "menuItemId": 1, "name": "Latte", "unitPrice": 6500, "quantity": 2, "lineTotal": 13000 } ]
+}
+
+// Order summary (GET /api/orders list)
+{ "id": 7, "status": "PLACED", "total": 18000, "itemCount": 3, "createdAt": "2026-11-07T03:15:00.000Z" }
+
+// Queue order (GET /api/operator/orders): Order + customer
+{ "...Order fields": "...", "customer": { "id": 1, "name": "Alice" } }
+```
+
+### 4.4 Sprint 1 endpoints
+
+Details, all error cases and tests are in the feature contracts (`docs/sprints/sprint-1/F-0x-*.md`). Who may call each endpoint: section 5.2.
+
+| Method + path | Request | Success | Errors | Feature |
+|---|---|---|---|---|
+| `POST /api/auth/login` | `{ email, password }` | 200 User + `Set-Cookie: sid` | 400, 401 | F-01 |
+| `POST /api/auth/logout` | — | 204, cookie cleared | — | F-01 |
+| `GET /api/auth/me` | — | 200 User | 401 | F-01 |
+| `GET /api/health` | — | 200 `{ ok: true }` (public, for smoke tests) | — | #1 |
+| `GET /api/menu` | — | 200 Menu item[] by `id` | 401, 403 | F-02 |
+| `POST /api/orders` | `{ items: [{ menuItemId, quantity }] }` | 201 Order | 400, 401, 403 | F-03 |
+| `GET /api/orders` | — | 200 Order summary[] newest first | 401, 403 | F-03 |
+| `GET /api/orders/:id` | — | 200 Order | 400, 401, 403, 404 | F-03 |
+| `GET /api/operator/orders?status=PLACED` | — | 200 Queue order[] oldest first | 400, 401, 403 | F-04 |
+| `POST /api/operator/orders/:id/accept` | — | 200 Order (ACCEPTED, `acceptedAt` set) | 400, 401, 403, 404, 409 | F-04 |
+
+Later sprints add endpoints with the same conventions (planned paths in section 5.2).
 
 ## 5. Access control
 
@@ -212,3 +351,4 @@ Sprint 2–3 paths are planned names; their feature contracts confirm them.
 | Date | Version | Change | Why |
 |---|---|---|---|
 | 6 Nov 2026 | 1 | Sections 1, 2, 5, 6, 7 (A); 3, 4 placeholders for B | Deliverable 1 part C |
+| 6 Nov 2026 | 1.1 | Sections 3 data model and 4 API conventions (B) | Deliverable 1 part C |
