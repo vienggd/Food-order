@@ -192,4 +192,4 @@ Shared checklist: [`definition-of-done.md`](definition-of-done.md). F-03 extra e
 | 1 | 6 Nov 2026 | First version, before implementation | ninja |
 | 1.1 | 6 Nov 2026 | Shared order shape with F-04 agreed in chat: list is a plain array; malformed id → 400 (was 404). Still before implementation | ninja |
 
-Open point for review: the desktop timeline shows "Accepted" without a time in Sprint 1, because `orders` has no `accepted_at` column. If F-04 adds one, S4 will show it.
+Agreed with F-04 (chat, 6 Nov): F-04 adds `orders.accepted_at` (nullable) and `acceptedAt` to the shared order JSON (`null` until accepted). Whichever of F-03 / F-04 merges second adds `acceptedAt` to the order response. S4 shows the accepted time when `acceptedAt` is not null.
