@@ -31,3 +31,6 @@ Thumbs.db
 
 # Vite dependency cache
 .vite/
+
+# Raw JSON from npm run evidence
+docs/evidence/.raw/
