@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Desktop login · Campus Café UI</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500..700&amp;family=Plus+Jakarta+Sans:wght@400..800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#2F4A3A}a:hover{color:#1F3328}
+.dk{font-family:"Plus Jakarta Sans",system-ui,sans-serif;color:#2B1B14;font-size:15px;line-height:1.5}
+.bgimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:62% 62%;display:block}
+.shade{position:absolute;inset:0;background:rgba(43,27,20,.62)}
+.card{background:#fff;border-radius:16px;box-shadow:0 18px 40px rgba(20,12,8,.35);width:420px;box-sizing:border-box;position:relative}
+.ch{margin:-28px 18px 0;border-radius:12px;padding:22px 24px;background:#2F4A3A;color:#fff;box-shadow:0 8px 18px rgba(47,74,58,.4);text-align:center}
+.ch h1{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:28px;margin:0}
+.ch p{margin:4px 0 0;font-size:14px;color:#D9E4D3}
+.lb{display:block;font-size:13px;font-weight:700;margin:16px 0 6px}
+.in{display:block;width:100%;box-sizing:border-box;height:48px;border-radius:12px;border:1px solid #DCCFBD;background:#fff;padding:0 14px;font:inherit;color:#2B1B14}
+.btn{font:inherit;font-weight:700;font-size:16px;border:0;border-radius:999px;height:50px;width:100%;background:#2F4A3A;color:#fff;margin-top:24px}
+.msg{border-radius:12px;padding:11px 14px;font-size:14px;margin:0 0 4px;background:#FDE3E0;color:#7A1C12}
+.btn{transition:transform .16s ease}
+.btn:hover{transform:translateY(-1px)}
+.btn:active{transform:translateY(1px) scale(.98)}
+:focus-visible{outline:3px solid #D4874A;outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;transform:none!important}}
+</style>
+</head>
+<body>
+<p style="margin:0;padding:10px 16px;font:14px system-ui,sans-serif;background:#2B1B14;color:#F3EBDD"><a href="index.html" style="color:#E0B07A">← All screens</a> · Desktop · Login</p>
+<div class="dk" style="width: 1280px; height: 820px; position: relative; overflow: hidden; background: #2B1B14">
+  <img class="bgimg" src="img/espresso-shot.webp" alt="Espresso running into a small white cup at a steel machine">
+  <div class="shade"></div>
+  <div style="position: absolute; left: 48px; top: 36px; right: 48px; display: flex; justify-content: space-between; align-items: center; color: #F3EBDD">
+    <p style="margin: 0; font-family: Fraunces, Georgia, serif; font-weight: 600; font-size: 26px; color: #E0B07A">Campus Café</p>
+    <p style="margin: 0; font-size: 14px">Order ahead. Skip the line.</p>
+  </div>
+  <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center">
+    <div class="card">
+      <div class="ch"><h1>Sign in</h1><p>Use your café account</p></div>
+      <div style="padding: 24px 28px 26px">
+        <div class="msg" role="alert">Incorrect email or password.</div>
+        <label class="lb" for="dl-e">Email</label><input class="in" id="dl-e" type="email" value="alice@cafe.test">
+        <label class="lb" for="dl-p">Password</label><input class="in" id="dl-p" type="password">
+        <button class="btn">Log in</button>
+        <p style="margin: 16px 0 0; font-size: 13px; color: #6E5E4F; text-align: center">Accounts are created by the café. No sign-up.</p>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
