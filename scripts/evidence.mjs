@@ -7,7 +7,8 @@ const sh = (cmd, opts = {}) => execSync(cmd, { encoding: "utf8", stdio: ["ignore
 const tmp = "docs/evidence/.raw";
 mkdirSync(tmp, { recursive: true });
 
-if (sh("git status --porcelain -- . ':!docs/evidence'").trim()) {
+const dirty = sh("git status --porcelain").split("\n").filter((l) => l.trim() && !l.slice(3).startsWith("docs/evidence/"));
+if (dirty.length) {
   console.error("Working tree has changes outside docs/evidence. Commit them first so the evidence matches a commit.");
   process.exit(1);
 }
