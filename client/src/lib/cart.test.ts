@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { cartReducer, emptyCart, MAX_LINES, type Cart } from "./cart";
+import { canAddFromMenu, cartReducer, emptyCart, MAX_LINES, type Cart } from "./cart";
 
 const item = (id: number, price = 1000) => ({ id, name: `Item ${id}`, price });
 const apply = (cart: Cart, ...actions: Parameters<typeof cartReducer>[1][]) => actions.reduce(cartReducer, cart);
@@ -31,5 +31,13 @@ describe("cartReducer", () => {
     expect(cart.lines.reduce((s, l) => s + l.price * l.quantity, 0)).toBe(18000);
     expect(apply(cart, { type: "remove", menuItemId: 1 }).lines.map((l) => l.menuItemId)).toEqual([2]);
     expect(apply(cart, { type: "clear" }).lines).toEqual([]);
+  });
+
+  it("TEST-F03-23 at 20 lines every menu + is disabled", () => {
+    let cart = emptyCart;
+    for (let i = 1; i < MAX_LINES; i++) cart = apply(cart, { type: "add", item: item(i) });
+    expect(canAddFromMenu(cart)).toBe(true);
+    cart = apply(cart, { type: "add", item: item(MAX_LINES) });
+    expect(canAddFromMenu(cart)).toBe(false);
   });
 });

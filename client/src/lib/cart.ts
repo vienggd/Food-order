@@ -36,3 +36,6 @@ export function cartReducer(cart: Cart, action: CartAction): Cart {
 }
 
 export const estimatedTotal = (cart: Cart) => cart.lines.reduce((sum, l) => sum + l.price * l.quantity, 0);
+
+// ui-spec S2: at 20 lines every + on the menu is disabled (lines in the cart change only with their stepper).
+export const canAddFromMenu = (cart: Cart) => cart.lines.length < MAX_LINES;

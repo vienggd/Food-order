@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { api, ApiError, NETWORK_MESSAGE } from "../api";
 import { useCart } from "../cart";
-import { estimatedTotal, MAX_LINES, MAX_QTY } from "../lib/cart";
+import { canAddFromMenu, estimatedTotal, MAX_QTY } from "../lib/cart";
 import { formatBaht } from "../lib/money";
 import type { Order } from "../lib/orders";
 
@@ -98,7 +98,8 @@ export function MenuPage() {
   const inCart = Object.fromEntries(cart.lines.map((l) => [l.menuItemId, l.quantity]));
   const count = cart.lines.reduce((n, l) => n + l.quantity, 0);
   const total = estimatedTotal(cart);
-  const full = cart.lines.length >= MAX_LINES;
+  const full = !canAddFromMenu(cart);
+  const fullMsg = "Cart is full (20 different items max).";
 
   async function placeOrder() {
     setSubmitting(true);
@@ -143,7 +144,12 @@ export function MenuPage() {
         </div>
       )}
       {cart.lines.length === 0 ? (
-        <p className="muted">Your cart is empty. Add something from the menu.</p>
+        <div>
+          <p className="muted">Your cart is empty. Add something from the menu.</p>
+          <button className="btn ghost small phone-only" onClick={() => navigate("/menu")}>
+            Browse the menu
+          </button>
+        </div>
       ) : (
         <ul className="cart-lines">
           {cart.lines.map((l) => (
@@ -184,17 +190,22 @@ export function MenuPage() {
                   className="remove"
                   aria-label={`Remove ${l.name}`}
                   disabled={submitting}
-                  onClick={() => dispatch({ type: "remove", menuItemId: l.menuItemId })}
+                  onClick={() => {
+                    dispatch({ type: "remove", menuItemId: l.menuItemId });
+                    setBadLines(({ [l.menuItemId]: _, ...rest }) => rest);
+                  }}
                 >
                   ✕
                 </button>
               </div>
               {l.quantity >= MAX_QTY && <p className="hint">Max 10 per item.</p>}
+              {l.quantity <= 1 && <p className="hint">Min 1. Use ✕ to remove.</p>}
               {badLines[l.menuItemId] && <p className="field-error">{badLines[l.menuItemId]}</p>}
             </li>
           ))}
         </ul>
       )}
+      {full && <div className="msg info">{fullMsg}</div>}
       <p className="muted">Pickup: ASAP</p>
       <div className="cart-total">
         <span>Estimated total</span>
@@ -213,13 +224,13 @@ export function MenuPage() {
           <p className="banner-title">Order ahead. Skip the line.</p>
           <p className="banner-sub">Coffee and snacks from ฿35. Pickup ASAP at the counter.</p>
         </section>
-        {full && <p className="hint">Cart is full (20 different items max).</p>}
+        {full && <p className="hint">{fullMsg}</p>}
         <MenuList
           load={load}
           reload={reload}
           inCart={inCart}
           onAdd={(item) => dispatch({ type: "add", item })}
-          addDisabledFor={(item) => full && !inCart[item.id]}
+          addDisabledFor={() => full}
         />
         {count > 0 && (
           <button className="cart-bar" onClick={() => navigate("/menu#cart")}>

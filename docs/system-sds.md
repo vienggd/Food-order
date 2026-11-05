@@ -194,7 +194,7 @@ The enum already holds every status so later sprints need no enum migration. All
 | Auth | `sid` httpOnly cookie (section 6); no tokens in headers or URLs |
 | Money | Integer satang (`6500` = ฿65.00); the client only formats it |
 | Time | ISO 8601 UTC strings (`2026-11-07T03:15:00.000Z`); the client shows local time |
-| Ids | Positive integers in paths; anything else → 400 `VALIDATION_ERROR` |
+| Ids | Positive whole numbers up to 2147483647 (Postgres `int`) in paths and bodies; anything else → 400 `VALIDATION_ERROR`, never 500 |
 | Lists | Plain JSON arrays, in a fixed documented order |
 | Input checks | Zod schemas with `.strict()`: unknown fields are rejected (stops clients sending `price`, `total`, `role`, `customerId` — BR-04, NFR-02) |
 | Success codes | 200 read/update, 201 created, 204 no content (logout) |
@@ -353,3 +353,4 @@ Sprint 2–3 paths are planned names; their feature contracts confirm them.
 | 6 Nov 2026 | 1 | Sections 1, 2, 5, 6, 7 (A); 3, 4 placeholders for B | Deliverable 1 part C |
 | 6 Nov 2026 | 1.1 | Sections 3 data model and 4 API conventions (B) | Deliverable 1 part C |
 | 6 Nov 2026 | 1.2 | 2.2 empty-state wording matches ui-spec; 7.1 says serving the built client comes in Lab 5 | Recheck #38: doc must match the code |
+| 6 Nov 2026 | 1.3 | 4.1 ids: upper bound 2147483647 (recheck #37: larger ids gave 500) | Bug fix |

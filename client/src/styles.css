@@ -181,3 +181,4 @@ button[disabled] { cursor: not-allowed; }
   .menu-list { grid-template-columns: repeat(2, 1fr); }
 }
 @media (min-width: 1200px) { .menu-list { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 900px) { .phone-only { display: none; } }

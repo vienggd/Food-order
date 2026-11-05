@@ -124,6 +124,12 @@ describe("F-04 accept", () => {
     expect(bad.body.error.code).toBe("VALIDATION_ERROR");
   });
 
+  it("TEST-F04-14 an id above 2147483647 gives 400, not 500", async () => {
+    const res = await accept(3000000000);
+    expect(res.status).toBe(400);
+    expect(res.body.error.code).toBe("VALIDATION_ERROR");
+  });
+
   it("TEST-F04-09 customers get 403 and anonymous users 401 on both endpoints; order unchanged", async () => {
     const o = await makeOrder("alice@cafe.test", "PLACED");
     expect((await queue(alice)).status).toBe(403);
