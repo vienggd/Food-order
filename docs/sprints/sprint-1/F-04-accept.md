@@ -56,7 +56,7 @@ One table in `server/src/orders/transitions.ts`, used by every status change now
 
 Per [`../../ui/ui-spec.md`](../../ui/ui-spec.md) S5.
 - Heading "New orders" with the count; **Refresh queue** button (no auto-polling).
-- Phone: one card per order — `#id`, customer name, placed time, items summary ("Latte ×2, Croissant ×1"), total `฿xx.xx`, **Accept order**. Desktop: four number cards (Waiting orders, Oldest waiting in minutes, Items to make, Queue value — worked out on the client from the list) and the orders as a table.
+- Phone: one card per order — `#id`, customer name, placed time, items summary ("Latte ×2, Croissant ×1"), total `฿xx.xx`, **Accept order**. Desktop: four number cards (Waiting orders, Oldest waiting in minutes, Items to make, Queue value — worked out on the client from the list) and the orders as cards in a 2-column grid. Sprint 1: desktop shows cards; the table in the design is known UI debt.
 - States: loading placeholders; empty "No new orders. New orders appear here when you refresh."; load error "Couldn't load orders." + **Reload queue**; accepting: only that button shows "Accepting…" (disabled); success "Order #N accepted." and the card leaves; 409 "Order #N: Already accepted by another staff member." then reload; 404 "Order #N no longer exists." then reload.
 
 ## 4. API
@@ -83,7 +83,7 @@ Migration `add_order_accepted_at`: `orders.accepted_at TIMESTAMP NULL`, set when
 | AC-F04-05 | An ACCEPTED order; operator accepts it again (BR-06) | 409 INVALID_STATE "Already accepted by another staff member."; row unchanged |
 | AC-F04-06 | An order in CANCELLED (set directly in the database); operator accepts (BR-06) | 409 INVALID_STATE "Only PLACED orders can be accepted."; row unchanged |
 | AC-F04-07 | One PLACED order; 20 accept requests sent at the same time (BR-07, NFR-04) | Exactly one 200 and nineteen 409; order ACCEPTED once |
-| AC-F04-08 | Accept id 999999 (no such order); accept id `abc` | 404 NOT_FOUND; 400 VALIDATION_ERROR |
+| AC-F04-08 | Accept id 999999 (no such order); accept id `abc` or 3000000000 (above 2147483647) | 404 NOT_FOUND; 400 VALIDATION_ERROR (never 500) |
 | AC-F04-09 | Customer session; no session — on both endpoints | 403 FORBIDDEN; 401 UNAUTHENTICATED; order unchanged |
 | AC-F04-10 | `canTransition` | true only for PLACED → ACCEPTED; false for ACCEPTED → ACCEPTED, PLACED → READY, CANCELLED → ACCEPTED and every other pair |
 | AC-F04-11 | UI: operator logs in with 2 PLACED orders | Two cards, oldest first, heading count 2; with none: the empty message |
@@ -104,11 +104,12 @@ Levels as in F-01 (unit / API with real Postgres / E2E). The test ID is at the s
 | TEST-F04-06 | AC-F04-06 | API | One CANCELLED order | POST accept | 409; DB row still CANCELLED |
 | TEST-F04-07 | AC-F04-07 | API | One PLACED order | 20 POST accept in parallel (`Promise.all`) | statuses: one 200, nineteen 409; DB ACCEPTED |
 | TEST-F04-08 | AC-F04-08 | API | Seed | POST accept 999999; POST accept `abc` | 404; 400 |
+| TEST-F04-14 | AC-F04-08 | API | Seed | POST accept 3000000000 | 400 VALIDATION_ERROR (not 500) |
 | TEST-F04-09 | AC-F04-09 | API | One PLACED order | Both endpoints as alice and anonymous | 403 / 401; order still PLACED |
 | TEST-F04-10 | AC-F04-10 | unit | — | `canTransition` for every (from, to) pair of the 7 statuses | true only for PLACED → ACCEPTED |
-| TEST-F04-11 | AC-F04-11 | E2E | Seed; alice places 2 orders through the API | Log in as staff | 2 cards oldest first, count 2 |
+| TEST-F04-11 | AC-F04-11 | E2E | Seed; 2 PLACED orders inserted directly in the E2E database (alice, bob), same as the API tests | Log in as staff | 2 cards oldest first, count 2 |
 | TEST-F04-12 | AC-F04-12 | E2E | As 11 | Press Accept order on the first card | "Order #N accepted."; 1 card left |
-| TEST-F04-13 | AC-F04-13 | E2E | As 11; then accept order N through the API | Press Accept order on N | 409 message; N not in the list |
+| TEST-F04-13 | AC-F04-13 | E2E | As 11; then order N set to ACCEPTED directly in the E2E database | Press Accept order on N | 409 message; N not in the list |
 
 TDD: TEST-F04-01..10 are committed failing first (`[red]`, `docs/evidence/tdd/F-04-red.txt`), then the code (`[green]`, `F-04-green.txt`). E2E tests run in Issue #10.
 
@@ -121,3 +122,4 @@ See [`definition-of-done.md`](definition-of-done.md). F-04 specific: TEST-F04-07
 | Date | Version | Change | Why |
 |---|---|---|---|
 | 6 Nov 2026 | 1 | First contract; adds `accepted_at` | Before implementation (Issue #5); accepted time requested for the order detail timeline (chat with ninja, 6 Nov) |
+| 6 Nov 2026 | 1.1 | AC-F04-08 + TEST-F04-14: id above 2147483647 → 400, not 500; TEST-F04-11/13 preconditions say orders are inserted in the E2E database; UI §3: desktop cards, table is known UI debt | Recheck (#37, agreed in chat #71/#72): bug found by ninja; contract made to match the tests and code |

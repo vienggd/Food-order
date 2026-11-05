@@ -56,8 +56,10 @@ Source: `docs/ui/ui-spec.md` S2 (cart), S3, S4 and `docs/ui/design/Menu.html`, `
 - Line: name, stepper (− qty +), line subtotal, ✕ remove. "Pickup: ASAP". "Estimated total". **Place order →**.
 - Phone: cart is its own view, opened from the "N items · ฿x · View cart →" bar or the Cart tab. Desktop: panel on the right.
 - **+** on an item already in the cart adds 1 to that line (no duplicate line); the item shows "In cart · N".
-- Stepper − disabled at 1 ("Min 1 — use ✕ to remove."), + disabled at 10 ("Max 10 per item."); typed values are clamped to 1–10.
-- At 20 lines, + on a new item is disabled with "Cart is full (20 different items max)."
+- Stepper − disabled at 1 with the hint "Min 1. Use ✕ to remove." under the line, + disabled at 10 with "Max 10 per item."; typed values are clamped to 1–10.
+- At 20 lines every + on the menu is disabled and the cart shows "Cart is full (20 different items max)." (ui-spec S2, design `Menu.html`).
+- After a 400, the marked line loses its mark when it is removed.
+- Empty cart on the phone: "Your cart is empty. Add something from the menu." + **Browse the menu**.
 
 | State | What the user sees |
 |---|---|
@@ -145,11 +147,11 @@ No schema change; uses tables from #1.
 | AC-F03-05 | (BR-04) When the request contains `price`, `unitPrice` or `total` (top level or in a line), then 400 `VALIDATION_ERROR` and nothing is saved; a valid order's total never depends on client values. |
 | AC-F03-06 | (BR-05) Given a placed order, when the menu price or name changes later, then the order detail still shows the name, unit price and total from order time. |
 | AC-F03-07 | When a customer lists orders, then they get only their own orders, newest first, with id, status, total, item count and time. |
-| AC-F03-08 | When a customer opens their own order, then they get 200 with lines and total; when they open another customer's order or a missing id, then 404 `NOT_FOUND` with the same message; a malformed id (e.g. `abc`) gives 400 `VALIDATION_ERROR`. |
+| AC-F03-08 | When a customer opens their own order, then they get 200 with lines and total; when they open another customer's order or a missing id, then 404 `NOT_FOUND` with the same message; a malformed id (e.g. `abc`) or an id outside 1–2147483647 gives 400 `VALIDATION_ERROR`, never 500. |
 | AC-F03-09 | When not logged in, any F-03 endpoint answers 401; when logged in as operator, 403. |
 | AC-F03-10 | In the browser, a customer adds items (adding the same item twice gives quantity 2 on one line), places the order, lands on `/orders/:id` with "Order #N placed!", and sees the server total. |
 | AC-F03-11 | In the browser, when the server rejects the order with 400, the message is shown, the cart is kept, and the bad line is marked. |
-| AC-F03-12 | In the cart, the stepper cannot go below 1 or above 10, and a 21st different item cannot be added. |
+| AC-F03-12 | In the cart, the stepper cannot go below 1 or above 10, and at 20 lines no + on the menu adds anything (a 21st different item cannot be added; lines already in the cart change only with their stepper). |
 
 ## 7. Test specification
 
@@ -172,10 +174,12 @@ Seed: alice, bob (CUSTOMER), staff (OPERATOR); Latte 6500 (id 1), Americano 5500
 | TEST-F03-13 | AC-F03-08 | API | alice has order A | alice GET `/api/orders/A` | 200 with lines and total |
 | TEST-F03-14 | AC-F03-08 | API | bob has order B | alice GET `/api/orders/B`; alice GET `/api/orders/99999` | both 404 `NOT_FOUND`, same message |
 | TEST-F03-21 | AC-F03-08 | API | alice | GET `/api/orders/abc`, `/api/orders/0`, `/api/orders/-1` | each 400 `VALIDATION_ERROR` |
+| TEST-F03-22 | AC-F03-08, AC-F03-02 | API | alice | GET `/api/orders/3000000000`; POST order with `menuItemId: 3000000000` | each 400 `VALIDATION_ERROR` (not 500); nothing saved |
 | TEST-F03-15 | AC-F03-09 | API | no cookie | POST, GET list, GET detail | all 401 |
 | TEST-F03-16 | AC-F03-09 | API | staff (OPERATOR) | POST, GET list, GET detail | all 403; nothing saved |
 | TEST-F03-17 | AC-F03-01 | unit | `cartReducer`: add Latte, add Latte, add Americano | apply | 2 lines; Latte qty 2 |
 | TEST-F03-18 | AC-F03-12 | unit | `cartReducer`: set qty 0, 11, 2.7; add 21st item | apply | qty clamped to 1, 10, 2; 21st item refused |
+| TEST-F03-23 | AC-F03-12 | unit | `canAddFromMenu(cart)` with 19 and 20 lines | call | true at 19, false at 20 (every menu + disabled) |
 | TEST-F03-19 | AC-F03-10 | E2E | alice logged in | add Latte twice + Thai Milk Tea, Place order | URL `/orders/N`; "Order #N placed!"; total ฿180.00; `/orders` lists it as PLACED |
 | TEST-F03-20 | AC-F03-11 | E2E | alice logged in; Latte in cart; Latte set sold out in DB before submit | Place order | error message shown naming Latte; cart still has Latte; line marked |
 
@@ -191,5 +195,6 @@ Shared checklist: [`definition-of-done.md`](definition-of-done.md). F-03 extra e
 |---|---|---|---|
 | 1 | 6 Nov 2026 | First version, before implementation | ninja |
 | 1.1 | 6 Nov 2026 | Shared order shape with F-04 agreed in chat: list is a plain array; malformed id → 400 (was 404). Still before implementation | ninja |
+| 1.2 | 6 Nov 2026 | Recheck (#37): ids above 2147483647 gave 500 → now 400 (TEST-F03-22); cart limits and hints aligned with ui-spec S2 / design (every + disabled at 20 lines, "Min 1" hint, mark cleared on remove, empty-cart button; TEST-F03-23) | ninja |
 
 Agreed with F-04 (chat, 6 Nov): F-04 adds `orders.accepted_at` (nullable) and `acceptedAt` to the shared order JSON (`null` until accepted). Whichever of F-03 / F-04 merges second adds `acceptedAt` to the order response. S4 shows the accepted time when `acceptedAt` is not null.
