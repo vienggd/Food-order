@@ -1,0 +1,43 @@
+
+ RUN  v3.2.7 D:/Lab Software2026/Food-order/server
+
+warn The configuration property `package.json#prisma` is deprecated and will be removed in Prisma 7. Please migrate to a Prisma config file (e.g., `prisma.config.ts`).
+For more information, see: https://pris.ly/prisma-config
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "cafe_test", schema "public" at "localhost:5433"
+
+2 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+ ✓ tests/orders.test.ts (29 tests) 13098ms
+   ✓ F-03 POST /api/orders > TEST-F03-01 places an order: 201 PLACED, server total, lines with copied name and price, saved  360ms
+   ✓ F-03 POST /api/orders > TEST-F03-04 BR-02 empty or missing items {"items":[]}: 400, nothing saved  398ms
+   ✓ F-03 POST /api/orders > TEST-F03-04 BR-02 empty or missing items {}: 400, nothing saved  502ms
+   ✓ F-03 POST /api/orders > TEST-F03-04 BR-02 empty or missing items {"items":"Latte"}: 400, nothing saved  502ms
+   ✓ F-03 POST /api/orders > TEST-F03-05 BR-02 boundary: 20 different lines are accepted  550ms
+   ✓ F-03 POST /api/orders > TEST-F03-06 BR-02 21 lines: 400, nothing saved  568ms
+   ✓ F-03 POST /api/orders > TEST-F03-07 BR-02 the same item twice: 400 DUPLICATE, nothing saved  439ms
+   ✓ F-03 POST /api/orders > TEST-F03-08 BR-03 a sold-out item rejects the whole order: 400 SOLD_OUT naming it, nothing saved  544ms
+   ✓ F-03 POST /api/orders > TEST-F03-09 BR-03 an unknown item: 400 NOT_FOUND reason, nothing saved  458ms
+   ✓ F-03 POST /api/orders > TEST-F03-10 BR-04 client sends price on a line: 400, nothing saved  489ms
+   ✓ F-03 POST /api/orders > TEST-F03-10 BR-04 client sends unitPrice on a line: 400, nothing saved  583ms
+   ✓ F-03 POST /api/orders > TEST-F03-10 BR-04 client sends total at top level: 400, nothing saved  512ms
+   ✓ F-03 GET /api/orders and /api/orders/:id > TEST-F03-11 BR-05 order keeps name and price from order time after the menu changes  552ms
+   ✓ F-03 GET /api/orders and /api/orders/:id > TEST-F03-12 list shows only my orders, newest first, with item count  654ms
+   ✓ F-03 GET /api/orders and /api/orders/:id > TEST-F03-13 my own order detail: 200 with lines and total  592ms
+   ✓ F-03 GET /api/orders and /api/orders/:id > TEST-F03-14 another customer's order and a missing id both give the same 404  459ms
+   ✓ F-03 GET /api/orders and /api/orders/:id > TEST-F03-21 malformed id abc: 400 VALIDATION_ERROR  685ms
+   ✓ F-03 GET /api/orders and /api/orders/:id > TEST-F03-21 malformed id 0: 400 VALIDATION_ERROR  504ms
+   ✓ F-03 GET /api/orders and /api/orders/:id > TEST-F03-21 malformed id -1: 400 VALIDATION_ERROR  444ms
+   ✓ F-03 GET /api/orders and /api/orders/:id > TEST-F03-21 malformed id 1.5: 400 VALIDATION_ERROR  539ms
+   ✓ F-03 access > TEST-F03-15 not logged in: all F-03 endpoints give 401  482ms
+   ✓ F-03 access > TEST-F03-16 operator: all F-03 endpoints give 403, nothing saved  481ms
+
+ Test Files  1 passed (1)
+      Tests  29 passed (29)
+   Start at  03:56:49
+   Duration  15.96s (transform 111ms, setup 6ms, collect 496ms, tests 13.10s, environment 0ms, prepare 58ms)
+

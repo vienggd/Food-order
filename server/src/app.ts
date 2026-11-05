@@ -2,6 +2,7 @@ import express, { type Express } from "express";
 import cookieParser from "cookie-parser";
 import { AppError, errorHandler } from "./errors.js";
 import { authRouter } from "./auth/routes.js";
+import { ordersRouter } from "./orders/routes.js";
 import { menuRouter } from "./menu/routes.js";
 import { operatorRouter } from "./operator/routes.js";
 
@@ -16,6 +17,7 @@ export function createApp(addRoutes?: (app: Express) => void) {
     res.json({ ok: true });
   });
   api.use("/auth", authRouter);
+  api.use("/orders", ordersRouter);
   api.use("/menu", menuRouter);
   api.use("/operator", operatorRouter);
   addRoutes?.(app);

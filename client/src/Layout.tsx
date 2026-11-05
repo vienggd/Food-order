@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { Navigate, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Link, Navigate, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { homeFor, useAuth, type Role } from "./auth";
+import { useCart } from "./cart";
 
 const LINKS: Record<Role, { to: string; label: string }[]> = {
   CUSTOMER: [
@@ -22,6 +23,7 @@ export function RequireRole({ role, title, children }: { role: Role; title: stri
   const location = useLocation();
   const navigate = useNavigate();
   const [leaving, setLeaving] = useState(false);
+  const { cart } = useCart();
 
   if (loading) return <div className="loading-page" aria-busy="true" />;
   if (!user) return <Navigate to="/login" replace state={{ from: location.pathname }} />;
@@ -34,6 +36,7 @@ export function RequireRole({ role, title, children }: { role: Role; title: stri
   }
 
   const links = LINKS[user.role];
+  const cartCount = cart.lines.reduce((n, l) => n + l.quantity, 0);
   const roleChip = user.role === "OPERATOR" ? "Operator" : "Customer";
   const logoutButton = (cls: string) => (
     <button className={cls} onClick={doLogout} disabled={leaving}>
@@ -87,6 +90,11 @@ export function RequireRole({ role, title, children }: { role: Role; title: stri
             {l.label}
           </NavLink>
         ))}
+        {user.role === "CUSTOMER" && (
+          <Link to="/menu#cart" className="tab">
+            Cart{cartCount > 0 ? ` (${cartCount})` : ""}
+          </Link>
+        )}
       </nav>
     </div>
   );

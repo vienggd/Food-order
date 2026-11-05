@@ -3,17 +3,9 @@ import { homeFor, useAuth } from "./auth";
 import { RequireRole } from "./Layout";
 import { LoginPage } from "./pages/LoginPage";
 import { MenuPage } from "./pages/MenuPage";
+import { OrderDetailPage, OrdersPage } from "./pages/OrdersPage";
+import { CartProvider } from "./cart";
 import { QueuePage } from "./pages/QueuePage";
-
-// Placeholder until the feature that owns the screen replaces it (F-02/F-03: ninja, F-04: vieng).
-function Coming({ feature }: { feature: string }) {
-  return (
-    <div className="empty">
-      <p className="empty-title">Coming soon</p>
-      <p>This screen is built in {feature}.</p>
-    </div>
-  );
-}
 
 function Home() {
   const { user, loading } = useAuth();
@@ -33,15 +25,19 @@ function NotFound() {
 }
 
 export function App() {
+  // key: a new user gets a new, empty cart.
+  const { user } = useAuth();
   return (
+    <CartProvider key={user?.id ?? 0}>
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/menu" element={<RequireRole role="CUSTOMER" title="Menu"><MenuPage /></RequireRole>} />
-      <Route path="/orders" element={<RequireRole role="CUSTOMER" title="My orders"><Coming feature="F-03" /></RequireRole>} />
-      <Route path="/orders/:id" element={<RequireRole role="CUSTOMER" title="Order"><Coming feature="F-03" /></RequireRole>} />
+      <Route path="/orders" element={<RequireRole role="CUSTOMER" title="My orders"><OrdersPage /></RequireRole>} />
+      <Route path="/orders/:id" element={<RequireRole role="CUSTOMER" title="Order"><OrderDetailPage /></RequireRole>} />
       <Route path="/operator/orders" element={<RequireRole role="OPERATOR" title="Order queue"><QueuePage /></RequireRole>} />
       <Route path="*" element={<NotFound />} />
     </Routes>
+    </CartProvider>
   );
 }
