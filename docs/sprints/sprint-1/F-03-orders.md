@@ -114,17 +114,17 @@ Errors:
 
 ### `GET /api/orders`
 
-Response 200, newest first (`createdAt` desc, then `id` desc):
+Response 200: a plain array, newest first (`createdAt` desc, then `id` desc):
 
 ```json
-{ "orders": [ { "id": 7, "status": "PLACED", "total": 18000, "itemCount": 3, "createdAt": "2026-11-07T03:15:00.000Z" } ] }
+[ { "id": 7, "status": "PLACED", "total": 18000, "itemCount": 3, "createdAt": "2026-11-07T03:15:00.000Z" } ]
 ```
 
 `itemCount` = sum of quantities. Errors: 401, 403.
 
 ### `GET /api/orders/:id`
 
-Response 200: same shape as the `POST` response. Errors: 401, 403, **404 `NOT_FOUND` "Order not found."** when the id is not a positive integer, does not exist, or belongs to another customer.
+Response 200: same shape as the `POST` response (the shared order shape, also used by F-04). Errors: 401, 403, **400 `VALIDATION_ERROR`** when the id is not a positive whole number, **404 `NOT_FOUND` "Order not found."** when it does not exist or belongs to another customer.
 
 ## 5. Data
 
@@ -145,7 +145,7 @@ No schema change; uses tables from #1.
 | AC-F03-05 | (BR-04) When the request contains `price`, `unitPrice` or `total` (top level or in a line), then 400 `VALIDATION_ERROR` and nothing is saved; a valid order's total never depends on client values. |
 | AC-F03-06 | (BR-05) Given a placed order, when the menu price or name changes later, then the order detail still shows the name, unit price and total from order time. |
 | AC-F03-07 | When a customer lists orders, then they get only their own orders, newest first, with id, status, total, item count and time. |
-| AC-F03-08 | When a customer opens their own order, then they get 200 with lines and total; when they open another customer's order or a missing id, then 404 `NOT_FOUND` with the same message. |
+| AC-F03-08 | When a customer opens their own order, then they get 200 with lines and total; when they open another customer's order or a missing id, then 404 `NOT_FOUND` with the same message; a malformed id (e.g. `abc`) gives 400 `VALIDATION_ERROR`. |
 | AC-F03-09 | When not logged in, any F-03 endpoint answers 401; when logged in as operator, 403. |
 | AC-F03-10 | In the browser, a customer adds items (adding the same item twice gives quantity 2 on one line), places the order, lands on `/orders/:id` with "Order #N placed!", and sees the server total. |
 | AC-F03-11 | In the browser, when the server rejects the order with 400, the message is shown, the cart is kept, and the bad line is marked. |
@@ -170,7 +170,8 @@ Seed: alice, bob (CUSTOMER), staff (OPERATOR); Latte 6500 (id 1), Americano 5500
 | TEST-F03-11 | AC-F03-06 | API | alice places Latte ×1; then Latte price set to 9900 and name to "Latte XL" in DB | GET `/api/orders/:id` | line name "Latte", unitPrice 6500, total 6500 |
 | TEST-F03-12 | AC-F03-07 | API | alice has 2 orders, bob has 1 | alice GET `/api/orders` | 2 orders, newest first, both alice's; `itemCount` correct |
 | TEST-F03-13 | AC-F03-08 | API | alice has order A | alice GET `/api/orders/A` | 200 with lines and total |
-| TEST-F03-14 | AC-F03-08 | API | bob has order B | alice GET `/api/orders/B`; alice GET `/api/orders/99999`; alice GET `/api/orders/abc` | all 404 `NOT_FOUND`, same message |
+| TEST-F03-14 | AC-F03-08 | API | bob has order B | alice GET `/api/orders/B`; alice GET `/api/orders/99999` | both 404 `NOT_FOUND`, same message |
+| TEST-F03-21 | AC-F03-08 | API | alice | GET `/api/orders/abc`, `/api/orders/0`, `/api/orders/-1` | each 400 `VALIDATION_ERROR` |
 | TEST-F03-15 | AC-F03-09 | API | no cookie | POST, GET list, GET detail | all 401 |
 | TEST-F03-16 | AC-F03-09 | API | staff (OPERATOR) | POST, GET list, GET detail | all 403; nothing saved |
 | TEST-F03-17 | AC-F03-01 | unit | `cartReducer`: add Latte, add Latte, add Americano | apply | 2 lines; Latte qty 2 |
@@ -189,5 +190,6 @@ Shared checklist: [`definition-of-done.md`](definition-of-done.md). F-03 extra e
 | Version | Date | Change | By |
 |---|---|---|---|
 | 1 | 6 Nov 2026 | First version, before implementation | ninja |
+| 1.1 | 6 Nov 2026 | Shared order shape with F-04 agreed in chat: list is a plain array; malformed id → 400 (was 404). Still before implementation | ninja |
 
 Open point for review: the desktop timeline shows "Accepted" without a time in Sprint 1, because `orders` has no `accepted_at` column. If F-04 adds one, S4 will show it.
