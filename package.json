@@ -12,7 +12,8 @@
     "test:e2e": "playwright test",
     "db:up": "docker compose up -d",
     "db:migrate": "npm run db:migrate -w server",
-    "db:seed": "npm run db:seed -w server"
+    "db:seed": "npm run db:seed -w server",
+    "evidence": "node scripts/evidence.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.64.1",
