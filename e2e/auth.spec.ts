@@ -35,5 +35,10 @@ test.describe("F-01 login, logout, guards", () => {
     await expect(page).toHaveURL(/\/menu$/);
     await expect(page.getByText("You don't have access to that page.")).toBeVisible();
     await shot(page, "F01-forbidden-redirect", info.project.name);
+
+    // The notice is for that one redirect: it is gone once the user moves on.
+    await page.getByRole("link", { name: "My orders" }).locator("visible=true").first().click();
+    await expect(page).toHaveURL(/\/orders$/);
+    await expect(page.getByText("You don't have access to that page.")).toHaveCount(0);
   });
 });

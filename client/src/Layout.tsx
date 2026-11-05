@@ -36,6 +36,7 @@ export function RequireRole({ role, title, children }: { role: Role; title: stri
   }
 
   const links = LINKS[user.role];
+  const clearNotice = () => setNotice(null); // a notice is for one redirect, not every page after it
   const cartCount = cart.lines.reduce((n, l) => n + l.quantity, 0);
   const roleChip = user.role === "OPERATOR" ? "Operator" : "Customer";
   const logoutButton = (cls: string) => (
@@ -50,7 +51,7 @@ export function RequireRole({ role, title, children }: { role: Role; title: stri
         <p className="brand small">Campus Café</p>
         <nav className="side-links">
           {links.map((l) => (
-            <NavLink key={l.to} to={l.to} end>
+            <NavLink key={l.to} to={l.to} end onClick={clearNotice}>
               {l.label}
             </NavLink>
           ))}
@@ -86,12 +87,12 @@ export function RequireRole({ role, title, children }: { role: Role; title: stri
 
       <nav className="tabs">
         {links.map((l) => (
-          <NavLink key={l.to} to={l.to} end className="tab">
+          <NavLink key={l.to} to={l.to} end className="tab" onClick={clearNotice}>
             {l.label}
           </NavLink>
         ))}
         {user.role === "CUSTOMER" && (
-          <Link to="/menu#cart" className="tab">
+          <Link to="/menu#cart" className="tab" onClick={clearNotice}>
             Cart{cartCount > 0 ? ` (${cartCount})` : ""}
           </Link>
         )}
