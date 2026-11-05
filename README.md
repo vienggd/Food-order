@@ -30,7 +30,9 @@ npm run db:up                            # 3. start Postgres 16 in Docker (port 
 npm run db:migrate                       # 4. create the tables
 npm run db:seed                          # 5. add 3 accounts + the menu
 npm run dev                              # 6. API on :3000, app on http://localhost:5173
-npm test                                 # 7. server tests (uses the cafe_test database)
+npm test                                 # 7. server + client tests (server uses the cafe_test database)
+npx playwright install chromium          # 8. once: browser for end-to-end tests
+npm run test:e2e                         # 9. end-to-end tests, phone + desktop (own cafe_e2e database, ports 3100/5174)
 ```
 
 Seeded accounts: `alice@cafe.test`, `bob@cafe.test` (customers), `staff@cafe.test` (operator). Their password is the `SEED_PASSWORD` you chose; it is never stored in Git.
