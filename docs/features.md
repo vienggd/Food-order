@@ -1,26 +1,28 @@
 # Feature inventory — Campus Café Pre-order
 
 Deliverable 1, part B (1 of 2). Issue #7. Traceability: [`traceability.md`](traceability.md). Sprint plan: [`sprints/plan.md`](sprints/plan.md).
-Version 1 — 6 Nov 2026 (draft). Requirement IDs (FR/NFR) are filled in from the SRS (#6) when it is ready.
+Version 1 — 6 Nov 2026 (draft). Requirement IDs match the SRS (#6).
 
 Roles: **CUSTOMER** (orders food), **OPERATOR** (café staff; one shop, sees all orders). Anonymous users can only reach `/login`.
 
 ## Summary
 
-| ID | Feature | Sprint | Roles | Business rules | Status |
-|---|---|---|---|---|---|
-| F-01 | Login, logout, "who am I" | 1 | anyone → CUSTOMER / OPERATOR | — | Planned |
-| F-02 | Browse menu | 1 | CUSTOMER | BR-03 (sold-out shown) | Planned |
-| F-03 | Place order, my orders, order detail | 1 | CUSTOMER | BR-01, BR-02, BR-03, BR-04, BR-05 | Planned |
-| F-04 | Operator queue + accept order | 1 | OPERATOR | BR-06, BR-07 | Planned |
-| F-05 | Menu management + sold-out toggle | 2 | OPERATOR | to specify in Sprint 2 | Not started |
-| F-06 | Customer cancel / operator reject with reason | 2 | CUSTOMER, OPERATOR | to specify in Sprint 2 | Not started |
-| F-07 | Fulfilment: PREPARING → READY → PICKED_UP | 2 | OPERATOR | to specify in Sprint 2 | Not started |
-| F-08 | Simulated payment | 2 | CUSTOMER, OPERATOR | to specify in Sprint 2 | Not started |
-| F-09 | Pickup time slots + order cut-off | 3 | CUSTOMER, OPERATOR | to specify in Sprint 3 | Not started |
-| F-10 | Sales summary | 3 | OPERATOR | to specify in Sprint 3 | Not started |
-| F-11 | Order search / filter | 3 | CUSTOMER, OPERATOR | to specify in Sprint 3 | Not started |
-| F-12 | Hardening: login rate limit, error states, accessibility | 3 | all | to specify in Sprint 3 | Not started |
+| ID | Feature | Sprint | Roles | Requirements | Business rules | Status |
+|---|---|---|---|---|---|---|
+| F-01 | Login, logout, "who am I" | 1 | anyone → CUSTOMER / OPERATOR | FR-01..FR-04, NFR-01, NFR-02 | — | Planned |
+| F-02 | Browse menu | 1 | CUSTOMER | FR-05 | BR-03 (sold-out shown) | Planned |
+| F-03 | Place order, my orders, order detail | 1 | CUSTOMER | FR-06..FR-08, NFR-04 | BR-01, BR-02, BR-03, BR-04, BR-05 | Planned |
+| F-04 | Operator queue + accept order | 1 | OPERATOR | FR-09, FR-10, NFR-04 | BR-06, BR-07 | Planned |
+| F-05 | Menu management + sold-out toggle | 2 | OPERATOR | FR-11 | to specify in Sprint 2 | Not started |
+| F-06 | Customer cancel / operator reject with reason | 2 | CUSTOMER, OPERATOR | FR-12, FR-13 | to specify in Sprint 2 | Not started |
+| F-07 | Fulfilment: PREPARING → READY → PICKED_UP | 2 | OPERATOR | FR-14 | to specify in Sprint 2 | Not started |
+| F-08 | Simulated payment | 2 | CUSTOMER, OPERATOR | FR-15 | to specify in Sprint 2 | Not started |
+| F-09 | Pickup time slots + order cut-off | 3 | CUSTOMER, OPERATOR | FR-16 | to specify in Sprint 3 | Not started |
+| F-10 | Sales summary | 3 | OPERATOR | FR-17 | to specify in Sprint 3 | Not started |
+| F-11 | Order search / filter | 3 | CUSTOMER, OPERATOR | FR-18 | to specify in Sprint 3 | Not started |
+| F-12 | Hardening: login rate limit, error states, accessibility | 3 | all | NFR-08, NFR-09 | to specify in Sprint 3 | Not started |
+
+All Sprint 1 features also follow NFR-03, NFR-05, NFR-06 and NFR-07.
 
 Status values: Not started → Planned (in a sprint plan) → Specified (contract committed) → Implemented → Verified (tests pass on the release) → Released (tagged on `main`).
 
