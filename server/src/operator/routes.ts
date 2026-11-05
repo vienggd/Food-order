@@ -5,13 +5,13 @@ import { AppError } from "../errors.js";
 import { requireRole } from "../auth/middleware.js";
 import { toOrderJson } from "../orders/json.js";
 import { statusesThatCanMoveTo } from "../orders/transitions.js";
+import { dbId } from "../ids.js";
 
 export const operatorRouter = Router();
 operatorRouter.use(requireRole("OPERATOR"));
 
 // Sprint 1 supports only the PLACED queue; missing status means PLACED.
 const queueQuery = z.object({ status: z.literal("PLACED").default("PLACED") });
-const idParam = z.coerce.number().int().positive();
 
 operatorRouter.get("/orders", async (req, res) => {
   const { status } = queueQuery.parse(req.query);
@@ -24,7 +24,7 @@ operatorRouter.get("/orders", async (req, res) => {
 });
 
 operatorRouter.post("/orders/:id/accept", async (req, res) => {
-  const id = idParam.parse(req.params.id);
+  const id = dbId.parse(req.params.id);
   // One atomic conditional update decides any race (BR-07): only one request can change the row.
   const { count } = await prisma.order.updateMany({
     where: { id, status: { in: statusesThatCanMoveTo("ACCEPTED") } },

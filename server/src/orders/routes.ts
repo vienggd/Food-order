@@ -4,6 +4,7 @@ import { prisma } from "../db.js";
 import { AppError } from "../errors.js";
 import { requireRole } from "../auth/middleware.js";
 import { toOrderJson } from "./json.js";
+import { dbId } from "../ids.js";
 
 export const ordersRouter = Router();
 ordersRouter.use(requireRole("CUSTOMER"));
@@ -13,14 +14,13 @@ const placeBody = z.strictObject({
   items: z
     .array(
       z.strictObject({
-        menuItemId: z.number().int().positive(),
+        menuItemId: z.number().pipe(dbId),
         quantity: z.number().int().min(1).max(10), // BR-01
       }),
     )
     .min(1)
     .max(20), // BR-02
 });
-const idParam = z.coerce.number().int().positive();
 
 type BadItem = { menuItemId: number; reason: "DUPLICATE" | "NOT_FOUND" | "SOLD_OUT" };
 
@@ -90,7 +90,7 @@ ordersRouter.get("/", async (req, res) => {
 });
 
 ordersRouter.get("/:id", async (req, res) => {
-  const id = idParam.parse(req.params.id);
+  const id = dbId.parse(req.params.id);
   // Filter by owner in the query: another customer's order looks exactly like a missing one (DEC-07).
   const order = await prisma.order.findFirst({
     where: { id, customerId: req.user!.id },
