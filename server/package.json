@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch --env-file=.env src/index.ts",
+    "postinstall": "prisma generate",
     "build": "prisma generate && tsc",
     "start": "node --env-file-if-exists=.env dist/src/index.js",
     "test": "vitest run",
