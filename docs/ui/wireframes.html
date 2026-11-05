@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Café Pre-order Wireframes</title>
+<style>
+  /* Low-fidelity, grayscale only. Boxes and labels, no visual polish. */
+  :root { --ink:#222; --mid:#666; --soft:#999; --line:#888; --fill:#eee; --fill2:#ddd; --bg:#fafafa; }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 16px; background: var(--bg); color: var(--ink);
+         font: 14px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  h1 { margin: 0 0 4px; font-size: 22px; }
+  h2 { margin: 36px 0 4px; font-size: 18px; border-bottom: 2px solid var(--ink); padding-bottom: 4px; }
+  h3 { margin: 0 0 6px; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--mid); }
+  p.meta { margin: 4px 0 12px; color: var(--mid); }
+  code { background: var(--fill); padding: 0 4px; border-radius: 3px; }
+  nav.toc a { margin-right: 12px; color: var(--ink); }
+
+  .row { display: flex; flex-wrap: wrap; gap: 16px; }
+  .state { flex: 1 1 260px; max-width: 340px; }
+  .frame { border: 2px solid var(--ink); background: #fff; min-height: 220px; }
+  .bar { background: var(--fill2); border-bottom: 1px solid var(--line); padding: 3px 8px; font: 11px monospace; color: var(--mid); }
+  .body { padding: 10px; }
+  .note { font-size: 12px; color: var(--mid); margin-top: 6px; }
+
+  /* shared header */
+  .hdr { display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--line); padding: 6px 10px; background: var(--fill); font-size: 12px; }
+  .hdr .logo { font-weight: 700; }
+  .hdr .nav { flex: 1; }
+  .hdr .nav span { margin-right: 8px; text-decoration: underline; }
+  .hdr .nav span.on { font-weight: 700; text-decoration: none; border-bottom: 2px solid var(--ink); }
+
+  /* widgets */
+  .lbl { font-size: 11px; color: var(--mid); margin-top: 6px; }
+  .input { border: 1px solid var(--line); height: 26px; padding: 3px 6px; color: var(--soft); font-size: 12px; }
+  .input.bad { border: 2px solid var(--ink); }
+  .btn { display: inline-block; border: 1px solid var(--ink); padding: 3px 10px; font-size: 12px; background: #fff; }
+  .btn.primary { background: var(--ink); color: #fff; }
+  .btn.dis { border-color: var(--soft); color: var(--soft); background: var(--fill); }
+  .btn.block { display: block; text-align: center; margin-top: 10px; }
+  .badge { display: inline-block; border: 1px solid var(--ink); border-radius: 10px; padding: 0 7px; font-size: 10px; font-weight: 700; }
+  .badge.fill { background: var(--ink); color: #fff; }
+  .msg { border: 1px dashed var(--ink); padding: 6px; font-size: 12px; margin: 6px 0; }
+  .msg.err::before { content: "⚠ "; }
+  .msg.ok::before { content: "✓ "; }
+  .msg.info::before { content: "ⓘ "; }
+  .field-err { font-size: 11px; font-weight: 700; margin-top: 2px; }
+  .skel { background: repeating-linear-gradient(90deg, var(--fill) 0 8px, var(--fill2) 8px 16px); height: 14px; margin: 8px 0; }
+  .spinner { text-align: center; color: var(--mid); padding: 20px 0; }
+  .empty { text-align: center; color: var(--mid); border: 1px dashed var(--soft); padding: 18px 6px; margin: 8px 0; }
+
+  .item { display: flex; align-items: center; gap: 6px; border-bottom: 1px solid var(--fill2); padding: 5px 0; font-size: 12px; }
+  .item .name { flex: 1; }
+  .item.sold { color: var(--soft); background: var(--fill); }
+  .stepper { display: inline-flex; border: 1px solid var(--line); font-size: 11px; }
+  .stepper span { padding: 0 6px; border-right: 1px solid var(--line); }
+  .stepper span:last-child { border-right: 0; }
+  .cart { border: 1px solid var(--ink); padding: 6px; margin-top: 8px; font-size: 12px; }
+  .cart .line, .tot { display: flex; justify-content: space-between; }
+  .tot { font-weight: 700; border-top: 1px solid var(--line); margin-top: 4px; padding-top: 4px; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th, td { border-bottom: 1px solid var(--fill2); text-align: left; padding: 3px 2px; vertical-align: top; }
+  th { color: var(--mid); font-weight: 600; font-size: 11px; }
+  td.r, th.r { text-align: right; }
+  .card { border: 1px solid var(--line); padding: 6px; margin: 6px 0; font-size: 12px; }
+  .card .top { display: flex; justify-content: space-between; align-items: center; }
+  .card.fade { opacity: .45; }
+
+  /* flow diagram */
+  .flow { background: #fff; border: 2px solid var(--ink); padding: 8px; overflow-x: auto; }
+  .flow svg { display: block; min-width: 720px; width: 100%; height: auto; }
+  .flow text { font: 13px system-ui, sans-serif; fill: var(--ink); }
+  .flow .small { font-size: 11px; fill: var(--mid); }
+  .legend { font-size: 12px; color: var(--mid); margin-top: 6px; }
+</style>
+</head>
+<body>
+
+<h1>Campus Café Pre-order — Sprint 1 wireframes</h1>
+<p class="meta">Low-fidelity, grayscale. Each screen shows loading / empty / error / success states and validation. Details per screen in <code>ui-spec.md</code>. Prices are shown as ฿xx.xx (stored as integer satang).</p>
+<nav class="toc">
+  <a href="#flow">Flow</a><a href="#header">Header</a><a href="#login">Login</a><a href="#menu">Menu + cart</a>
+  <a href="#orders">My orders</a><a href="#detail">Order detail</a><a href="#queue">Operator queue</a><a href="#shared">Shared states</a>
+</nav>
+
+<!-- ================= FLOW ================= -->
+<h2 id="flow">0. Navigation flow</h2>
+<div class="flow">
+<svg viewBox="0 0 900 300" role="img" aria-label="Navigation flow: login, then role-based home">
+  <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#222"/></marker></defs>
+  <g fill="#fff" stroke="#222" stroke-width="2">
+    <rect x="10" y="125" width="130" height="50"/>
+    <rect x="190" y="125" width="130" height="50" stroke-dasharray="5 3"/>
+    <rect x="380" y="40" width="150" height="50"/>
+    <rect x="580" y="40" width="140" height="50"/>
+    <rect x="760" y="40" width="130" height="50"/>
+    <rect x="380" y="215" width="150" height="50"/>
+  </g>
+  <text x="75" y="147" text-anchor="middle">Login</text><text x="75" y="164" text-anchor="middle" class="small">/login</text>
+  <text x="255" y="147" text-anchor="middle">GET /api/auth/me</text><text x="255" y="164" text-anchor="middle" class="small">role?</text>
+  <text x="455" y="62" text-anchor="middle">Menu + cart</text><text x="455" y="79" text-anchor="middle" class="small">/menu (customer home)</text>
+  <text x="650" y="62" text-anchor="middle">Order detail</text><text x="650" y="79" text-anchor="middle" class="small">/orders/:id</text>
+  <text x="825" y="62" text-anchor="middle">My orders</text><text x="825" y="79" text-anchor="middle" class="small">/orders</text>
+  <text x="455" y="237" text-anchor="middle">Order queue</text><text x="455" y="254" text-anchor="middle" class="small">/operator/orders (operator home)</text>
+  <g stroke="#222" stroke-width="1.5" fill="none" marker-end="url(#ar)">
+    <path d="M140,150 H188"/>
+    <path d="M320,140 L378,72"/>
+    <path d="M320,160 L378,232"/>
+    <path d="M530,65 H578"/>
+    <path d="M825,92 C825,130 650,130 650,94"/>
+    <path d="M760,52 H722"/>
+  </g>
+  <text x="352" y="96" class="small">CUSTOMER</text>
+  <text x="352" y="214" class="small">OPERATOR</text>
+  <text x="532" y="58" class="small">Place order</text>
+  <text x="700" y="125" class="small">click a row</text>
+  <text x="725" y="34" class="small">header nav</text>
+  <text x="10" y="210" class="small">Any 401 from any API → back to /login</text>
+  <text x="10" y="228" class="small">Logout (header) → POST /api/auth/logout → /login</text>
+  <text x="10" y="246" class="small">Wrong-role route → redirect to own home</text>
+</svg>
+</div>
+<p class="legend">Dashed box = not a screen (app checks the session on load). Customer header links: Menu · My orders. Operator header link: Order queue.</p>
+
+<!-- ================= HEADER ================= -->
+<h2 id="header">1. Shared header (all logged-in screens)</h2>
+<div class="row">
+  <div class="state"><h3>Customer</h3>
+    <div class="frame" style="min-height:0"><div class="hdr"><span class="logo">☕ Café</span><span class="nav"><span class="on">Menu</span><span>My orders</span></span><span>Alice · Customer</span><span class="btn">Logout</span></div></div>
+    <div class="note">Current page link is bold. Name + role from <code>GET /api/auth/me</code>.</div></div>
+  <div class="state"><h3>Operator</h3>
+    <div class="frame" style="min-height:0"><div class="hdr"><span class="logo">☕ Café</span><span class="nav"><span class="on">Order queue</span></span><span>Staff · Operator</span><span class="btn">Logout</span></div></div>
+    <div class="note">Operator never sees Menu / My orders links.</div></div>
+  <div class="state"><h3>Loading session / logging out</h3>
+    <div class="frame" style="min-height:0"><div class="hdr"><span class="logo">☕ Café</span><span class="nav"><span class="skel" style="display:inline-block;width:90px;height:10px;margin:0"></span></span><span class="btn dis">Logging out…</span></div></div>
+    <div class="note">While <code>/me</code> loads, show a placeholder (no links). Logout button disabled while request runs; always ends on /login.</div></div>
+</div>
+
+<!-- ================= LOGIN ================= -->
+<h2 id="login">2. Login — <code>/login</code> (F-01)</h2>
+<div class="row">
+  <div class="state"><h3>Default</h3><div class="frame"><div class="bar">/login</div><div class="body">
+    <b>Sign in</b>
+    <div class="lbl">Email</div><div class="input">alice@cafe.test</div>
+    <div class="lbl">Password</div><div class="input">••••••••</div>
+    <span class="btn primary block">Log in</span>
+    <div class="note">No sign-up link (accounts are seeded).</div>
+  </div></div></div>
+  <div class="state"><h3>Validation (client)</h3><div class="frame"><div class="bar">/login</div><div class="body">
+    <b>Sign in</b>
+    <div class="lbl">Email</div><div class="input bad"></div><div class="field-err">Email is required.</div>
+    <div class="lbl">Password</div><div class="input bad"></div><div class="field-err">Password is required.</div>
+    <span class="btn primary block">Log in</span>
+  </div></div><div class="note">Checked before sending. Also "Enter a valid email." for bad format.</div></div>
+  <div class="state"><h3>Loading</h3><div class="frame"><div class="bar">/login</div><div class="body">
+    <b>Sign in</b>
+    <div class="lbl">Email</div><div class="input">alice@cafe.test</div>
+    <div class="lbl">Password</div><div class="input">••••••••</div>
+    <span class="btn dis block">Logging in…</span>
+  </div></div><div class="note">Button disabled → no double submit.</div></div>
+  <div class="state"><h3>Error (401 bad credentials)</h3><div class="frame"><div class="bar">/login</div><div class="body">
+    <b>Sign in</b>
+    <div class="msg err">Incorrect email or password.</div>
+    <div class="lbl">Email</div><div class="input">alice@cafe.test</div>
+    <div class="lbl">Password</div><div class="input"></div>
+    <span class="btn primary block">Log in</span>
+  </div></div><div class="note">Same message for unknown email and wrong password. Password field cleared, email kept.</div></div>
+  <div class="state"><h3>Success</h3><div class="frame"><div class="bar">/login → redirect</div><div class="body">
+    <div class="spinner">Redirecting…</div>
+    <div class="note">CUSTOMER → <code>/menu</code><br>OPERATOR → <code>/operator/orders</code><br>Already logged in + open /login → same redirect.</div>
+  </div></div></div>
+</div>
+
+<!-- ================= MENU + CART ================= -->
+<h2 id="menu">3. Menu + cart — <code>/menu</code> (customer, F-02 + F-03)</h2>
+<div class="row">
+  <div class="state"><h3>Loading</h3><div class="frame"><div class="hdr"><span class="logo">☕</span><span class="nav"><span class="on">Menu</span><span>My orders</span></span><span class="btn">Logout</span></div><div class="body">
+    <b>Menu</b><div class="skel"></div><div class="skel"></div><div class="skel"></div><div class="skel"></div>
+  </div></div><div class="note">Placeholder rows while <code>GET /api/menu</code> runs.</div></div>
+
+  <div class="state"><h3>Empty</h3><div class="frame"><div class="hdr"><span class="logo">☕</span><span class="nav"><span class="on">Menu</span><span>My orders</span></span><span class="btn">Logout</span></div><div class="body">
+    <b>Menu</b><div class="empty">No items on the menu right now.<br>Please check back later.</div>
+  </div></div></div>
+
+  <div class="state"><h3>Error (load failed)</h3><div class="frame"><div class="hdr"><span class="logo">☕</span><span class="nav"><span class="on">Menu</span><span>My orders</span></span><span class="btn">Logout</span></div><div class="body">
+    <b>Menu</b><div class="msg err">Couldn't load the menu. Check your connection.</div><span class="btn">Try again</span>
+  </div></div></div>
+
+  <div class="state"><h3>Success — browsing + cart</h3><div class="frame"><div class="hdr"><span class="logo">☕</span><span class="nav"><span class="on">Menu</span><span>My orders</span></span><span class="btn">Logout</span></div><div class="body">
+    <b>Menu</b>
+    <div class="item"><span class="name">Latte</span><span>฿55.00</span><span class="btn">Add</span></div>
+    <div class="item"><span class="name">Croissant</span><span>฿45.00</span><span class="btn">Add</span></div>
+    <div class="item sold"><span class="name">Matcha cake <span class="badge">SOLD OUT</span></span><span>฿80.00</span><span class="btn dis">Add</span></div>
+    <div class="item"><span class="name">Iced tea</span><span>฿35.00</span><span class="btn">Add</span></div>
+    <div class="cart"><b>Your cart</b>
+      <div class="line"><span>Latte</span><span class="stepper"><span>−</span><span>2</span><span>+</span></span><span>฿110.00</span><span>✕</span></div>
+      <div class="line"><span>Croissant</span><span class="stepper"><span>−</span><span>1</span><span>+</span></span><span>฿45.00</span><span>✕</span></div>
+      <div class="tot"><span>Estimated total</span><span>฿155.00</span></div>
+      <div class="note">Pickup: ASAP</div>
+      <span class="btn primary block">Place order</span>
+    </div>
+  </div></div><div class="note">Sold-out items greyed, Add disabled. "Add" on an item already in cart = +1 (no duplicate lines, BR-02). Total is an estimate; server decides the real one (BR-04).</div></div>
+
+  <div class="state"><h3>Empty cart</h3><div class="frame"><div class="hdr"><span class="logo">☕</span><span class="nav"><span class="on">Menu</span><span>My orders</span></span><span class="btn">Logout</span></div><div class="body">
+    <b>Menu</b>
+    <div class="item"><span class="name">Latte</span><span>฿55.00</span><span class="btn">Add</span></div>
+    <div class="item"><span class="name">Croissant</span><span>฿45.00</span><span class="btn">Add</span></div>
+    <div class="cart"><b>Your cart</b><div class="empty">Your cart is empty. Add something from the menu.</div><span class="btn dis block">Place order</span></div>
+  </div></div></div>
+
+  <div class="state"><h3>Validation (client, BR-01 / BR-02)</h3><div class="frame"><div class="hdr"><span class="logo">☕</span><span class="nav"><span class="on">Menu</span><span>My orders</span></span><span class="btn">Logout</span></div><div class="body">
+    <div class="cart"><b>Your cart</b>
+      <div class="line"><span>Latte</span><span class="stepper"><span>−</span><span>10</span><span style="color:#bbb">+</span></span><span>฿550.00</span></div>
+      <div class="field-err">Max 10 per item.</div>
+      <div class="line"><span>Croissant</span><span class="stepper"><span style="color:#bbb">−</span><span>1</span><span>+</span></span><span>฿45.00</span></div>
+      <div class="field-err">Min 1 — use ✕ to remove.</div>
+      <div class="msg info">Cart is full (20 different items max).</div>
+      <span class="btn primary block">Place order</span>
+    </div>
+  </div></div><div class="note">Stepper can't go below 1 or above 10 (+/− disabled at the limits). Typed values are clamped to 1–10.</div></div>
+
+  <div class="state"><h3>Submitting</h3><div class="frame"><div class="hdr"><span class="logo">☕</span><span class="nav"><span class="on">Menu</span><span>My orders</span></span><span class="btn">Logout</span></div><div class="body">
+    <div class="cart"><b>Your cart</b>
+      <div class="line"><span>Latte</span><span>× 2</span><span>฿110.00</span></div>
+      <div class="line"><span>Croissant</span><span>× 1</span><span>฿45.00</span></div>
+      <span class="btn dis block">Placing order…</span>
+    </div>
+  </div></div><div class="note"><code>POST /api/orders</code> body: <code>{items:[{menuItemId, quantity}]}</code> — no prices. Steppers + button locked.</div></div>
+
+  <div class="state"><h3>Error 400 from server (item sold out)</h3><div class="frame"><div class="hdr"><span class="logo">☕</span><span class="nav"><span class="on">Menu</span><span>My orders</span></span><span class="btn">Logout</span></div><div class="body">
+    <div class="msg err">Order not placed. "Croissant" is no longer available.</div>
+    <div class="item sold"><span class="name">Croissant <span class="badge">SOLD OUT</span></span><span>฿45.00</span><span class="btn dis">Add</span></div>
+    <div class="cart"><b>Your cart</b>
+      <div class="line"><span>Latte</span><span class="stepper"><span>−</span><span>2</span><span>+</span></span><span>฿110.00</span></div>
+      <div class="line" style="color:#999"><span><s>Croissant</s> — sold out</span><span>✕</span></div>
+      <span class="btn primary block">Place order</span>
+    </div>
+  </div></div><div class="note">Server message shown as-is (BR-03, all-or-nothing → nothing saved). Menu reloads; offending line marked from <code>error.details</code>. Customer removes it and tries again.</div></div>
+
+  <div class="state"><h3>Success → order detail</h3><div class="frame"><div class="bar">→ /orders/1042</div><div class="body">
+    <div class="msg ok">Order #1042 placed!</div>
+    <div class="note">Cart cleared. Redirect to <code>/orders/:id</code>, which shows the <b>server-calculated</b> total (see section 5).</div>
+  </div></div></div>
+</div>
+
+<!-- ================= MY ORDERS ================= -->
+<h2 id="orders">4. My orders — <code>/orders</code> (customer, F-03)</h2>
+<div class="row">
+  <div class="state"><h3>Loading</h3><div class="frame"><div class="hdr"><span class="logo">☕</span><span class="nav"><span>Menu</span><span class="on">My orders</span></span><span class="btn">Logout</span></div><div class="body">
+    <b>My orders</b><div class="skel"></div><div class="skel"></div><div class="skel"></div>
+  </div></div></div>
+  <div class="state"><h3>Empty</h3><div class="frame"><div class="hdr"><span class="logo">☕</span><span class="nav"><span>Menu</span><span class="on">My orders</span></span><span class="btn">Logout</span></div><div class="body">
+    <b>My orders</b><div class="empty">You haven't ordered yet.</div><span class="btn">Go to menu</span>
+  </div></div></div>
+  <div class="state"><h3>Error</h3><div class="frame"><div class="hdr"><span class="logo">☕</span><span class="nav"><span>Menu</span><span class="on">My orders</span></span><span class="btn">Logout</span></div><div class="body">
+    <b>My orders</b><div class="msg err">Couldn't load your orders.</div><span class="btn">Try again</span>
+  </div></div></div>
+  <div class="state"><h3>Success</h3><div class="frame"><div class="hdr"><span class="logo">☕</span><span class="nav"><span>Menu</span><span class="on">My orders</span></span><span class="btn">Logout</span></div><div class="body">
+    <b>My orders</b> <span class="btn" style="float:right">↻ Refresh</span>
+    <table><tr><th>#</th><th>Placed</th><th>Status</th><th class="r">Total</th></tr>
+      <tr><td>1042</td><td>10:15</td><td><span class="badge">PLACED</span></td><td class="r">฿155.00</td></tr>
+      <tr><td>1037</td><td>Yesterday 12:02</td><td><span class="badge fill">ACCEPTED</span></td><td class="r">฿80.00</td></tr>
+      <tr><td>1020</td><td>3 Nov 09:40</td><td><span class="badge fill">ACCEPTED</span></td><td class="r">฿35.00</td></tr>
+    </table>
+  </div></div><div class="note">Newest first. Whole row is clickable → <code>/orders/:id</code>. Only the user's own orders.</div></div>
+</div>
+
+<!-- ================= ORDER DETAIL ================= -->
+<h2 id="detail">5. Order detail — <code>/orders/:id</code> (customer, F-03)</h2>
+<div class="row">
+  <div class="state"><h3>Loading</h3><div class="frame"><div class="hdr"><span class="logo">☕</span><span class="nav"><span>Menu</span><span>My orders</span></span><span class="btn">Logout</span></div><div class="body">
+    <span>← My orders</span><div class="skel"></div><div class="skel"></div><div class="skel"></div>
+  </div></div></div>
+  <div class="state"><h3>Not found (404)</h3><div class="frame"><div class="hdr"><span class="logo">☕</span><span class="nav"><span>Menu</span><span>My orders</span></span><span class="btn">Logout</span></div><div class="body">
+    <div class="empty">Order not found.</div><span class="btn">Back to my orders</span>
+  </div></div><div class="note">Same screen for a missing id and another customer's order (server returns 404 for both).</div></div>
+  <div class="state"><h3>Error (other)</h3><div class="frame"><div class="hdr"><span class="logo">☕</span><span class="nav"><span>Menu</span><span>My orders</span></span><span class="btn">Logout</span></div><div class="body">
+    <span>← My orders</span><div class="msg err">Couldn't load this order.</div><span class="btn">Try again</span>
+  </div></div></div>
+  <div class="state"><h3>Success</h3><div class="frame"><div class="hdr"><span class="logo">☕</span><span class="nav"><span>Menu</span><span>My orders</span></span><span class="btn">Logout</span></div><div class="body">
+    <span>← My orders</span>
+    <div style="display:flex;justify-content:space-between;margin-top:6px"><b>Order #1042</b><span class="badge">PLACED</span></div>
+    <div class="note" style="margin-top:0">Placed 6 Nov 2026, 10:15 · Pickup: ASAP</div>
+    <table><tr><th>Item</th><th class="r">Unit</th><th class="r">Qty</th><th class="r">Line</th></tr>
+      <tr><td>Latte</td><td class="r">฿55.00</td><td class="r">×2</td><td class="r">฿110.00</td></tr>
+      <tr><td>Croissant</td><td class="r">฿45.00</td><td class="r">×1</td><td class="r">฿45.00</td></tr>
+    </table>
+    <div class="tot"><span>Total</span><span>฿155.00</span></div>
+    <div class="note">Waiting for the café to accept. <span class="btn">↻ Refresh</span></div>
+  </div></div><div class="note">Name + unit price are the snapshot saved with the order (BR-05) — they don't change if the menu changes. Total comes from the server (BR-04).</div></div>
+</div>
+
+<!-- ================= OPERATOR QUEUE ================= -->
+<h2 id="queue">6. Operator order queue — <code>/operator/orders</code> (operator, F-04)</h2>
+<div class="row">
+  <div class="state"><h3>Loading</h3><div class="frame"><div class="hdr"><span class="logo">☕</span><span class="nav"><span class="on">Order queue</span></span><span class="btn">Logout</span></div><div class="body">
+    <b>New orders (PLACED)</b><div class="skel"></div><div class="skel"></div><div class="skel"></div>
+  </div></div></div>
+  <div class="state"><h3>Empty</h3><div class="frame"><div class="hdr"><span class="logo">☕</span><span class="nav"><span class="on">Order queue</span></span><span class="btn">Logout</span></div><div class="body">
+    <b>New orders (PLACED)</b> <span class="btn" style="float:right">↻ Refresh</span>
+    <div class="empty">No new orders. Nice and quiet ☕</div>
+  </div></div></div>
+  <div class="state"><h3>Error (load failed)</h3><div class="frame"><div class="hdr"><span class="logo">☕</span><span class="nav"><span class="on">Order queue</span></span><span class="btn">Logout</span></div><div class="body">
+    <b>New orders (PLACED)</b><div class="msg err">Couldn't load orders.</div><span class="btn">Try again</span>
+  </div></div></div>
+  <div class="state"><h3>Success — list</h3><div class="frame"><div class="hdr"><span class="logo">☕</span><span class="nav"><span class="on">Order queue</span></span><span class="btn">Logout</span></div><div class="body">
+    <b>New orders (PLACED) · 2</b> <span class="btn" style="float:right">↻ Refresh</span>
+    <div class="card"><div class="top"><b>#1041 · Bob</b><span>10:12</span></div>Iced tea ×1, Croissant ×2<div class="top"><b>฿125.00</b><span class="btn primary">Accept</span></div></div>
+    <div class="card"><div class="top"><b>#1042 · Alice</b><span>10:15</span></div>Latte ×2, Croissant ×1<div class="top"><b>฿155.00</b><span class="btn primary">Accept</span></div></div>
+  </div></div><div class="note">Oldest first (first come, first served). Data from <code>GET /api/operator/orders?status=PLACED</code>.</div></div>
+  <div class="state"><h3>Accepting (one row)</h3><div class="frame"><div class="hdr"><span class="logo">☕</span><span class="nav"><span class="on">Order queue</span></span><span class="btn">Logout</span></div><div class="body">
+    <b>New orders (PLACED) · 2</b>
+    <div class="card"><div class="top"><b>#1041 · Bob</b><span>10:12</span></div>Iced tea ×1, Croissant ×2<div class="top"><b>฿125.00</b><span class="btn dis">Accepting…</span></div></div>
+    <div class="card"><div class="top"><b>#1042 · Alice</b><span>10:15</span></div>Latte ×2, Croissant ×1<div class="top"><b>฿155.00</b><span class="btn primary">Accept</span></div></div>
+  </div></div><div class="note">Only that row's button is disabled.</div></div>
+  <div class="state"><h3>Success — accepted</h3><div class="frame"><div class="hdr"><span class="logo">☕</span><span class="nav"><span class="on">Order queue</span></span><span class="btn">Logout</span></div><div class="body">
+    <div class="msg ok">Order #1041 accepted.</div>
+    <b>New orders (PLACED) · 1</b>
+    <div class="card"><div class="top"><b>#1042 · Alice</b><span>10:15</span></div>Latte ×2, Croissant ×1<div class="top"><b>฿155.00</b><span class="btn primary">Accept</span></div></div>
+  </div></div><div class="note">Row removed from queue (it is no longer PLACED).</div></div>
+  <div class="state"><h3>Error 409 (BR-06 / BR-07)</h3><div class="frame"><div class="hdr"><span class="logo">☕</span><span class="nav"><span class="on">Order queue</span></span><span class="btn">Logout</span></div><div class="body">
+    <div class="msg err">Order #1041: Already accepted by another staff member.</div>
+    <b>New orders (PLACED) · 1</b>
+    <div class="card fade"><div class="top"><b>#1041 · Bob</b><span>gone</span></div></div>
+    <div class="card"><div class="top"><b>#1042 · Alice</b><span>10:15</span></div>Latte ×2, Croissant ×1<div class="top"><b>฿155.00</b><span class="btn primary">Accept</span></div></div>
+  </div></div><div class="note">Show message, then auto-refresh the list. The order drops out. Nothing to undo.</div></div>
+</div>
+
+<!-- ================= SHARED ================= -->
+<h2 id="shared">7. Shared states (any screen)</h2>
+<div class="row">
+  <div class="state"><h3>401 — session expired</h3><div class="frame"><div class="bar">/login</div><div class="body">
+    <div class="msg info">Your session has ended. Please log in again.</div>
+    <div class="lbl">Email</div><div class="input"></div><div class="lbl">Password</div><div class="input"></div>
+    <span class="btn primary block">Log in</span>
+  </div></div><div class="note">Any API 401 → clear user, go to /login with this note.</div></div>
+  <div class="state"><h3>403 — wrong role</h3><div class="frame"><div class="bar">/operator/orders (as customer)</div><div class="body">
+    <div class="msg err">You don't have access to that page.</div>
+    <div class="note">Redirect to own home (/menu or /operator/orders) and show this as a toast.</div>
+  </div></div></div>
+  <div class="state"><h3>Unknown route</h3><div class="frame"><div class="bar">/something</div><div class="body">
+    <div class="empty">Page not found.</div><span class="btn">Go home</span>
+  </div></div></div>
+  <div class="state"><h3>Network / 500</h3><div class="frame"><div class="bar">any</div><div class="body">
+    <div class="msg err">Something went wrong. Please try again.</div><span class="btn">Try again</span>
+    <div class="note">Used when there is no <code>{error}</code> body (server down, timeout).</div>
+  </div></div></div>
+</div>
+
+<p class="meta" style="margin-top:32px">CPE 334 · Project Deliverable 1 · Sprint 1 (F-01..F-04). Not to scale; layout only.</p>
+</body>
+</html>
