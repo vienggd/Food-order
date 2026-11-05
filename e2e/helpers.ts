@@ -16,5 +16,9 @@ export async function logout(page: Page) {
 }
 
 // Screenshots for the PDF (Part F): docs/evidence/screenshots/<name>-<phone|desktop>.png
-export const shot = (page: Page, name: string, project: string) =>
-  page.screenshot({ path: `docs/evidence/screenshots/${name}-${project}.png`, fullPage: true });
+// Each one also checks NFR-06: the page never scrolls sideways.
+export async function shot(page: Page, name: string, project: string) {
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+  expect(overflow, `${name}: page is ${overflow}px wider than the screen`).toBeLessThanOrEqual(0);
+  await page.screenshot({ path: `docs/evidence/screenshots/${name}-${project}.png`, fullPage: true });
+}
