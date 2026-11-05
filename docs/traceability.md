@@ -11,7 +11,7 @@ Sprint 1 AC and test IDs come from the contracts in `docs/sprints/sprint-1/` and
 | Req | Rule (short) | Feature | Sprint | AC | Tests | Result |
 |---|---|---|---|---|---|---|
 | BR-01 | Quantity per line is a whole number 1–10 | F-03 | 1 | AC-F03-02, AC-F03-12 | TEST-F03-02, -03 (API); -18 (unit) | Pass |
-| BR-02 | 1–20 lines, no duplicate menu item | F-03 | 1 | AC-F03-03, AC-F03-12 | TEST-F03-04, -05, -06, -07 (API); -17, -18 (unit) | Pass |
+| BR-02 | 1–20 lines, no duplicate menu item | F-03 | 1 | AC-F03-03, AC-F03-12 | TEST-F03-04, -05, -06, -07 (API); -17, -18, -23 (unit) | Pass |
 | BR-03 | Every item exists and is available, else nothing is saved | F-02, F-03 | 1 | AC-F02-02, AC-F02-06, AC-F03-04, AC-F03-11 | TEST-F02-02 (API), -08 (E2E); TEST-F03-08, -09 (API), -20 (E2E) | Pass |
 | BR-04 | Server calculates the total; price/total in request → 400 | F-03 | 1 | AC-F03-01, AC-F03-05 | TEST-F03-01, -10 (API) | Pass |
 | BR-05 | Order line keeps item name and unit price at order time | F-03 | 1 | AC-F03-06 | TEST-F03-11 (API) | Pass |
@@ -31,9 +31,9 @@ IDs agreed with the SRS author in chat on 6 Nov 2026.
 | FR-05 | View menu with price and availability | F-02 | 1 | AC-F02-01, -02, -05, -06, -07 | TEST-F02-01, -02, -06 (API); -07 (unit); -08, -09 (E2E) | Pass |
 | FR-06 | Place an order | F-03 | 1 | AC-F03-01..05, AC-F03-10..12 | TEST-F03-01..10 (API); -17, -18 (unit); -19, -20 (E2E) | Pass |
 | FR-07 | List my orders | F-03 | 1 | AC-F03-07, AC-F03-10 | TEST-F03-12 (API); -19 (E2E) | Pass |
-| FR-08 | View my order detail | F-03 | 1 | AC-F03-06, AC-F03-08, AC-F03-10 | TEST-F03-11, -13, -14, -21 (API); -19 (E2E) | Pass |
+| FR-08 | View my order detail | F-03 | 1 | AC-F03-06, AC-F03-08, AC-F03-10 | TEST-F03-11, -13, -14, -21, -22 (API); -19 (E2E) | Pass |
 | FR-09 | Operator queue of PLACED orders, oldest first | F-04 | 1 | AC-F04-01..03, AC-F04-11 | TEST-F04-01..03 (API); -11 (E2E) | Pass |
-| FR-10 | Accept an order | F-04 | 1 | AC-F04-04..08, AC-F04-12, AC-F04-13 | TEST-F04-04..08 (API); -12, -13 (E2E) | Pass |
+| FR-10 | Accept an order | F-04 | 1 | AC-F04-04..08, AC-F04-12, AC-F04-13 | TEST-F04-04..08, -14 (API); -12, -13 (E2E) | Pass |
 | FR-11 | Menu management | F-05 | 2 | Sprint 2 contract | — | — |
 | FR-12 | Customer cancel | F-06 | 2 | Sprint 2 contract | — | — |
 | FR-13 | Operator reject with reason | F-06 | 2 | Sprint 2 contract | — | — |
@@ -61,17 +61,17 @@ IDs agreed with the SRS author in chat on 6 Nov 2026.
 
 - Every FR/BR/NFR maps to a feature: **yes** (FR-01..FR-18, BR-01..BR-07, NFR-01..NFR-09).
 - Every Sprint 1 AC appears in at least one row above: **yes** — AC-F01-01..14, AC-F02-01..07, AC-F03-01..12, AC-F04-01..13 (46 AC).
-- Every Sprint 1 AC has at least one automated test: **yes** — 58 test IDs (TEST-F01-01..14, TEST-F02-01..09, TEST-F03-01..21, TEST-F04-01..13), all found in test names in `server/tests/`, `client/src/lib/`, `e2e/`.
+- Every Sprint 1 AC has at least one automated test: **yes** — 61 test IDs (TEST-F01-01..14, TEST-F02-01..09, TEST-F03-01..23, TEST-F04-01..14), all found in test names in `server/tests/`, `client/src/lib/`, `e2e/`.
 - Only manual check: NFR-07 (secrets and configuration), documented above.
 
 | Test files | Level | IDs |
 |---|---|---|
 | `server/tests/auth.test.ts` | API (+ unit TEST-F01-11) | TEST-F01-01..11 |
 | `server/tests/menu.test.ts` | API | TEST-F02-01..06 |
-| `server/tests/orders.test.ts` | API | TEST-F03-01..16, -21 |
-| `server/tests/operator.test.ts`, `transitions.test.ts` | API, unit | TEST-F04-01..09, -10 |
+| `server/tests/orders.test.ts` | API | TEST-F03-01..16, -21, -22 |
+| `server/tests/operator.test.ts`, `transitions.test.ts` | API, unit | TEST-F04-01..09, -14; -10 |
 | `server/tests/app.test.ts`, `seed.test.ts` | API, DB | setup AC-1.2..1.5 (#1) |
-| `client/src/lib/money.test.ts`, `cart.test.ts` | unit | TEST-F02-07, TEST-F03-17..18 |
+| `client/src/lib/money.test.ts`, `cart.test.ts` | unit | TEST-F02-07, TEST-F03-17, -18, -23 |
 | `e2e/auth.spec.ts`, `menu.spec.ts`, `orders.spec.ts`, `queue.spec.ts` | E2E | TEST-F01-12..14, TEST-F02-08..09, TEST-F03-19..20, TEST-F04-11..13 |
 
 ## Change log
@@ -80,3 +80,4 @@ IDs agreed with the SRS author in chat on 6 Nov 2026.
 |---|---|---|
 | 6 Nov 2026 | First draft (business rules mapped) | Deliverable 1 part B |
 | 6 Nov 2026 | AC, test IDs and results for all Sprint 1 rows (#28) | AC-B3 |
+| 6 Nov 2026 | Added TEST-F03-22, TEST-F03-23, TEST-F04-14 (recheck #37) | Bug fix and ui-spec alignment |
