@@ -36,3 +36,6 @@ export function cartReducer(cart: Cart, action: CartAction): Cart {
 }
 
 export const estimatedTotal = (cart: Cart) => cart.lines.reduce((sum, l) => sum + l.price * l.quantity, 0);
+
+// Implemented in the [green] commit.
+export const canAddFromMenu = (_cart: Cart) => true;

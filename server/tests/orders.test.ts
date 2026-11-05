@@ -172,6 +172,18 @@ describe("F-03 GET /api/orders and /api/orders/:id", () => {
   });
 });
 
+describe("F-03 id range", () => {
+  it("TEST-F03-22 ids above 2147483647 give 400, not 500, and nothing is saved", async () => {
+    const detail = await get(alice, "/api/orders/3000000000");
+    expect(detail.status).toBe(400);
+    expect(detail.body.error.code).toBe("VALIDATION_ERROR");
+    const placed = await place(alice, { items: [{ menuItemId: 3000000000, quantity: 1 }] });
+    expect(placed.status).toBe(400);
+    expect(placed.body.error.code).toBe("VALIDATION_ERROR");
+    await expectNothingSaved();
+  });
+});
+
 describe("F-03 access", () => {
   it("TEST-F03-15 not logged in: all F-03 endpoints give 401", async () => {
     for (const res of [
