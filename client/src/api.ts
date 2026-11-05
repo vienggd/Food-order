@@ -39,5 +39,3 @@ export async function api<T>(path: string, options: { method?: string; body?: un
   if (res.status === 401 && path !== "/api/auth/login" && path !== "/api/auth/me") onUnauthorized();
   throw new ApiError(res.status, err.code, err.message, err.details);
 }
-
-export const formatBaht = (satang: number) => "฿" + (satang / 100).toFixed(2);
