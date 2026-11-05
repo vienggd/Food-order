@@ -1,0 +1,90 @@
+// Database schema. Change it, then run `npm run db:migrate` to create a migration.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CUSTOMER
+  OPERATOR
+}
+
+// Whole product lifecycle. Sprint 1 only uses PLACED -> ACCEPTED.
+enum OrderStatus {
+  PLACED
+  ACCEPTED
+  PREPARING
+  READY
+  PICKED_UP
+  REJECTED
+  CANCELLED
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  email        String    @unique
+  name         String
+  passwordHash String    @map("password_hash")
+  role         Role
+  createdAt    DateTime  @default(now()) @map("created_at")
+  sessions     Session[]
+  orders       Order[]
+
+  @@map("users")
+}
+
+model Session {
+  id        String   @id // random, sent to the browser in an httpOnly cookie
+  userId    Int      @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([userId])
+  @@map("sessions")
+}
+
+model MenuItem {
+  id          Int         @id @default(autoincrement())
+  name        String      @unique
+  price       Int // satang: 15500 = 155.00 baht
+  isAvailable Boolean     @default(true) @map("is_available")
+  orderLines  OrderLine[]
+
+  @@map("menu_items")
+}
+
+model Order {
+  id         Int         @id @default(autoincrement())
+  customerId Int         @map("customer_id")
+  customer   User        @relation(fields: [customerId], references: [id])
+  status     OrderStatus @default(PLACED)
+  total      Int // satang, calculated by the server (BR-04)
+  createdAt  DateTime    @default(now()) @map("created_at")
+  updatedAt  DateTime    @updatedAt @map("updated_at")
+  lines      OrderLine[]
+
+  @@index([status, createdAt])
+  @@index([customerId])
+  @@map("orders")
+}
+
+// name and unitPrice are copies taken when the order is placed (BR-05).
+model OrderLine {
+  id         Int      @id @default(autoincrement())
+  orderId    Int      @map("order_id")
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  menuItemId Int      @map("menu_item_id")
+  menuItem   MenuItem @relation(fields: [menuItemId], references: [id])
+  name       String
+  unitPrice  Int      @map("unit_price")
+  quantity   Int
+
+  @@unique([orderId, menuItemId]) // BR-02: no duplicate item lines
+  @@map("order_lines")
+}
