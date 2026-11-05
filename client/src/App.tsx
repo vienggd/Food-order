@@ -2,6 +2,7 @@ import { Link, Navigate, Route, Routes } from "react-router-dom";
 import { homeFor, useAuth } from "./auth";
 import { RequireRole } from "./Layout";
 import { LoginPage } from "./pages/LoginPage";
+import { QueuePage } from "./pages/QueuePage";
 
 // Placeholder until the feature that owns the screen replaces it (F-02/F-03: ninja, F-04: vieng).
 function Coming({ feature }: { feature: string }) {
@@ -38,7 +39,7 @@ export function App() {
       <Route path="/menu" element={<RequireRole role="CUSTOMER" title="Menu"><Coming feature="F-02" /></RequireRole>} />
       <Route path="/orders" element={<RequireRole role="CUSTOMER" title="My orders"><Coming feature="F-03" /></RequireRole>} />
       <Route path="/orders/:id" element={<RequireRole role="CUSTOMER" title="Order"><Coming feature="F-03" /></RequireRole>} />
-      <Route path="/operator/orders" element={<RequireRole role="OPERATOR" title="Order queue"><Coming feature="F-04" /></RequireRole>} />
+      <Route path="/operator/orders" element={<RequireRole role="OPERATOR" title="Order queue"><QueuePage /></RequireRole>} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
