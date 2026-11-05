@@ -2,6 +2,7 @@ import express, { type Express } from "express";
 import cookieParser from "cookie-parser";
 import { AppError, errorHandler } from "./errors.js";
 import { authRouter } from "./auth/routes.js";
+import { menuRouter } from "./menu/routes.js";
 import { operatorRouter } from "./operator/routes.js";
 
 // addRoutes lets tests mount extra routes before the 404 and error handlers.
@@ -15,6 +16,7 @@ export function createApp(addRoutes?: (app: Express) => void) {
     res.json({ ok: true });
   });
   api.use("/auth", authRouter);
+  api.use("/menu", menuRouter);
   api.use("/operator", operatorRouter);
   addRoutes?.(app);
 

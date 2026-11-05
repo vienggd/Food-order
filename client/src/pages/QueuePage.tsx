@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { api, ApiError, NETWORK_MESSAGE } from "../api";
+import { formatBaht as baht } from "../lib/money";
 
 type QueueOrder = {
   id: number;
@@ -9,8 +10,7 @@ type QueueOrder = {
   lines: { name: string; quantity: number }[];
 };
 
-// shortcut: local copies; switch to client/src/lib/money.ts / time helpers once F-02/F-03 merge.
-const baht = (satang: number) => "฿" + (satang / 100).toFixed(2);
+// shortcut: local time format; switch to the shared time helper if F-03 adds one.
 const time = (iso: string) => new Date(iso).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 const items = (o: QueueOrder) => o.lines.map((l) => `${l.name} ×${l.quantity}`).join(", ");
 

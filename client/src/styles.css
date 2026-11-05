@@ -117,3 +117,23 @@ button[disabled] { cursor: not-allowed; }
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; transform: none !important; }
 }
+
+/* Menu (F-02) */
+.banner { background: var(--forest); color: #fff; border-radius: var(--radius); padding: 18px 20px; margin-bottom: 16px; }
+.banner-title { font-family: "Fraunces", Georgia, serif; font-size: 22px; font-weight: 600; margin: 0 0 4px; }
+.banner-sub { margin: 0; font-size: 13px; color: #d9e4d3; }
+.menu-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.menu-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: #fff; border-radius: var(--radius); box-shadow: var(--card-shadow); padding: 14px 16px; }
+.menu-item.sold-out { opacity: 0.55; }
+.menu-name { font-weight: 800; margin: 0; }
+.menu-price { margin: 2px 0 0; color: var(--muted); }
+.badge { display: inline-block; font-size: 11px; font-weight: 700; border-radius: 999px; padding: 2px 8px; margin: 6px 6px 0 0; }
+.badge.sold { background: #e3d9cf; color: var(--muted); }
+.badge.in-cart { background: #dce5d6; color: var(--forest); }
+.add { flex: none; width: 44px; height: 44px; border-radius: 50%; border: 0; background: var(--forest); color: #fff; font-size: 22px; font-weight: 700; }
+.add[disabled] { background: #e3d9cf; color: var(--muted); }
+@media (min-width: 900px) {
+  .menu-list { grid-template-columns: repeat(3, 1fr); }
+  .menu-item { flex-direction: column; align-items: stretch; min-height: 140px; }
+  .menu-item .add { align-self: flex-end; }
+}
