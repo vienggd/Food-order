@@ -101,7 +101,7 @@ Full screen-by-screen states are in [`ui/ui-spec.md`](ui/ui-spec.md); final desi
 | State | Behaviour |
 |---|---|
 | Loading | Grey placeholder rows; the action button is disabled and its label changes ("Logging in…", "Placing order…", "Accepting…"), which also stops double submits |
-| Empty | Dashed box with one sentence and a next step where useful ("You haven't ordered yet." + Go to menu) |
+| Empty | White card with a bold one-line title, a short sentence and a next step where useful ("No orders yet." + Browse the menu) |
 | Validation (client) | Required/format checks and cart limits (qty 1–10, max 20 lines, sold-out items not addable). Convenience only; the server re-checks |
 | Error from API | Show the server's `error.message`. 400 → error box, keep the user's input, mark fields/lines named in `details`. 401 → back to `/login` with "Your session has ended. Please log in again." 403 → own home with "You don't have access to that page." 404 → "not found" state with a back link. 409 → show message, reload the data |
 | Network / 500 | "Something went wrong. Please try again." + Try again |
@@ -311,7 +311,7 @@ Sprint 2–3 paths are planned names; their feature contracts confirm them.
 | `TEST_DATABASE_URL` | Automated tests (must be local `*_test`) | `…/cafe_test` | not set |
 | `SEED_PASSWORD` | Password of seeded accounts | chosen by each developer | Secret Manager; never shown on screen |
 | `PORT` | HTTP port | 3000 | set by Cloud Run |
-| `NODE_ENV` | `production` turns on the `Secure` cookie flag and serving the built client | unset | `production` |
+| `NODE_ENV` | `production` turns on the `Secure` cookie flag (Express serving the built client is added with the Dockerfile in Lab 5) | unset | `production` |
 
 ### 7.2 Secrets
 - Real values live only in `server/.env` (git-ignored) locally and in **Secret Manager** in GCP.
@@ -352,3 +352,4 @@ Sprint 2–3 paths are planned names; their feature contracts confirm them.
 |---|---|---|---|
 | 6 Nov 2026 | 1 | Sections 1, 2, 5, 6, 7 (A); 3, 4 placeholders for B | Deliverable 1 part C |
 | 6 Nov 2026 | 1.1 | Sections 3 data model and 4 API conventions (B) | Deliverable 1 part C |
+| 6 Nov 2026 | 1.2 | 2.2 empty-state wording matches ui-spec; 7.1 says serving the built client comes in Lab 5 | Recheck #38: doc must match the code |

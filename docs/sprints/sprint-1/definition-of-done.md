@@ -24,7 +24,7 @@ Applies to every Sprint 1 feature (F-01..F-04) and to the Sprint 1 release. A fe
 |---|---|---|
 | R1 | F-01..F-04 and Docs A–D are Done (above) | Board, closed Issues |
 | R2 | On `sprint-1`: fresh install → migrate → seed → `npm test` and `npm run test:e2e` pass; build passes | Saved output with the tested commit id |
-| R3 | Traceability: every Sprint 1 AC maps to a test ID, test file/name and result | `docs/traceability.md` |
+| R3 | Traceability: every Sprint 1 AC maps to a test ID, test file/name and result | `docs/traceability.md` + `docs/evidence/ac-results.md` (generated) |
 | R4 | Both students rechecked everything on `sprint-1` and agree it is done | Chat / PR comment from both |
 | R5 | vieng decides the merge into `main` and the tag `v0.1.0-sprint1` (AIs do not do this on their own) | Release PR + tag |
 | R6 | Known incomplete work and any failed or skipped test are written down | Part F of the PDF |
@@ -34,3 +34,4 @@ Applies to every Sprint 1 feature (F-01..F-04) and to the Sprint 1 release. A fe
 | Date | Version | Change | Why |
 |---|---|---|---|
 | 6 Nov 2026 | 1 | First version | Sprint 1 contracts |
+| 6 Nov 2026 | 1.1 | R3 also points to the generated per-AC results file | Recheck #38 |
