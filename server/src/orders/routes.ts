@@ -4,7 +4,7 @@ import { prisma } from "../db.js";
 import { AppError } from "../errors.js";
 import { requireRole } from "../auth/middleware.js";
 import { toOrderJson } from "./json.js";
-import { dbId } from "../ids.js";
+import { dbId, MAX_DB_ID } from "../ids.js";
 
 export const ordersRouter = Router();
 ordersRouter.use(requireRole("CUSTOMER"));
@@ -14,7 +14,7 @@ const placeBody = z.strictObject({
   items: z
     .array(
       z.strictObject({
-        menuItemId: z.number().pipe(dbId),
+        menuItemId: z.number().int().min(1).max(MAX_DB_ID),
         quantity: z.number().int().min(1).max(10), // BR-01
       }),
     )
