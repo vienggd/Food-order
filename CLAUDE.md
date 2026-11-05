@@ -47,7 +47,10 @@ Left to right: Backlog, Specified, Started, PR Review, Fixing, Done.
    Check that the issue shows the branch under "Development". If the branch already existed, link it in the issue sidebar under "Development" on the website. Move the card to Started.
 4. Do the work. Write tests first when the task has code. Make small commits. Push the branch.
 5. Open a pull request into the staging branch, not main. Put "Closes #<number>" in the description. Move the card to PR Review.
-6. Link the issue to the pull request. Closing words do NOT work when the base is not the default branch, so also open the pull request page and link the issue in the sidebar under "Development". Then check both links:
+6. Link the issue to the pull request. Closing words do NOT work when the base is not the default branch, so link them by command (same as the "Development" sidebar on the website):
+   - Get the ids: `gh api graphql -f query='{repository(owner:"<owner>",name:"<repo>"){issue(number:<n>){id} pullRequest(number:<pr>){id}}}'`
+   - Link: `gh api graphql -f query='mutation{addCloseIssueReferences(input:{issueId:"<issue id>",pullRequestIds:["<pr id>"]}){clientMutationId}}'`
+   Then check both links:
    - Branch linked: `gh issue develop --list <number>`
    - Pull request linked: `gh api graphql -f query='{repository(owner:"<owner>",name:"<repo>"){issue(number:<n>){closedByPullRequestsReferences(first:5){nodes{number}}}}}'`
    Do not call the task finished until both links show on GitHub.
