@@ -45,7 +45,10 @@ const CSS = `
   code { font: 8pt Consolas, monospace; background: #f6efe4; padding: 0 2px; border-radius: 3px; }
   pre { font: 7.8pt/1.35 Consolas, monospace; background: #f6efe4; padding: 7px; border-radius: 5px; white-space: pre-wrap; break-inside: avoid; }
   pre code { background: none; padding: 0; }
-  img { max-width: 100%; border: 1px solid #d9cbb8; border-radius: 4px; }
+  .fig { display: inline-block; vertical-align: top; width: 31%; margin: 0 1.5% 8px 0; break-inside: avoid; }
+  .fig.wide { width: 48%; }
+  .fig img { width: 100%; max-height: 120mm; object-fit: contain; object-position: top; border: 1px solid #d9cbb8; border-radius: 4px; }
+  .cap { display: block; font-size: 7.5pt; color: #6e5e4f; }
   a { color: #2f4a3a; }
   .todo { background: #fde3e0; color: #7a1c12; font-weight: 600; padding: 0 3px; }
   .muted { color: #6e5e4f; }
@@ -70,7 +73,9 @@ function renderMarkdown(file) {
   };
   renderer.image = ({ href, text }) => {
     const src = /^https?:/.test(href) ? href : pathToFileURL(resolve(dirname(file), href)).href;
-    return `<img src="${src}" alt="${text}">`;
+    // Screenshots sit side by side with their alt text as caption; desktop/GitHub shots get half width.
+    const wide = /desktop|github/.test(href) ? " wide" : "";
+    return `<span class="fig${wide}"><img src="${src}" alt="${text}"><span class="cap">${text}</span></span>`;
   };
   return marked.parse(md, { renderer, gfm: true });
 }
