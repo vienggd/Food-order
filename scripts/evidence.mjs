@@ -92,6 +92,34 @@ writeFileSync(
   "docs/evidence/ac-results.md",
   `# Sprint 1 acceptance criteria → tests → results\n\n${header}\n\nAll tests below are automated. Planned tests come from each contract's test specification (\`docs/sprints/sprint-1/F-0x-*.md\`); a result is **Pass** only if every matching test passed in this run.\n\n${acs.length} AC; ${acs.length - bad} Pass; ${bad} not Pass.\n\n| AC | Criterion (short) | Planned tests | Test file › name | Result |\n|---|---|---|---|---|\n${acRows.join("\n")}\n`,
 );
+// 5. Refresh the generated blocks in Part F of the PDF (docs/evidence/part-f.md).
+const partF = "docs/evidence/part-f.md";
+let board = "";
+try {
+  const items = JSON.parse(sh("gh project item-list 4 --owner vienggg --format json --limit 100")).items;
+  board = `Board https://github.com/users/vienggg/projects/4 read at ${when}:\n\n| Issue | Title | Column |\n|---|---|---|\n${items
+    .sort((a, b) => a.content.number - b.content.number)
+    .map((i) => `| #${i.content.number} | ${i.title} | ${i.status} |`)
+    .join("\n")}`;
+} catch {
+  board = "_Board could not be read (gh not logged in)._";
+}
+const blocks = {
+  COMMIT: `${header}\n\n**Release reference:** branch \`sprint-1\`; the release to \`main\` and tag \`v0.1.0-sprint1\` are made by the students — if a release is made, \`npm run evidence\` is run again on it and this line names it.`,
+  COUNTS: `| Suite | Command | Exit code |\n|---|---|---|\n| server unit + API (real Postgres \`cafe_test\`) | \`npm test -w server\` | ${exit.server} |\n| client unit | \`npm test -w client\` | ${exit.client} |\n| E2E (Playwright, \`cafe_e2e\`) | \`npm run test:e2e\` | ${exit.e2e} |\n| build | \`npm run build\` | ${exit.build} |\n\n| Suite | Tests | Passed | Failed | Skipped |\n|---|---|---|---|---|\n${countsTable}`,
+  "AC-TABLE": `${acs.length} AC; ${acs.length - bad} Pass; ${bad} not Pass.\n\n| AC | Criterion (short) | Planned tests | Test file › name | Result |\n|---|---|---|---|---|\n${acRows.join("\n")}`,
+  BOARD: board,
+};
+try {
+  let text = readFileSync(partF, "utf8");
+  for (const [name, body] of Object.entries(blocks)) {
+    text = text.replace(new RegExp(`<!-- ${name} -->[\\s\\S]*?<!-- /${name} -->`), `<!-- ${name} -->\n${body}\n<!-- /${name} -->`);
+  }
+  writeFileSync(partF, text);
+} catch {
+  // part-f.md not present on this branch: nothing to refresh
+}
+
 console.log(`commit ${commit}`);
 console.log(suites.map((s) => `${s}: ${count(s, "passed")} passed, ${count(s, "failed")} failed, ${count(s, "skipped")} skipped`).join("\n"));
 console.log(`build exit ${exit.build}; AC: ${acs.length} total, ${bad} not Pass`);
