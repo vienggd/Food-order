@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { Fragment, useEffect, useState, type ReactNode } from "react";
 import { Link, Navigate, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { homeFor, useAuth, type Role } from "./auth";
 import { useCart } from "./cart";
@@ -88,16 +88,19 @@ export function RequireRole({ role, title, children }: { role: Role; title: stri
       </main>
 
       <nav className="tabs">
-        {links.map((l) => (
-          <NavLink key={l.to} to={l.to} end className="tab" onClick={clearNotice}>
-            {l.label}
-          </NavLink>
+        {links.map((l, i) => (
+          <Fragment key={l.to}>
+            <NavLink to={l.to} end className="tab" onClick={clearNotice}>
+              {l.label}
+            </NavLink>
+            {/* Design Menu.html: the customer's Cart tab sits between Menu and My orders. */}
+            {user.role === "CUSTOMER" && i === 0 && (
+              <Link to="/menu#cart" className="tab" onClick={clearNotice}>
+                Cart{cartCount > 0 ? ` (${cartCount})` : ""}
+              </Link>
+            )}
+          </Fragment>
         ))}
-        {user.role === "CUSTOMER" && (
-          <Link to="/menu#cart" className="tab" onClick={clearNotice}>
-            Cart{cartCount > 0 ? ` (${cartCount})` : ""}
-          </Link>
-        )}
       </nav>
     </div>
   );
