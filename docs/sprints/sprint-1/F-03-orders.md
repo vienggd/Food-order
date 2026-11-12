@@ -55,6 +55,7 @@ Source: `docs/ui/ui-spec.md` S2 (cart), S3, S4 and `docs/ui/design/Menu.html`, `
 ### S2 cart (on `/menu`)
 - Line: name, stepper (− qty +), line subtotal, ✕ remove. "Pickup: ASAP". "Estimated total". **Place order →**.
 - Phone: cart is its own view, opened from the "N items · ฿x · View cart →" bar or the Cart tab. Desktop: panel on the right.
+- Phone bottom tabs for a customer, in this order: **Menu · Cart · My orders** (design `Menu.html`; Cart in the middle).
 - **+** on an item already in the cart adds 1 to that line (no duplicate line); the item shows "In cart · N".
 - Stepper − disabled at 1 with the hint "Min 1. Use ✕ to remove." under the line, + disabled at 10 with "Max 10 per item."; typed values are clamped to 1–10.
 - At 20 lines every + on the menu is disabled and the cart shows "Cart is full (20 different items max)." (ui-spec S2, design `Menu.html`).
@@ -152,6 +153,7 @@ No schema change; uses tables from #1.
 | AC-F03-10 | In the browser, a customer adds items (adding the same item twice gives quantity 2 on one line), places the order, lands on `/orders/:id` with "Order #N placed!", and sees the server total. |
 | AC-F03-11 | In the browser, when the server rejects the order with 400, the message is shown, the cart is kept, and the bad line is marked. |
 | AC-F03-12 | In the cart, the stepper cannot go below 1 or above 10, and at 20 lines no + on the menu adds anything (a 21st different item cannot be added; lines already in the cart change only with their stepper). |
+| AC-F03-13 | On a phone, the customer's bottom tabs read Menu, Cart, My orders, in that order. |
 
 ## 7. Test specification
 
@@ -180,6 +182,7 @@ Seed: alice, bob (CUSTOMER), staff (OPERATOR); Latte 6500 (id 1), Americano 5500
 | TEST-F03-17 | AC-F03-01 | unit | `cartReducer`: add Latte, add Latte, add Americano | apply | 2 lines; Latte qty 2 |
 | TEST-F03-18 | AC-F03-12 | unit | `cartReducer`: set qty 0, 11, 2.7; add 21st item | apply | qty clamped to 1, 10, 2; 21st item refused |
 | TEST-F03-23 | AC-F03-12 | unit | `canAddFromMenu(cart)` with 19 and 20 lines | call | true at 19, false at 20 (every menu + disabled) |
+| TEST-F03-24 | AC-F03-13 | E2E | alice logged in | phone: read the bottom tab labels; desktop: read the sidebar links | phone: exactly Menu, Cart, My orders; desktop: Menu, My orders (unchanged) |
 | TEST-F03-19 | AC-F03-10 | E2E | alice logged in | add Latte twice + Thai Milk Tea, Place order | URL `/orders/N`; "Order #N placed!"; total ฿180.00; `/orders` lists it as PLACED |
 | TEST-F03-20 | AC-F03-11 | E2E | alice logged in; Latte in cart; Latte set sold out in DB before submit | Place order | error message shown naming Latte; cart still has Latte; line marked |
 
@@ -196,5 +199,6 @@ Shared checklist: [`definition-of-done.md`](definition-of-done.md). F-03 extra e
 | 1 | 6 Nov 2026 | First version, before implementation | ninja |
 | 1.1 | 6 Nov 2026 | Shared order shape with F-04 agreed in chat: list is a plain array; malformed id → 400 (was 404). Still before implementation | ninja |
 | 1.2 | 6 Nov 2026 | Recheck (#37): ids above 2147483647 gave 500 → now 400 (TEST-F03-22); cart limits and hints aligned with ui-spec S2 / design (every + disabled at 20 lines, "Min 1" hint, mark cleared on remove, empty-cart button; TEST-F03-23) | ninja |
+| 1.3 | 13 Nov 2026 | AC-F03-13 + TEST-F03-24: phone tab order Menu · Cart · My orders, as in the design (QA finding on release PR #46, issue #47) | ninja |
 
 Agreed with F-04 (chat, 6 Nov): F-04 adds `orders.accepted_at` (nullable) and `acceptedAt` to the shared order JSON (`null` until accepted). Whichever of F-03 / F-04 merges second adds `acceptedAt` to the order response. S4 shows the accepted time when `acceptedAt` is not null.

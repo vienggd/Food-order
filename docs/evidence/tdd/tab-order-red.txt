@@ -1,0 +1,59 @@
+warn The configuration property `package.json#prisma` is deprecated and will be removed in Prisma 7. Please migrate to a Prisma config file (e.g., `prisma.config.ts`).
+For more information, see: https://pris.ly/prisma-config
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "cafe_e2e", schema "public" at "localhost:5433"
+
+2 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+Seed done: 3 users, 6 menu items.
+
+Running 6 tests using 1 worker
+
+  ok 1 [phone] › e2e\orders.spec.ts:20:7 › F-03 place order › TEST-F03-19 add Latte twice + Thai Milk Tea, place order, see server total and the order in My orders (4.5s)
+  ok 2 [phone] › e2e\orders.spec.ts:52:7 › F-03 place order › TEST-F03-20 item sells out while in the cart: message names it, cart kept, line marked, nothing saved (874ms)
+  x  3 [phone] › e2e\orders.spec.ts:70:5 › TEST-F03-24 phone tabs read Menu, Cart, My orders (design Menu.html) (586ms)
+  ok 4 [desktop] › e2e\orders.spec.ts:20:7 › F-03 place order › TEST-F03-19 add Latte twice + Thai Milk Tea, place order, see server total and the order in My orders (1.2s)
+  ok 5 [desktop] › e2e\orders.spec.ts:52:7 › F-03 place order › TEST-F03-20 item sells out while in the cart: message names it, cart kept, line marked, nothing saved (749ms)
+  -  6 [desktop] › e2e\orders.spec.ts:70:5 › TEST-F03-24 phone tabs read Menu, Cart, My orders (design Menu.html)
+
+
+  1) [phone] › e2e\orders.spec.ts:70:5 › TEST-F03-24 phone tabs read Menu, Cart, My orders (design Menu.html) 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        "Menu",
+    -   "Cart",
+        "My orders",
+    +   "Cart",
+      ]
+
+      73 |   await expect(page).toHaveURL(/\/menu$/);
+      74 |   const labels = (await page.locator("nav.tabs .tab").allInnerTexts()).map((t) => t.replace(/\s*\(\d+\)$/, "").trim());
+    > 75 |   expect(labels).toEqual(["Menu", "Cart", "My orders"]);
+         |                  ^
+      76 | });
+      77 |
+        at D:\Lab Software2026\Food-order\e2e\orders.spec.ts:75:18
+
+    Error Context: test-results\orders-TEST-F03-24-phone-t-2adbf-My-orders-design-Menu-html--phone\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\orders-TEST-F03-24-phone-t-2adbf-My-orders-design-Menu-html--phone\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\orders-TEST-F03-24-phone-t-2adbf-My-orders-design-Menu-html--phone\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [phone] › e2e\orders.spec.ts:70:5 › TEST-F03-24 phone tabs read Menu, Cart, My orders (design Menu.html) 
+  1 skipped
+  4 passed (17.6s)
