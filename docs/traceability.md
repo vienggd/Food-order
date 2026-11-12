@@ -52,7 +52,7 @@ IDs agreed with the SRS author in chat on 6 Nov 2026.
 | NFR-03 | One error format, codes 400/401/403/404/409 | F-01..F-04 | 1 | setup AC-1.4, AC-1.5; every error AC | app.test.ts (AC-1.5); every API test asserts `error.code` | Pass |
 | NFR-04 | One transaction per order; safe concurrent accept | F-03, F-04 | 1 | AC-F03-04, AC-F04-07 | TEST-F03-03..10 (0 orders and 0 lines after rejection); TEST-F04-07 (20 parallel accepts) | Pass |
 | NFR-05 | Automated unit, API and end-to-end tests; tests first | F-01..F-04 | 1 | all Sprint 1 AC | All tests above; red/green output in `docs/evidence/tdd/` (F-01..F-04) | Pass |
-| NFR-06 | Loading, empty and error states; phone and desktop | F-01..F-04 | 1 | AC-F01-13, AC-F02-07, AC-F03-10, -11, AC-F04-11 | E2E on phone 375 px and desktop 1280 px (20 runs); screenshots in `docs/evidence/screenshots/` | Pass |
+| NFR-06 | Loading, empty and error states; phone and desktop | F-01..F-04 | 1 | AC-F01-13, AC-F02-07, AC-F03-10, -11, -13, AC-F04-11 | E2E on phone 375 px and desktop 1280 px (22 runs; TEST-F03-24 phone tab order); screenshots in `docs/evidence/screenshots/` | Pass |
 | NFR-07 | One container, settings from env, no secrets in Git | all | 1 | — | Manual: `server/.env.example` placeholders only; `git grep` for the seed password: no match (6 Nov 2026). Container in Lab 5 | Pass |
 | NFR-08 | Login rate limit | F-12 | 3 | Sprint 3 contract | — | — |
 | NFR-09 | Accessibility | F-12 | 3 | Sprint 3 contract | — | — |
@@ -60,8 +60,8 @@ IDs agreed with the SRS author in chat on 6 Nov 2026.
 ## 4. Coverage check
 
 - Every FR/BR/NFR maps to a feature: **yes** (FR-01..FR-18, BR-01..BR-07, NFR-01..NFR-09).
-- Every Sprint 1 AC appears in at least one row above: **yes** — AC-F01-01..14, AC-F02-01..07, AC-F03-01..12, AC-F04-01..13 (46 AC).
-- Every Sprint 1 AC has at least one automated test: **yes** — 61 test IDs (TEST-F01-01..14, TEST-F02-01..09, TEST-F03-01..23, TEST-F04-01..14), all found in test names in `server/tests/`, `client/src/lib/`, `e2e/`.
+- Every Sprint 1 AC appears in at least one row above: **yes** — AC-F01-01..14, AC-F02-01..07, AC-F03-01..13, AC-F04-01..13 (47 AC).
+- Every Sprint 1 AC has at least one automated test: **yes** — 62 test IDs (TEST-F01-01..14, TEST-F02-01..09, TEST-F03-01..24, TEST-F04-01..14), all found in test names in `server/tests/`, `client/src/lib/`, `e2e/`.
 - Only manual check: NFR-07 (secrets and configuration), documented above.
 
 | Test files | Level | IDs |
@@ -72,7 +72,7 @@ IDs agreed with the SRS author in chat on 6 Nov 2026.
 | `server/tests/operator.test.ts`, `transitions.test.ts` | API, unit | TEST-F04-01..09, -14; -10 |
 | `server/tests/app.test.ts`, `seed.test.ts` | API, DB | setup AC-1.2..1.5 (#1) |
 | `client/src/lib/money.test.ts`, `cart.test.ts` | unit | TEST-F02-07, TEST-F03-17, -18, -23 |
-| `e2e/auth.spec.ts`, `menu.spec.ts`, `orders.spec.ts`, `queue.spec.ts` | E2E | TEST-F01-12..14, TEST-F02-08..09, TEST-F03-19..20, TEST-F04-11..13 |
+| `e2e/auth.spec.ts`, `menu.spec.ts`, `orders.spec.ts`, `queue.spec.ts` | E2E | TEST-F01-12..14, TEST-F02-08..09, TEST-F03-19..20, -24, TEST-F04-11..13 |
 
 ## Change log
 
@@ -81,3 +81,4 @@ IDs agreed with the SRS author in chat on 6 Nov 2026.
 | 6 Nov 2026 | First draft (business rules mapped) | Deliverable 1 part B |
 | 6 Nov 2026 | AC, test IDs and results for all Sprint 1 rows (#28) | AC-B3 |
 | 6 Nov 2026 | Added TEST-F03-22, TEST-F03-23, TEST-F04-14 (recheck #37) | Bug fix and ui-spec alignment |
+| 13 Nov 2026 | Added AC-F03-13 / TEST-F03-24 phone tab order (#47) | QA finding on release PR #46 |
