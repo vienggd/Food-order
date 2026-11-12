@@ -66,3 +66,16 @@ test.describe("F-03 place order", () => {
     expect(await db.order.count()).toBe(0);
   });
 });
+
+test("TEST-F03-24 phone tabs read Menu, Cart, My orders; desktop sidebar unchanged (design Menu.html)", async ({ page }, info) => {
+  await loginAs(page, "alice@cafe.test");
+  await expect(page).toHaveURL(/\/menu$/);
+  const strip = (t: string) => t.replace(/\s*\(?\d+\)?$/, "").trim(); // drop the cart / menu count
+  if (info.project.name === "phone") {
+    const tabs = (await page.locator("nav.tabs .tab").allInnerTexts()).map(strip);
+    expect(tabs).toEqual(["Menu", "Cart", "My orders"]);
+  } else {
+    const side = (await page.locator("nav.side-links a").allInnerTexts()).map(strip);
+    expect(side).toEqual(["Menu", "My orders"]); // desktop: cart is the side panel, no Cart link
+  }
+});
