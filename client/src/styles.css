@@ -178,6 +178,7 @@ button[disabled] { cursor: not-allowed; }
   .menu-layout.cart-open .menu-main { display: block; }
   /* The cart never grows past the window: the item list scrolls, total + Place order stay visible. */
   .cart { display: flex; flex-direction: column; position: sticky; top: 16px; max-height: calc(100vh - 126px); } /* 126px = page title above the cart + bottom gap */
+  .cart > * { flex-shrink: 0; } /* only the item list may shrink; the button keeps its 48px */
   .cart .cart-lines { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding-right: 4px; }
   .cart-head .msg-close, .cart-bar { display: none; }
   .menu-list { grid-template-columns: repeat(2, 1fr); }
