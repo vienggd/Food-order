@@ -19,4 +19,27 @@ Sprint 1 in progress (due Sun 8 Nov 2026): login, menu, place order, operator ac
 - Flow: `feature/F-0x-...` → `sprint-1` → `main` (merge commits, no squash).
 - Each feature has a GitHub Issue (titled with its ID, e.g. `F-01`) on the project board.
 
-Setup and run instructions will be added with the code skeleton.
+## Run it locally
+
+You need Node 24 and Docker Desktop (running).
+
+```bash
+npm install                              # 1. install packages (client + server)
+cp server/.env.example server/.env       # 2. then set SEED_PASSWORD in server/.env
+npm run db:up                            # 3. start Postgres 16 in Docker (port 5433)
+npm run db:migrate                       # 4. create the tables
+npm run db:seed                          # 5. add 3 accounts + the menu
+npm run dev                              # 6. API on :3000, app on http://localhost:5173
+npm test                                 # 7. server + client tests (server uses the cafe_test database)
+npx playwright install chromium          # 8. once: browser for end-to-end tests
+npm run test:e2e                         # 9. end-to-end tests, phone + desktop (own cafe_e2e database, ports 3100/5174)
+```
+
+Seeded accounts: `alice@cafe.test`, `bob@cafe.test` (customers), `staff@cafe.test` (operator). Their password is the `SEED_PASSWORD` you chose; it is never stored in Git.
+
+| Folder | What |
+|---|---|
+| `client/` | React + Vite + TypeScript app |
+| `server/` | Express + TypeScript API; `prisma/` schema, migrations, seed; `tests/` Vitest + Supertest |
+| `e2e/` | Playwright end-to-end tests (`npm run test:e2e`) |
+| `docs/` | Plan, SRS, SDS, feature contracts, evidence |

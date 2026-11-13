@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Login screen · Campus Café UI</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500..700&amp;family=Plus+Jakarta+Sans:wght@400..800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#2F4A3A}a:hover{color:#1F3328}
+.wf{font-family:"Plus Jakarta Sans",system-ui,sans-serif;color:#2B1B14;font-size:14px;line-height:1.4}
+.wf h1{font-weight:600;font-family:"Fraunces",Georgia,serif;font-size:40px;line-height:1.05;color:#2F4A3A;margin:0 0 6px}
+.sub{color:#6E5E4F;margin:0 0 28px;max-width:1150px}
+.row{display:flex;gap:32px;align-items:flex-start;margin-bottom:44px}
+.st{width:340px;flex:none}
+.sl{margin:0 0 10px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#6E5E4F}
+.ph{width:340px;height:660px;box-sizing:border-box;border-radius:36px;background:#F3EBDD;border:1px solid #E2D5C1;box-shadow:0 10px 30px rgba(59,34,25,.10);overflow:hidden;display:flex;flex-direction:column}
+.nt{font-size:12.5px;color:#6E5E4F;margin:10px 4px 0}
+.hero{background:#2F4A3A;color:#fff;padding:36px 22px 26px;border-radius:0 0 30px 30px}
+.brand{font-weight:600;font-family:"Fraunces",Georgia,serif;font-size:38px;line-height:.95;margin:0}
+.brand em{font-style:italic;color:#E0B07A}
+.tag{margin:8px 0 0;font-size:13px;color:#D9E4D3}
+.ct{flex:1;padding:18px 20px}
+.ti{font-size:18px;font-weight:800;margin:0 0 2px}
+.hi{font-size:12px;color:#6E5E4F;margin:0}
+.lb{display:block;font-size:12px;font-weight:700;margin:14px 0 6px}
+.in{display:block;width:100%;box-sizing:border-box;height:46px;border-radius:14px;border:0;background:#fff;box-shadow:0 2px 8px rgba(43,27,20,.06);padding:0 14px;font:inherit;color:#2B1B14}
+.in.bad{box-shadow:inset 0 0 0 2px #B3261E}
+.fe{font-size:11.5px;font-weight:700;color:#7A1C12;margin:4px 0 0}
+.btn{font:inherit;font-weight:700;font-size:15px;border:0;border-radius:999px;height:48px;padding:0 18px;display:flex;width:100%;align-items:center;justify-content:center;gap:8px;text-decoration:none;background:#2F4A3A;color:#fff;margin-top:20px}
+.btn:hover{color:#fff}
+.btn.ds{background:#E3D9CF;color:#6E5E4F}
+.btn.gh{background:#fff;color:#2F4A3A;box-shadow:inset 0 0 0 1.5px #2F4A3A;margin-top:10px}
+.btn.gh:hover{color:#2F4A3A}
+.msg{border-radius:14px;padding:10px 12px;font-size:12.5px;margin:12px 0 0;background:#FDE3E0;color:#7A1C12}
+.ok{width:72px;height:72px;border-radius:50%;background:#D4874A;color:#2B1B14;display:flex;align-items:center;justify-content:center;margin:30px auto 14px}
+.cen{text-align:center}
+.btn,.acc,.rf,.ib,.out,.add,.cbar,.fab,.tab,.oc,.links a,.back{transition:transform .16s ease,box-shadow .16s ease,background-color .16s ease,color .16s ease}
+.btn:hover,.acc:hover,.rf:hover,.ib:hover,.out:hover,.cbar:hover,.fab:hover{transform:translateY(-1px)}
+.add:hover{transform:scale(1.06)}
+.btn:active,.acc:active,.rf:active,.ib:active,.out:active,.add:active,.cbar:active,.fab:active{transform:translateY(1px) scale(.98)}
+a.oc:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(43,27,20,.10)}
+.links a:not(.on):hover,.tab:not(.on):hover{color:#2B1B14}
+button[disabled]{cursor:not-allowed;transform:none}
+:focus-visible{outline:3px solid #D4874A;outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;transform:none!important}}
+.lp{display:block;width:100%;height:150px;object-fit:cover;object-position:62% 62%}
+.hero{padding:20px 22px 18px;border-radius:0 0 26px 26px}
+.brand{font-size:32px}
+</style>
+</head>
+<body>
+<p style="margin:0;padding:10px 16px;font:14px system-ui,sans-serif;background:#2B1B14;color:#F3EBDD"><a href="index.html" style="color:#E0B07A">← All screens</a> · Login /login</p>
+<div class="wf" style="width: 1908px; height: 1000px; box-sizing: border-box; padding: 40px; background: #FAF5EC">
+  <h1>Login · /login</h1>
+  <p class="sub">Public. F-01. POST /api/auth/login { email, password } sets the session cookie, then GET /api/auth/me gives the role. No sign-up link: accounts are seeded.</p>
+  <div class="row">
+    <div class="st">
+      <h3 class="sl">Default</h3>
+      <div class="ph"><img class="lp" src="img/espresso-shot.webp" alt="Espresso running into a small white cup at a steel machine"><div class="hero"><p class="brand">Campus Café<br><em>Order ahead.</em></p><p class="tag">Skip the line. Pick up when it's ready.</p></div><div class="ct">
+        <p class="ti">Sign in</p><p class="hi">Use your café account.</p>
+        <label class="lb" for="a-e">Email</label><input class="in" id="a-e" type="email" value="alice@cafe.test">
+        <label class="lb" for="a-p">Password</label><input class="in" id="a-p" type="password" value="password">
+        <button class="btn">Log in</button>
+      </div></div>
+      <p class="nt">Focus starts on Email.</p>
+    </div>
+    <div class="st">
+      <h3 class="sl">Validation (client)</h3>
+      <div class="ph"><img class="lp" src="img/espresso-shot.webp" alt="Espresso running into a small white cup at a steel machine"><div class="hero"><p class="brand">Campus Café<br><em>Order ahead.</em></p><p class="tag">Skip the line. Pick up when it's ready.</p></div><div class="ct">
+        <p class="ti">Sign in</p><p class="hi">Use your café account.</p>
+        <label class="lb" for="b-e">Email</label><input class="in bad" id="b-e" type="email" aria-invalid="true">
+        <p class="fe">Email is required.</p>
+        <label class="lb" for="b-p">Password</label><input class="in bad" id="b-p" type="password" aria-invalid="true">
+        <p class="fe">Password is required.</p>
+        <button class="btn">Log in</button>
+      </div></div>
+      <p class="nt">Checked before sending. Bad format: "Enter a valid email."</p>
+    </div>
+    <div class="st">
+      <h3 class="sl">Loading</h3>
+      <div class="ph"><img class="lp" src="img/espresso-shot.webp" alt="Espresso running into a small white cup at a steel machine"><div class="hero"><p class="brand">Campus Café<br><em>Order ahead.</em></p><p class="tag">Skip the line. Pick up when it's ready.</p></div><div class="ct">
+        <p class="ti">Sign in</p><p class="hi">Use your café account.</p>
+        <label class="lb" for="c-e">Email</label><input class="in" id="c-e" type="email" value="alice@cafe.test" disabled="">
+        <label class="lb" for="c-p">Password</label><input class="in" id="c-p" type="password" value="password" disabled="">
+        <button class="btn ds" disabled="">Logging in…</button>
+      </div></div>
+      <p class="nt">Button disabled, so no double submit.</p>
+    </div>
+    <div class="st">
+      <h3 class="sl">Error: 401 bad credentials</h3>
+      <div class="ph"><img class="lp" src="img/espresso-shot.webp" alt="Espresso running into a small white cup at a steel machine"><div class="hero"><p class="brand">Campus Café<br><em>Order ahead.</em></p><p class="tag">Skip the line. Pick up when it's ready.</p></div><div class="ct">
+        <p class="ti">Sign in</p>
+        <div class="msg" role="alert">Incorrect email or password.</div>
+        <label class="lb" for="d-e">Email</label><input class="in" id="d-e" type="email" value="alice@cafe.test">
+        <label class="lb" for="d-p">Password</label><input class="in" id="d-p" type="password">
+        <button class="btn">Log in</button>
+      </div></div>
+      <p class="nt">Same message for an unknown email and a wrong password, so nobody can find out which emails exist. Password cleared, email kept.</p>
+    </div>
+    <div class="st">
+      <h3 class="sl">Success</h3>
+      <div class="ph"><img class="lp" src="img/espresso-shot.webp" alt="Espresso running into a small white cup at a steel machine"><div class="hero"><p class="brand">Campus Café<br><em>Order ahead.</em></p><p class="tag">Skip the line. Pick up when it's ready.</p></div><div class="ct">
+        <div class="ok"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg></div>
+        <p class="ti cen">Welcome back!</p><p class="hi cen">Taking you to your home screen…</p>
+        <a class="btn" href="Menu.html">Customer → Menu</a>
+        <a class="btn gh" href="Queue.html">Operator → Order queue</a>
+      </div></div>
+      <p class="nt">CUSTOMER → /menu, OPERATOR → /operator/orders. Opening /login while logged in redirects the same way.</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>

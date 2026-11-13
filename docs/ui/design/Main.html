@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flow, header and shared states · Campus Café UI</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500..700&amp;family=Plus+Jakarta+Sans:wght@400..800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#2F4A3A}a:hover{color:#1F3328}
+.wf{font-family:"Plus Jakarta Sans",system-ui,sans-serif;color:#2B1B14;font-size:14px;line-height:1.4}
+.wf h1{font-weight:600;font-family:"Fraunces",Georgia,serif;font-size:40px;line-height:1.05;color:#2F4A3A;margin:0 0 6px}
+.sub{color:#6E5E4F;margin:0 0 28px;max-width:1150px}
+.sec{font-weight:600;font-family:"Fraunces",Georgia,serif;font-size:26px;color:#2F4A3A;margin:0 0 16px}
+.row{display:flex;gap:32px;align-items:flex-start;margin-bottom:44px}
+.st{width:340px;flex:none}
+.sl{margin:0 0 10px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#6E5E4F}
+.ph{width:340px;height:660px;box-sizing:border-box;border-radius:36px;background:#F3EBDD;border:1px solid #E2D5C1;box-shadow:0 10px 30px rgba(59,34,25,.10);overflow:hidden;display:flex;flex-direction:column}
+.ph.short{height:auto}
+.nt{font-size:12.5px;color:#6E5E4F;margin:10px 4px 0}
+.top{display:flex;align-items:center;gap:10px;padding:18px 18px 8px}
+.who{flex:1}
+.hi{font-size:12px;color:#6E5E4F;margin:0}
+.brand{font-weight:600;font-family:"Fraunces",Georgia,serif;font-size:26px;line-height:1;color:#2F4A3A;margin:2px 0 0}
+.role{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#2F4A3A;background:#DCE5D6;border-radius:999px;padding:2px 8px;margin-top:5px}
+.ib{width:44px;height:44px;border-radius:14px;background:#fff;border:0;box-shadow:0 2px 8px rgba(43,27,20,.08);display:inline-flex;align-items:center;justify-content:center;color:#2B1B14;text-decoration:none}
+.ct{flex:1;padding:6px 18px 12px;overflow:hidden}
+.tabs{display:flex;align-items:flex-end;justify-content:space-around;background:#fff;margin:6px 12px 12px;border-radius:24px;padding:8px 6px;box-shadow:0 2px 10px rgba(43,27,20,.08)}
+.tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:11px;color:#6E5E4F;text-decoration:none;min-width:64px;min-height:44px}
+.tab.on{color:#2F4A3A;font-weight:700}
+.fab{width:60px;height:60px;border-radius:50%;background:#2F4A3A;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;font-weight:700;margin-top:-30px;text-decoration:none;position:relative;box-shadow:0 6px 16px rgba(59,34,25,.35)}
+.fab:hover{color:#fff}
+.ctn{position:absolute;top:-2px;right:-2px;background:#D4874A;color:#2B1B14;border-radius:999px;font-size:10px;padding:1px 6px;font-weight:800}
+.btn{font:inherit;font-weight:700;font-size:14px;border:0;border-radius:999px;height:44px;padding:0 18px;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;background:#2F4A3A;color:#fff}
+.btn:hover{color:#fff}
+.btn.gh{background:#fff;color:#2F4A3A;box-shadow:inset 0 0 0 1.5px #2F4A3A}
+.btn.ds{background:#E3D9CF;color:#6E5E4F}
+.btn.bl{display:flex;width:100%;margin-top:14px}
+.msg{border-radius:14px;padding:10px 12px;font-size:12.5px;margin:8px 0;background:#FDE3E0;color:#7A1C12}
+.msg.in{background:#DCE5D6;color:#2F4A3A}
+.sk{height:14px;background:#EDE2D6;border-radius:8px;margin:12px 0}
+.skc{height:120px;background:#EFE5DA;border-radius:20px;margin:10px 0}
+.em{background:#fff;border-radius:20px;text-align:center;padding:26px 14px;color:#6E5E4F;font-size:13px;margin:10px 0}
+.em b{display:block;color:#2B1B14;font-size:16px;margin-bottom:4px}
+.lb{display:block;font-size:12px;font-weight:700;margin:12px 0 6px}
+.in{display:block;width:100%;box-sizing:border-box;height:46px;border-radius:14px;border:0;background:#fff;box-shadow:0 2px 8px rgba(43,27,20,.06);padding:0 14px;font:inherit;color:#2B1B14}
+.fl{display:grid;grid-template-columns:repeat(9,auto);align-items:center;justify-content:start;column-gap:16px;row-gap:30px;background:#fff;border-radius:28px;padding:32px;box-shadow:0 2px 12px rgba(43,27,20,.06)}
+.bx{border-radius:20px;padding:12px 16px;text-align:center;min-width:140px;background:#F3EBDD;font-weight:700}
+.bx small{display:block;font:400 11px monospace;color:#6E5E4F}
+.bx.hm{background:#2F4A3A;color:#fff}
+.bx.hm small{color:#D9E4D3}
+.bx.dash{background:#fff;box-shadow:inset 0 0 0 2px #E2D5C1}
+.ar{font-size:12px;color:#6E5E4F;text-align:center}
+.ar b{display:block;font-size:22px;color:#D4874A;line-height:1}
+.legend{font-size:13px;color:#6E5E4F;margin:12px 0 0}
+.btn,.acc,.rf,.ib,.out,.add,.cbar,.fab,.tab,.oc,.links a,.back{transition:transform .16s ease,box-shadow .16s ease,background-color .16s ease,color .16s ease}
+.btn:hover,.acc:hover,.rf:hover,.ib:hover,.out:hover,.cbar:hover,.fab:hover{transform:translateY(-1px)}
+.add:hover{transform:scale(1.06)}
+.btn:active,.acc:active,.rf:active,.ib:active,.out:active,.add:active,.cbar:active,.fab:active{transform:translateY(1px) scale(.98)}
+a.oc:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(43,27,20,.10)}
+.links a:not(.on):hover,.tab:not(.on):hover{color:#2B1B14}
+button[disabled]{cursor:not-allowed;transform:none}
+:focus-visible{outline:3px solid #D4874A;outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;transform:none!important}}
+</style>
+</head>
+<body>
+<p style="margin:0;padding:10px 16px;font:14px system-ui,sans-serif;background:#2B1B14;color:#F3EBDD"><a href="index.html" style="color:#E0B07A">← All screens</a> · Flow, header & shared states</p>
+<div class="wf" style="width: 1908px; height: 1620px; box-sizing: border-box; padding: 40px; background: #FAF5EC">
+  <h1>Campus Café pre-order · Sprint 1</h1>
+  <p class="sub">Screens and states for F-01..F-04. Earthy palette: warm beige ground, forest green, espresso, sienna and caramel accents, rounded soft cards. Desktop (PC) layouts sit to the right. Prices shown as ฿xx.xx (stored as integer satang). Pickup is ASAP in Sprint 1. Food photos are placeholders. Full text in docs/ui/ui-spec.md.</p>
+
+  <h2 class="sec">Navigation flow</h2>
+  <div class="fl">
+    <div class="bx">Login<small>/login</small></div>
+    <div class="ar"><b>→</b>log in</div>
+    <div class="bx dash">GET /api/auth/me<small>role?</small></div>
+    <div class="ar"><b>→</b>CUSTOMER</div>
+    <div class="bx hm">Menu + cart<small>/menu (home)</small></div>
+    <div class="ar"><b>→</b>Place order</div>
+    <div class="bx">Order detail<small>/orders/:id</small></div>
+    <div class="ar"><b>←</b>tap an order</div>
+    <div class="bx">My orders<small>/orders</small></div>
+
+    <div></div><div></div><div></div>
+    <div class="ar"><b>→</b>OPERATOR</div>
+    <div class="bx hm">Order queue<small>/operator/orders (home)</small></div>
+    <div></div><div></div><div></div><div></div>
+  </div>
+  <p class="legend">Outlined box: not a screen; the app checks the session on load. Purple: each role's home. Any 401 → /login. Logout → POST /api/auth/logout → /login. A page for the other role → own home.</p>
+
+  <h2 class="sec" style="margin-top: 40px">Shared chrome</h2>
+  <div class="row">
+    <div class="st">
+      <h3 class="sl">Customer: top bar + tab bar</h3>
+      <div class="ph short">
+        <div class="top"><div class="who"><p class="hi">Hey, Alice</p><p class="brand">Campus Café</p><span class="role">Customer</span></div><a class="ib" href="Login.html" aria-label="Log out"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg></a></div>
+        <div style="height: 40px"></div>
+        <nav class="tabs"><a class="tab on" href="Menu.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Menu</a><a class="fab" href="Menu.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7h12l-1 14H7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>Cart<span class="ctn">2</span></a><a class="tab" href="Orders.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><path d="M9 7h6M9 11h6M9 15h4"/></svg>My orders</a></nav>
+      </div>
+      <p class="nt">Name and role come from GET /api/auth/me. Logout is the icon button. Tabs: Menu · Cart (opens the cart on /menu, badge = lines) · My orders.</p>
+    </div>
+    <div class="st">
+      <h3 class="sl">Operator: top bar + tab bar</h3>
+      <div class="ph short">
+        <div class="top"><div class="who"><p class="hi">Hey, Staff</p><p class="brand">Campus Café</p><span class="role">Operator</span></div><a class="ib" href="Login.html" aria-label="Log out"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg></a></div>
+        <div style="height: 40px"></div>
+        <nav class="tabs"><a class="tab on" href="Queue.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><path d="M9 7h6M9 11h6M9 15h4"/></svg>Order queue</a></nav>
+      </div>
+      <p class="nt">Operator never sees Menu, Cart or My orders.</p>
+    </div>
+    <div class="st">
+      <h3 class="sl">Loading session / logging out</h3>
+      <div class="ph short">
+        <div class="top"><div class="who"><div class="sk" style="width: 70px; margin: 0 0 6px"></div><p class="brand">Campus Café</p><div class="sk" style="width: 60px; margin: 6px 0 0"></div></div><button class="ib" disabled="" aria-label="Logging out"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#B3A797" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9"/></svg></button></div>
+        <div style="height: 40px"></div>
+        <div class="tabs"><div class="sk" style="width: 240px; height: 30px; margin: 6px 0"></div></div>
+      </div>
+      <p class="nt">While /me loads: placeholders, no tabs. Logout shows a spinner, is disabled, and always ends on /login.</p>
+    </div>
+  </div>
+
+  <h2 class="sec">Shared states (any screen)</h2>
+  <div class="row">
+    <div class="st">
+      <h3 class="sl">401: session expired</h3>
+      <div class="ph"><div class="ct" style="padding-top: 40px">
+        <p class="brand" style="font-size: 34px">Campus Café</p>
+        <p class="hi">Order ahead. Skip the line.</p>
+        <div class="msg in" style="margin-top: 18px">Your session has ended. Please log in again.</div>
+        <label class="lb" for="m-e">Email</label><input class="in" id="m-e" type="email">
+        <label class="lb" for="m-p">Password</label><input class="in" id="m-p" type="password">
+        <button class="btn bl">Log in</button>
+      </div></div>
+      <p class="nt">Any API 401 → clear the user, go to /login with this note.</p>
+    </div>
+    <div class="st">
+      <h3 class="sl">403: wrong role</h3>
+      <div class="ph">
+        <div class="top"><div class="who"><p class="hi">Hey, Alice</p><p class="brand">Campus Café</p><span class="role">Customer</span></div><a class="ib" href="Login.html" aria-label="Log out"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg></a></div>
+        <div class="ct"><div class="msg">You don't have access to that page.</div><div class="skc"></div><div class="skc"></div></div>
+      </div>
+      <p class="nt">Customer opened /operator/orders → redirected to /menu with this message.</p>
+    </div>
+    <div class="st">
+      <h3 class="sl">404: not found</h3>
+      <div class="ph">
+        <div class="top"><div class="who"><p class="hi">Hey, Alice</p><p class="brand">Campus Café</p><span class="role">Customer</span></div><a class="ib" href="Login.html" aria-label="Log out"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg></a></div>
+        <div class="ct"><div class="em"><b>Order not found</b>It may not exist, or it isn't yours.</div><a class="btn gh bl" href="Orders.html">Back to my orders</a></div>
+      </div>
+      <p class="nt">Same for a missing id and another customer's order. Unknown routes: "Page not found" + Go home.</p>
+    </div>
+    <div class="st">
+      <h3 class="sl">409: screen out of date</h3>
+      <div class="ph">
+        <div class="top"><div class="who"><p class="hi">Hey, Staff</p><p class="brand">Campus Café</p><span class="role">Operator</span></div><a class="ib" href="Login.html" aria-label="Log out"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg></a></div>
+        <div class="ct"><div class="msg">Already accepted by another staff member.</div><div class="skc"></div></div>
+      </div>
+      <p class="nt">Show error.message from the server, then reload the data.</p>
+    </div>
+    <div class="st">
+      <h3 class="sl">Network down / 500</h3>
+      <div class="ph">
+        <div class="top"><div class="who"><p class="hi">Hey, Alice</p><p class="brand">Campus Café</p><span class="role">Customer</span></div><a class="ib" href="Login.html" aria-label="Log out"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg></a></div>
+        <div class="ct"><div class="em"><b>Something went wrong</b>Please try again.</div><button class="btn bl">Try again</button></div>
+      </div>
+      <p class="nt">Used when the response has no {error} body (server down, timeout).</p>
+    </div>
+  </div>
+  <p class="legend" style="margin-top: 8px">Photographs: Shixart1985 (CC BY 2.0) and Takeaway (CC BY-SA 3.0), via Wikimedia Commons.</p>
+</div>
+</body>
+</html>

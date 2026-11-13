@@ -1,0 +1,253 @@
+# F-01 [red] run - 2026-11-06T03:38:36+07:00 - branch feature/F-01-auth, tests at the commit tagged [red]
+# command: npm test -w server -- tests/auth.test.ts
+
+> test
+> vitest run tests/auth.test.ts
+
+
+ RUN  v3.2.7 C:/Users/User/OneDrive/Desktop/se-lab/server
+
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "cafe_test", schema "public" at "localhost:5433"
+
+1 migration found in prisma/migrations
+
+
+No pending migrations to apply.
+ ❯ tests/auth.test.ts (11 tests | 11 failed) 1809ms
+   × F-01 login / logout / me > TEST-F01-01 valid login returns the user, sets a safe cookie and stores an 8 h session 231ms
+     → expected 404 to be 200 // Object.is equality
+   × F-01 login / logout / me > TEST-F01-02 wrong password: 401, no cookie, no session 185ms
+     → expected 404 to be 401 // Object.is equality
+   × F-01 login / logout / me > TEST-F01-03 unknown email gives exactly the same answer as a wrong password 170ms
+     → expected 404 to be 401 // Object.is equality
+   × F-01 login / logout / me > TEST-F01-04 missing password, bad email or an extra field: 400, no session 146ms
+     → {"email":"alice@cafe.test"}: expected 404 to be 400 // Object.is equality
+   × F-01 login / logout / me > TEST-F01-05 email is case-insensitive 173ms
+     → expected 404 to be 200 // Object.is equality
+   × F-01 login / logout / me > TEST-F01-06 me returns only id, name and role 181ms
+     → Cannot read properties of undefined (reading '0')
+   × F-01 login / logout / me > TEST-F01-07 me without a cookie or with a made-up sid: 401 134ms
+     → expected 404 to be 401 // Object.is equality
+   × F-01 login / logout / me > TEST-F01-08 expired session: 401 and the row is deleted 146ms
+     → expected 404 to be 401 // Object.is equality
+   × F-01 login / logout / me > TEST-F01-09 logout ends the session; the old cookie stops working 163ms
+     → Cannot read properties of undefined (reading '0')
+   × F-01 login / logout / me > TEST-F01-10 requireRole: wrong role 403, no session 401, right role 200 135ms
+     → Cannot read properties of undefined (reading '0')
+   × F-01 login / logout / me > TEST-F01-11 cookie is Secure only in production; always httpOnly, lax, 8 h 142ms
+     → expected {} to match object { secure: true, httpOnly: true, …(2) }
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 11 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/auth.test.ts > F-01 login / logout / me > TEST-F01-01 valid login returns the user, sets a safe cookie and stores an 8 h session
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/auth.test.ts:27:24
+     25|     const before = Date.now();
+     26|     const res = await login("alice@cafe.test");
+     27|     expect(res.status).toBe(200);
+       |                        ^
+     28|     expect(res.body).toEqual({ id: expect.any(Number), name: "Alice", …
+     29| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/11]⎯
+
+ FAIL  tests/auth.test.ts > F-01 login / logout / me > TEST-F01-02 wrong password: 401, no cookie, no session
+AssertionError: expected 404 to be 401 // Object.is equality
+
+- Expected
++ Received
+
+- 401
++ 404
+
+ ❯ tests/auth.test.ts:44:24
+     42|   it("TEST-F01-02 wrong password: 401, no cookie, no session", async (…
+     43|     const res = await login("alice@cafe.test", "wrong");
+     44|     expect(res.status).toBe(401);
+       |                        ^
+     45|     expect(res.body).toEqual({ error: { code: "UNAUTHENTICATED", messa…
+     46|     expect(res.headers["set-cookie"]).toBeUndefined();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/11]⎯
+
+ FAIL  tests/auth.test.ts > F-01 login / logout / me > TEST-F01-03 unknown email gives exactly the same answer as a wrong password
+AssertionError: expected 404 to be 401 // Object.is equality
+
+- Expected
++ Received
+
+- 401
++ 404
+
+ ❯ tests/auth.test.ts:53:28
+     51|     const wrongPass = await login("alice@cafe.test", "wrong");
+     52|     const unknown = await login("nobody@cafe.test");
+     53|     expect(unknown.status).toBe(401);
+       |                            ^
+     54|     expect(unknown.status).toBe(wrongPass.status);
+     55|     expect(unknown.body).toEqual(wrongPass.body);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/11]⎯
+
+ FAIL  tests/auth.test.ts > F-01 login / logout / me > TEST-F01-04 missing password, bad email or an extra field: 400, no session
+AssertionError: {"email":"alice@cafe.test"}: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ tests/auth.test.ts:67:48
+     65|     for (const body of bodies) {
+     66|       const res = await request(app).post("/api/auth/login").send(body…
+     67|       expect(res.status, JSON.stringify(body)).toBe(400);
+       |                                                ^
+     68|       expect(res.body.error.code).toBe("VALIDATION_ERROR");
+     69|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/11]⎯
+
+ FAIL  tests/auth.test.ts > F-01 login / logout / me > TEST-F01-05 email is case-insensitive
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/auth.test.ts:75:24
+     73|   it("TEST-F01-05 email is case-insensitive", async () => {
+     74|     const res = await login("ALICE@CAFE.TEST");
+     75|     expect(res.status).toBe(200);
+       |                        ^
+     76|     expect(res.body.name).toBe("Alice");
+     77|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/11]⎯
+
+ FAIL  tests/auth.test.ts > F-01 login / logout / me > TEST-F01-06 me returns only id, name and role
+TypeError: Cannot read properties of undefined (reading '0')
+ ❯ cookieOf tests/auth.test.ts:20:70
+     18| 
+     19| const login = (email: string, password = PASS) => request(app).post("/…
+     20| const cookieOf = (res: request.Response) => (res.headers["set-cookie"]…
+       |                                                                      ^
+     21| const sessionCount = () => prisma.session.count();
+     22| 
+ ❯ tests/auth.test.ts:80:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/11]⎯
+
+ FAIL  tests/auth.test.ts > F-01 login / logout / me > TEST-F01-07 me without a cookie or with a made-up sid: 401
+AssertionError: expected 404 to be 401 // Object.is equality
+
+- Expected
++ Received
+
+- 401
++ 404
+
+ ❯ tests/auth.test.ts:89:26
+     87|     for (const r of [request(app).get("/api/auth/me"), request(app).ge…
+     88|       const res = await r;
+     89|       expect(res.status).toBe(401);
+       |                          ^
+     90|       expect(res.body.error.code).toBe("UNAUTHENTICATED");
+     91|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/11]⎯
+
+ FAIL  tests/auth.test.ts > F-01 login / logout / me > TEST-F01-08 expired session: 401 and the row is deleted
+AssertionError: expected 404 to be 401 // Object.is equality
+
+- Expected
++ Received
+
+- 401
++ 404
+
+ ❯ tests/auth.test.ts:98:24
+     96|     await prisma.session.create({ data: { id: "expired-session-id", us…
+     97|     const res = await request(app).get("/api/auth/me").set("Cookie", "…
+     98|     expect(res.status).toBe(401);
+       |                        ^
+     99|     expect(await prisma.session.findUnique({ where: { id: "expired-ses…
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/11]⎯
+
+ FAIL  tests/auth.test.ts > F-01 login / logout / me > TEST-F01-09 logout ends the session; the old cookie stops working
+TypeError: Cannot read properties of undefined (reading '0')
+ ❯ cookieOf tests/auth.test.ts:20:70
+     18| 
+     19| const login = (email: string, password = PASS) => request(app).post("/…
+     20| const cookieOf = (res: request.Response) => (res.headers["set-cookie"]…
+       |                                                                      ^
+     21| const sessionCount = () => prisma.session.count();
+     22| 
+ ❯ tests/auth.test.ts:103:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/11]⎯
+
+ FAIL  tests/auth.test.ts > F-01 login / logout / me > TEST-F01-10 requireRole: wrong role 403, no session 401, right role 200
+TypeError: Cannot read properties of undefined (reading '0')
+ ❯ cookieOf tests/auth.test.ts:20:70
+     18| 
+     19| const login = (email: string, password = PASS) => request(app).post("/…
+     20| const cookieOf = (res: request.Response) => (res.headers["set-cookie"]…
+       |                                                                      ^
+     21| const sessionCount = () => prisma.session.count();
+     22| 
+ ❯ tests/auth.test.ts:112:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/11]⎯
+
+ FAIL  tests/auth.test.ts > F-01 login / logout / me > TEST-F01-11 cookie is Secure only in production; always httpOnly, lax, 8 h
+AssertionError: expected {} to match object { secure: true, httpOnly: true, …(2) }
+
+- Expected
++ Received
+
+- {
+-   "httpOnly": true,
+-   "maxAge": 0,
+-   "sameSite": "lax",
+-   "secure": true,
+- }
++ {}
+
+ ❯ tests/auth.test.ts:122:40
+    120| 
+    121|   it("TEST-F01-11 cookie is Secure only in production; always httpOnly…
+    122|     expect(sessionCookieOptions(true)).toMatchObject({ secure: true, h…
+       |                                        ^
+    123|     expect(sessionCookieOptions(false)).toMatchObject({ secure: false,…
+    124|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/11]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  11 failed (11)
+   Start at  03:38:38
+   Duration  7.44s (transform 84ms, setup 9ms, collect 550ms, tests 1.81s, environment 0ms, prepare 122ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path C:\Users\User\OneDrive\Desktop\se-lab\server
+npm error workspace server
+npm error location C:\Users\User\OneDrive\Desktop\se-lab\server
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run tests/auth.test.ts
