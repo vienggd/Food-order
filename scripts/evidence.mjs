@@ -96,13 +96,13 @@ writeFileSync(
 const partF = "docs/evidence/part-f.md";
 let board = "";
 try {
-  const items = JSON.parse(sh("gh project item-list 4 --owner vienggg --format json --limit 100")).items;
-  board = `Board https://github.com/users/vienggg/projects/4 read at ${when}:\n\n| Issue | Title | Column |\n|---|---|---|\n${items
+  const items = JSON.parse(sh("gh project item-list 4 --owner vienggd --format json --limit 100")).items;
+  board = `Board https://github.com/users/vienggd/projects/4 read at ${when}:\n\n| Issue | Title | Column |\n|---|---|---|\n${items
     .sort((a, b) => a.content.number - b.content.number)
     .map((i) => `| #${i.content.number} | ${i.title} | ${i.status} |`)
     .join("\n")}`;
-} catch {
-  board = "_Board could not be read (gh not logged in)._";
+} catch (e) {
+  board = `_Board could not be read: ${String(e.message ?? e).split("\n")[0]}_`;
 }
 const blocks = {
   COMMIT: `${header}\n\n**Release reference:** branch \`sprint-1\`; the release to \`main\` and tag \`v0.1.0-sprint1\` are made by the students — if a release is made, \`npm run evidence\` is run again on it and this line names it.`,

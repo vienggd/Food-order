@@ -10,7 +10,7 @@ import { dirname, posix, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
 const OUT_DIR = "docs/deliverable-1";
-const REPO = "https://github.com/vienggg/Food-order";
+const REPO = "https://github.com/vienggd/Food-order";
 const commit = execSync("git rev-parse --short HEAD").toString().trim();
 const branch = execSync("git rev-parse --abbrev-ref HEAD").toString().trim();
 
