@@ -24,7 +24,7 @@ const PARTS = [
     id: "E",
     title: "Sprint 1 engineering contracts",
     files: ["docs/sprints/sprint-1/F-01-auth.md", "docs/sprints/sprint-1/F-02-menu.md", "docs/sprints/sprint-1/F-03-orders.md", "docs/sprints/sprint-1/F-04-accept.md", "docs/sprints/sprint-1/definition-of-done.md"],
-    ids: "F-01..F-04; AC-F01-01..AC-F04-13 (46 AC); TEST-F01-01..TEST-F04-13 (58 tests); Definition of Done",
+    ids: "F-01..F-04; AC-F01-01..AC-F04-13 (47 AC); TEST-F01-01..TEST-F04-14 (61 tests); Definition of Done",
   },
   { id: "F", title: "Working Sprint 1 and verification", files: ["docs/evidence/part-f.md"], ids: "Demonstrations, build/test results, AC → test results, test excerpts, TDD, Issues/PRs, board, contribution, limitations" },
 ];
