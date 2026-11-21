@@ -105,7 +105,7 @@ try {
   board = `_Board could not be read: ${String(e.message ?? e).split("\n")[0]}_`;
 }
 const blocks = {
-  COMMIT: `${header}\n\n**Release reference:** branch \`sprint-1\`; the release to \`main\` and tag \`v0.1.0-sprint1\` are made by the students — if a release is made, \`npm run evidence\` is run again on it and this line names it.`,
+  COMMIT: `${header}\n\n**Release reference:** tag \`v0.1.0-sprint1\` on branch \`main\` (merge commit of release PR #46, commit \`12c1052\`). This evidence was run on that tagged commit.`,
   COUNTS: `| Suite | Command | Exit code |\n|---|---|---|\n| server unit + API (real Postgres \`cafe_test\`) | \`npm test -w server\` | ${exit.server} |\n| client unit | \`npm test -w client\` | ${exit.client} |\n| E2E (Playwright, \`cafe_e2e\`) | \`npm run test:e2e\` | ${exit.e2e} |\n| build | \`npm run build\` | ${exit.build} |\n\n| Suite | Tests | Passed | Failed | Skipped |\n|---|---|---|---|---|\n${countsTable}`,
   "AC-TABLE": `${acs.length} AC; ${acs.length - bad} Pass; ${bad} not Pass.\n\n| AC | Criterion (short) | Planned tests | Test file › name | Result |\n|---|---|---|---|---|\n${acRows.join("\n")}`,
   BOARD: board,
