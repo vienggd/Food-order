@@ -16,6 +16,7 @@ test-results/
 # Course material (kept locally, not published)
 docs/*.pdf
 docs/*.zip
+docs/labs/*/Lab*/
 
 # Local AI-tool folders
 .claude/
