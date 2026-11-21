@@ -1,6 +1,6 @@
 import type { Order, OrderLine } from "@prisma/client";
 
-// The shared Order shape (docs/system-sds.md 4.3). Money in satang, times ISO 8601.
+// The shared Order shape (docs/sprint_1/system-sds.md 4.3). Money in satang, times ISO 8601.
 export function toOrderJson(order: Order & { lines: OrderLine[] }) {
   return {
     id: order.id,

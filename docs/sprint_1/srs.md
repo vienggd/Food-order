@@ -41,7 +41,7 @@ Version 1 — 6 Nov 2026. Later changes go in the change log at the bottom.
 
 ## 4. Functional requirements
 
-Each requirement is observable through the UI and/or API. Detailed endpoints and acceptance criteria are in the feature contracts (`docs/sprints/sprint-1/`).
+Each requirement is observable through the UI and/or API. Detailed endpoints and acceptance criteria are in the feature contracts (`docs/sprint_1/sprints/sprint-1/`).
 
 | ID | Requirement | Feature | Sprint |
 |---|---|---|---|
@@ -86,8 +86,8 @@ Each rule is enforced by the server, whatever the client sends. Money is stored 
 | NFR-02 | **The server is the authority.** | 0 endpoints take the user id, role, price or total from the request. Another customer's order returns 404 with no order data. Error responses never contain stack traces. | API tests for 401/403/404 per protected endpoint; test that a price field → 400; test that a 500 has no stack | 1 |
 | NFR-03 | **One error format.** | 100% of API errors use `{ error: { code, message, details } }` with VALIDATION_ERROR 400, UNAUTHENTICATED 401, FORBIDDEN 403, NOT_FOUND 404, INVALID_STATE 409. | API tests assert code and shape on every error path | 1 |
 | NFR-04 | **Data integrity.** | A rejected order leaves 0 rows. 20 parallel accepts of one order give exactly 1 success. | API/DB tests: row count after rejection; concurrency test | 1 |
-| NFR-05 | **Automated tests, tests first.** | Every Sprint 1 acceptance criterion maps to ≥ 1 automated test; all pass on the release commit; rule tests have a failing run saved before the code. | Test run output on the release commit; red/green commits and saved output in `docs/evidence/tdd/` | 1 |
-| NFR-06 | **Usable states on phone and desktop.** | Every Sprint 1 screen has loading, empty and error states as in `docs/ui/ui-spec.md`; works at 375 px and 1280 px wide without sideways scrolling. | End-to-end tests at both widths + screenshots | 1 |
+| NFR-05 | **Automated tests, tests first.** | Every Sprint 1 acceptance criterion maps to ≥ 1 automated test; all pass on the release commit; rule tests have a failing run saved before the code. | Test run output on the release commit; red/green commits and saved output in `docs/sprint_1/evidence/tdd/` | 1 |
+| NFR-06 | **Usable states on phone and desktop.** | Every Sprint 1 screen has loading, empty and error states as in `docs/sprint_1/ui/ui-spec.md`; works at 375 px and 1280 px wide without sideways scrolling. | End-to-end tests at both widths + screenshots | 1 |
 | NFR-07 | **Deployable and configurable.** | All settings (database URL, seed password, port) come from environment variables; 0 secrets in Git; app runs as one container (Express serves the built React app). | Review + `git grep` for secrets each release; container build in Lab 5 | 1 (design), 2 (Lab 5) |
 | NFR-08 | **Login rate limit.** | After 5 failed logins for one email within 15 minutes, further attempts get 429 for 15 minutes. | API test | 3 |
 | NFR-09 | **Accessibility.** | Every Sprint 1–3 screen has no critical or serious issues in an automated accessibility check (axe), and works by keyboard only. | Playwright + axe check; manual keyboard check | 3 |

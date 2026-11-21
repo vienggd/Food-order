@@ -15,10 +15,10 @@ export async function logout(page: Page) {
   await expect(page).toHaveURL(/\/login$/);
 }
 
-// Screenshots for the PDF (Part F): docs/evidence/screenshots/<name>-<phone|desktop>.png
+// Screenshots for the PDF (Part F): docs/sprint_1/evidence/screenshots/<name>-<phone|desktop>.png
 // Each one also checks NFR-06: the page never scrolls sideways.
 export async function shot(page: Page, name: string, project: string) {
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow, `${name}: page is ${overflow}px wider than the screen`).toBeLessThanOrEqual(0);
-  await page.screenshot({ path: `docs/evidence/screenshots/${name}-${project}.png`, fullPage: true });
+  await page.screenshot({ path: `docs/sprint_1/evidence/screenshots/${name}-${project}.png`, fullPage: true });
 }

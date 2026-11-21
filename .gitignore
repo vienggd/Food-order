@@ -33,4 +33,4 @@ Thumbs.db
 .vite/
 
 # Raw JSON from npm run evidence
-docs/evidence/.raw/
+docs/sprint_1/evidence/.raw/

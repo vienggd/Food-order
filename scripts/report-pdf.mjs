@@ -1,4 +1,4 @@
-// Builds docs/deliverable-1/report.pdf: cover + navigation + contents, then Parts A–F rendered from the repo's
+// Builds docs/sprint_1/deliverable-1/report.pdf: cover + navigation + contents, then Parts A–F rendered from the repo's
 // Markdown (handout section 4: the complete documents must be inside the PDF).
 // Page numbers are real: every section starts on a new page and is printed on its own first to count its pages.
 // Usage: node scripts/report-pdf.mjs
@@ -9,24 +9,24 @@ import { existsSync, readFileSync, writeFileSync, rmSync } from "node:fs";
 import { dirname, posix, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
-const OUT_DIR = "docs/deliverable-1";
+const OUT_DIR = "docs/sprint_1/deliverable-1";
 const REPO = "https://github.com/vienggd/Food-order";
 const commit = execSync("git rev-parse --short HEAD").toString().trim();
 const branch = execSync("git rev-parse --abbrev-ref HEAD").toString().trim();
 
 // One entry per Part (handout 4.1 order). `ids` feeds the navigation table (4.3).
 const PARTS = [
-  { id: "A", title: "SRS and product scope", files: ["docs/srs.md"], ids: "Actors, scope, FR-01..FR-18, BR-01..BR-07, NFR-01..NFR-09, AS-01..06, DEC-01..08" },
-  { id: "B", title: "Feature inventory and traceability", files: ["docs/features.md", "docs/traceability.md"], ids: "F-01..F-12; FR/BR/NFR → feature → sprint → AC → TEST → result" },
-  { id: "C", title: "System-Level SDS", files: ["docs/system-sds.md"], ids: "Architecture, data model, API conventions, role matrix (5.2), sessions, configuration, GCP plan" },
-  { id: "D", title: "Three-sprint plan", files: ["docs/sprints/plan.md"], ids: "Sprint goals, F-01..F-12 allocation, dependencies, Sprint 1 scope, risks" },
+  { id: "A", title: "SRS and product scope", files: ["docs/sprint_1/srs.md"], ids: "Actors, scope, FR-01..FR-18, BR-01..BR-07, NFR-01..NFR-09, AS-01..06, DEC-01..08" },
+  { id: "B", title: "Feature inventory and traceability", files: ["docs/sprint_1/features.md", "docs/sprint_1/traceability.md"], ids: "F-01..F-12; FR/BR/NFR → feature → sprint → AC → TEST → result" },
+  { id: "C", title: "System-Level SDS", files: ["docs/sprint_1/system-sds.md"], ids: "Architecture, data model, API conventions, role matrix (5.2), sessions, configuration, GCP plan" },
+  { id: "D", title: "Three-sprint plan", files: ["docs/sprint_1/sprints/plan.md"], ids: "Sprint goals, F-01..F-12 allocation, dependencies, Sprint 1 scope, risks" },
   {
     id: "E",
     title: "Sprint 1 engineering contracts",
-    files: ["docs/sprints/sprint-1/F-01-auth.md", "docs/sprints/sprint-1/F-02-menu.md", "docs/sprints/sprint-1/F-03-orders.md", "docs/sprints/sprint-1/F-04-accept.md", "docs/sprints/sprint-1/definition-of-done.md"],
+    files: ["docs/sprint_1/sprints/sprint-1/F-01-auth.md", "docs/sprint_1/sprints/sprint-1/F-02-menu.md", "docs/sprint_1/sprints/sprint-1/F-03-orders.md", "docs/sprint_1/sprints/sprint-1/F-04-accept.md", "docs/sprint_1/sprints/sprint-1/definition-of-done.md"],
     ids: "F-01..F-04; AC-F01-01..AC-F04-13 (47 AC); TEST-F01-01..TEST-F04-14 (61 tests); Definition of Done",
   },
-  { id: "F", title: "Working Sprint 1 and verification", files: ["docs/evidence/part-f.md"], ids: "Demonstrations, build/test results, AC → test results, test excerpts, TDD, Issues/PRs, board, contribution, limitations" },
+  { id: "F", title: "Working Sprint 1 and verification", files: ["docs/sprint_1/evidence/part-f.md"], ids: "Demonstrations, build/test results, AC → test results, test excerpts, TDD, Issues/PRs, board, contribution, limitations" },
 ];
 
 const CSS = `

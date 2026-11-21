@@ -13,7 +13,7 @@ For each feature the contract (design, AC, test spec) was committed first, then 
 | F-03 Orders (ninja) | `3178514` 03:36 | `e922626` 03:50 — 29 failed | `13a2651` 03:57 — 29 passed | `tdd/F-03-red.txt`, `tdd/F-03-green.txt` |
 | F-04 Accept (vieng) | `92470d8` 03:37 | `463f459` 03:46 — 10 failed | `f729818` 03:48 — 10 passed | `tdd/F-04-red.txt`, `tdd/F-04-green.txt` |
 
-Client logic was done the same way: `formatBaht` (F-02) and the cart reducer (F-03) each have red and green output in `docs/evidence/tdd/`.
+Client logic was done the same way: `formatBaht` (F-02) and the cart reducer (F-03) each have red and green output in `docs/sprint_1/evidence/tdd/`.
 
 ## Issues, branches, pull requests and reviews
 

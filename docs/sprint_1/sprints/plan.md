@@ -1,6 +1,6 @@
 # Three-sprint plan — Campus Café Pre-order
 
-Deliverable 1, part D. Issue #9. Source of decisions: [`docs/PLAN.md`](../PLAN.md).
+Deliverable 1, part D. Issue #9. Source of decisions: [`docs/sprint_1/PLAN.md`](../PLAN.md).
 Version 1 — 6 Nov 2026. Changes after this are recorded in the change log at the bottom, not by rewriting this text.
 
 ## 1. Sprint goals and dates

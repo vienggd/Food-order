@@ -80,7 +80,7 @@ Version 1 — 6 Nov 2026. Later changes go in the change log at the bottom.
 
 ## 2. UI conventions
 
-Full screen-by-screen states are in [`ui/ui-spec.md`](ui/ui-spec.md); final designs in `docs/ui/design/`.
+Full screen-by-screen states are in [`ui/ui-spec.md`](ui/ui-spec.md); final designs in `docs/sprint_1/ui/design/`.
 
 ### 2.1 Screens and navigation
 
@@ -238,7 +238,7 @@ Every error body is `{ "error": { "code", "message", "details" } }` (NFR-03). `m
 
 ### 4.4 Sprint 1 endpoints
 
-Details, all error cases and tests are in the feature contracts (`docs/sprints/sprint-1/F-0x-*.md`). Who may call each endpoint: section 5.2.
+Details, all error cases and tests are in the feature contracts (`docs/sprint_1/sprints/sprint-1/F-0x-*.md`). Who may call each endpoint: section 5.2.
 
 | Method + path | Request | Success | Errors | Feature |
 |---|---|---|---|---|

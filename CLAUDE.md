@@ -24,7 +24,7 @@ The user is learning: explain each step in simple words.
 - Auth: DB `sessions` table, httpOnly cookie, 8h expiry, bcrypt; role always from the session.
 - Errors: `{ error: { code, message, details } }` — VALIDATION_ERROR 400, UNAUTHENTICATED 401, FORBIDDEN 403, NOT_FOUND 404, INVALID_STATE 409.
 - Money is integer satang. Seed password comes from env `SEED_PASSWORD`; never commit it.
-- UI screens and states: `docs/ui/ui-spec.md`, wireframes `docs/ui/wireframes.html`.
+- UI screens and states: `docs/sprint_1/ui/ui-spec.md`, wireframes `docs/sprint_1/ui/wireframes.html`.
 
 ---
 

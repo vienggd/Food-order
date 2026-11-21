@@ -1,10 +1,10 @@
 # Traceability matrix — Campus Café Pre-order
 
-Deliverable 1, part B (2 of 2). Issue #7. Features: [`features.md`](features.md). Requirements: `docs/srs.md` (#6).
+Deliverable 1, part B (2 of 2). Issue #7. Features: [`features.md`](features.md). Requirements: `docs/sprint_1/srs.md` (#6).
 Version 1 — 6 Nov 2026 (draft).
 
 How to read a row: requirement → feature → sprint → acceptance criteria (from the feature contract) → test IDs (from the test spec) → result on the tested commit.
-Sprint 1 AC and test IDs come from the contracts in `docs/sprints/sprint-1/` and match the test names (`it("TEST-…")`). **Result** = test run on commit `f3acfc9` (6 Nov 2026): `npm test` server 63/63 + client 5/5 passed, `npm run test:e2e` 20/20 passed (phone + desktop). Re-run on the final `sprint-1` commit before submission.
+Sprint 1 AC and test IDs come from the contracts in `docs/sprint_1/sprints/sprint-1/` and match the test names (`it("TEST-…")`). **Result** = test run on commit `f3acfc9` (6 Nov 2026): `npm test` server 63/63 + client 5/5 passed, `npm run test:e2e` 20/20 passed (phone + desktop). Re-run on the final `sprint-1` commit before submission.
 
 ## 1. Business rules
 
@@ -51,8 +51,8 @@ IDs agreed with the SRS author in chat on 6 Nov 2026.
 | NFR-02 | Role and prices only from server; no stack traces | F-01, F-03 | 1 | AC-F01-04, -06; AC-F03-05, -08; setup AC-1.5 | TEST-F01-04, -06; TEST-F03-10, -14 (API); app.test.ts "no stack trace" | Pass |
 | NFR-03 | One error format, codes 400/401/403/404/409 | F-01..F-04 | 1 | setup AC-1.4, AC-1.5; every error AC | app.test.ts (AC-1.5); every API test asserts `error.code` | Pass |
 | NFR-04 | One transaction per order; safe concurrent accept | F-03, F-04 | 1 | AC-F03-04, AC-F04-07 | TEST-F03-03..10 (0 orders and 0 lines after rejection); TEST-F04-07 (20 parallel accepts) | Pass |
-| NFR-05 | Automated unit, API and end-to-end tests; tests first | F-01..F-04 | 1 | all Sprint 1 AC | All tests above; red/green output in `docs/evidence/tdd/` (F-01..F-04) | Pass |
-| NFR-06 | Loading, empty and error states; phone and desktop | F-01..F-04 | 1 | AC-F01-13, AC-F02-07, AC-F03-10, -11, -13, AC-F04-11 | E2E on phone 375 px and desktop 1280 px (22 runs; TEST-F03-24 phone tab order); screenshots in `docs/evidence/screenshots/` | Pass |
+| NFR-05 | Automated unit, API and end-to-end tests; tests first | F-01..F-04 | 1 | all Sprint 1 AC | All tests above; red/green output in `docs/sprint_1/evidence/tdd/` (F-01..F-04) | Pass |
+| NFR-06 | Loading, empty and error states; phone and desktop | F-01..F-04 | 1 | AC-F01-13, AC-F02-07, AC-F03-10, -11, -13, AC-F04-11 | E2E on phone 375 px and desktop 1280 px (22 runs; TEST-F03-24 phone tab order); screenshots in `docs/sprint_1/evidence/screenshots/` | Pass |
 | NFR-07 | One container, settings from env, no secrets in Git | all | 1 | — | Manual: `server/.env.example` placeholders only; `git grep` for the seed password: no match (6 Nov 2026). Container in Lab 5 | Pass |
 | NFR-08 | Login rate limit | F-12 | 3 | Sprint 3 contract | — | — |
 | NFR-09 | Accessibility | F-12 | 3 | Sprint 3 contract | — | — |
