@@ -2,7 +2,7 @@ const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
 const pad = (n: number) => String(n).padStart(2, "0");
 const sameDay = (a: Date, b: Date) => a.toDateString() === b.toDateString();
 
-// Local time as in docs/ui/ui-spec.md: today "10:15", yesterday "Yesterday 12:02", older "3 Nov 09:40".
+// Local time as in docs/sprint_1/ui/ui-spec.md: today "10:15", yesterday "Yesterday 12:02", older "3 Nov 09:40".
 export function formatPlacedTime(iso: string, now = new Date()): string {
   const d = new Date(iso);
   const hm = `${pad(d.getHours())}:${pad(d.getMinutes())}`;

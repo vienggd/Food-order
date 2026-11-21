@@ -8,10 +8,10 @@ Sprint 1 in progress (due Sun 8 Nov 2026): login, menu, place order, operator ac
 
 ## Docs
 
-- **Start here — project plan:** [`docs/PLAN.md`](docs/PLAN.md) (what we build, decisions, sprints, who does what)
+- **Start here — project plan:** [`docs/sprint_1/PLAN.md`](docs/sprint_1/PLAN.md) (what we build, decisions, sprints, who does what)
 - Team workflow rules: [`CLAUDE.md`](CLAUDE.md)
-- UI wireframes: [`docs/ui/wireframes.html`](docs/ui/wireframes.html)
-- UI spec (screens, states, errors): [`docs/ui/ui-spec.md`](docs/ui/ui-spec.md)
+- UI wireframes: [`docs/sprint_1/ui/wireframes.html`](docs/sprint_1/ui/wireframes.html)
+- UI spec (screens, states, errors): [`docs/sprint_1/ui/ui-spec.md`](docs/sprint_1/ui/ui-spec.md)
 
 ## How we work
 
@@ -42,4 +42,4 @@ Seeded accounts: `alice@cafe.test`, `bob@cafe.test` (customers), `staff@cafe.tes
 | `client/` | React + Vite + TypeScript app |
 | `server/` | Express + TypeScript API; `prisma/` schema, migrations, seed; `tests/` Vitest + Supertest |
 | `e2e/` | Playwright end-to-end tests (`npm run test:e2e`) |
-| `docs/` | Plan, SRS, SDS, feature contracts, evidence |
+| `docs/sprint_1/` | Plan, SRS, SDS, feature contracts, evidence |

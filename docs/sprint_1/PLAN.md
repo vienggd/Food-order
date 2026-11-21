@@ -55,8 +55,8 @@ Deliverable 1 PDF parts:
 | S4 Order detail | `/orders/:id` | customer | F-03 |
 | S5 Order queue | `/operator/orders` | operator | F-04 |
 
-Details (every state: loading, empty, error, success): `docs/ui/ui-spec.md`.
-Final screen designs: `docs/ui/design/index.html` (on `sprint-1`, from PR #13). Low-fi sketch: `docs/ui/wireframes.html`.
+Details (every state: loading, empty, error, success): `docs/sprint_1/ui/ui-spec.md`.
+Final screen designs: `docs/sprint_1/ui/design/index.html` (on `sprint-1`, from PR #13). Low-fi sketch: `docs/sprint_1/ui/wireframes.html`.
 
 ## 5. Technology
 
@@ -132,7 +132,7 @@ Full rules: `CLAUDE.md`. Short version:
 - Every task is an Issue on the [project board](https://github.com/users/vienggd/projects/4).
 - Board columns: **Backlog → Specified → Started → PR Review → Fixing → Done**. Never skip a column.
 - **Contract before code**: write the feature's SDS/AC/STS/DoD and commit it (card → Specified) before any code.
-- **Tests first**: commit a failing test (`[red]`), then the code that makes it pass (`[green]`). Save the failing output in `docs/evidence/tdd/`.
+- **Tests first**: commit a failing test (`[red]`), then the code that makes it pass (`[green]`). Save the failing output in `docs/sprint_1/evidence/tdd/`.
 - Pull requests go into `sprint-1`, not `main`. Write `Closes #<issue>` and link the issue to the PR.
 - **Review**: the partner reviews, clicks **Approve**, merges (merge commit, never squash) and comments what they checked. Never approve or merge your own PR. The author replies to every review comment.
 - Release: PR `sprint-1` → `main`, then tag `v0.1.0-sprint1`.

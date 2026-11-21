@@ -35,7 +35,7 @@ Rules:
 
 ## 3. UI (screen S2, menu list part)
 
-Source: `docs/ui/ui-spec.md` S2 and `docs/ui/design/Menu.html`, `DesktopMenu.html`.
+Source: `docs/sprint_1/ui/ui-spec.md` S2 and `docs/sprint_1/ui/design/Menu.html`, `DesktopMenu.html`.
 
 - Banner: "Order ahead. Skip the line." / "Coffee and snacks from ฿35. Pickup ASAP at the counter."
 - Phone: one row per item. Desktop: 3-column cards.
@@ -108,7 +108,7 @@ No schema change. Reads `menu_items` (`id`, `name`, `price` Int satang, `is_avai
 | TEST-F02-08 | AC-F02-06 | E2E | Seeded DB; log in as alice in the browser | open `/menu` | Latte shows `฿65.00`; Croissant shows **Sold out** and its "Add Croissant" button is disabled |
 | TEST-F02-09 | AC-F02-07 | E2E | Logged in as alice; `/api/menu` answered with 500 (route mocked) | open `/menu`, then click **Reload menu** after the mock is removed | Error text shown; after reload the menu list appears |
 
-Tests are written first and must fail before the code exists (`[red]` commit, output saved in `docs/evidence/tdd/`), then pass (`[green]` commit). Test names start with the test ID, e.g. `it("TEST-F02-01 ...")`.
+Tests are written first and must fail before the code exists (`[red]` commit, output saved in `docs/sprint_1/evidence/tdd/`), then pass (`[green]` commit). Test names start with the test ID, e.g. `it("TEST-F02-01 ...")`.
 
 ## 8. Definition of Done
 

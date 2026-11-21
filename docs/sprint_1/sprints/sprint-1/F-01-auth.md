@@ -108,7 +108,7 @@ Level: **API** = Vitest + Supertest against the local `cafe_test` Postgres; **un
 | TEST-F01-13 | AC-F01-13 | E2E | Seeded | Log in alice + wrong password | Error text visible; password input empty; email input = alice@cafe.test |
 | TEST-F01-14 | AC-F01-14 | E2E | Seeded | Open `/menu` logged out; log in alice, open `/operator/orders` | `/login`; `/menu` + "You don't have access to that page." |
 
-TDD: TEST-F01-01..11 are committed failing first (`[red]`, output saved to `docs/evidence/tdd/F-01-red.txt`), then the code that makes them pass (`[green]`, `F-01-green.txt`). E2E tests run in Issue #10 once the screens exist.
+TDD: TEST-F01-01..11 are committed failing first (`[red]`, output saved to `docs/sprint_1/evidence/tdd/F-01-red.txt`), then the code that makes them pass (`[green]`, `F-01-green.txt`). E2E tests run in Issue #10 once the screens exist.
 
 ## 8. Definition of Done
 

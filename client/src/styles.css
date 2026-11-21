@@ -1,4 +1,4 @@
-/* Shared styles for all screens. Tokens from docs/ui/ui-spec.md "Visual design". */
+/* Shared styles for all screens. Tokens from docs/sprint_1/ui/ui-spec.md "Visual design". */
 :root {
   --forest: #2f4a3a;
   --forest-dark: #1f3328;
@@ -186,7 +186,7 @@ button[disabled] { cursor: not-allowed; }
 @media (min-width: 1200px) { .menu-list { grid-template-columns: repeat(3, 1fr); } }
 @media (min-width: 900px) { .phone-only { display: none; } }
 
-/* Desktop layouts from docs/ui/design/Desktop*.html (#43). Phone (< 900 px) keeps the rules above. */
+/* Desktop layouts from docs/sprint_1/ui/design/Desktop*.html (#43). Phone (< 900 px) keeps the rules above. */
 .section-head { margin: 4px 0 12px; }
 .center-text { text-align: center; }
 .no-signup { font-size: 13px; color: var(--muted); text-align: center; margin: 16px 0 0; }

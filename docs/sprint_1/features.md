@@ -33,14 +33,14 @@ Status values: Not started → Planned (in a sprint plan) → Specified (contrac
 - **Screens:** S1 Login, shared header and route guards.
 - **API:** `POST /api/auth/login`, `POST /api/auth/logout`, `GET /api/auth/me`.
 - **Key decisions:** sessions in the `sessions` table, random id in an httpOnly cookie, 8 hours; bcrypt hashes; role always read from the session; same 401 message for unknown email and wrong password. No sign-up (seeded accounts only).
-- **Issue / owner:** #2 / A (vieng). Contract: `docs/sprints/sprint-1/F-01-*.md`.
+- **Issue / owner:** #2 / A (vieng). Contract: `docs/sprint_1/sprints/sprint-1/F-01-*.md`.
 
 ### F-02 Browse menu
 - **What:** a customer sees every menu item with name and price; sold-out items are greyed out with a SOLD OUT badge and cannot be added.
 - **Screens:** S2 Menu (menu list part).
 - **API:** `GET /api/menu` → `{ id, name, price, isAvailable }`; price in satang.
 - **Access:** CUSTOMER only (401 if not logged in, 403 for OPERATOR).
-- **Issue / owner:** #3 / B (ninja). Contract: `docs/sprints/sprint-1/F-02-*.md`.
+- **Issue / owner:** #3 / B (ninja). Contract: `docs/sprint_1/sprints/sprint-1/F-02-*.md`.
 
 ### F-03 Place order, my orders, order detail
 - **What:** a customer builds a cart and places an order; the server checks every rule, calculates the total from database prices, and saves the order and its lines in one transaction. The customer can list their own orders and open one.
@@ -48,7 +48,7 @@ Status values: Not started → Planned (in a sprint plan) → Specified (contrac
 - **API:** `POST /api/orders` `{ items: [{ menuItemId, quantity }] }`, `GET /api/orders`, `GET /api/orders/:id`.
 - **Rules:** BR-01 quantity 1–10; BR-02 1–20 lines, no duplicate item; BR-03 every item exists and is available, else nothing is saved; BR-04 server total, a price/total field in the request → 400; BR-05 each line keeps the item name and unit price at order time.
 - **Access:** CUSTOMER only; another customer's order → 404 (same as a missing id).
-- **Issue / owner:** #4 / B (ninja). Contract: `docs/sprints/sprint-1/F-03-*.md`.
+- **Issue / owner:** #4 / B (ninja). Contract: `docs/sprint_1/sprints/sprint-1/F-03-*.md`.
 
 ### F-04 Operator queue + accept order
 - **What:** an operator sees PLACED orders oldest first and accepts one; it becomes ACCEPTED and leaves the queue.
@@ -56,7 +56,7 @@ Status values: Not started → Planned (in a sprint plan) → Specified (contrac
 - **API:** `GET /api/operator/orders?status=PLACED`, `POST /api/operator/orders/:id/accept`.
 - **Rules:** BR-06 only a PLACED order can be accepted (else 409); BR-07 two operators accepting at once → exactly one 200, the other 409 (conditional update `where status = PLACED`). Uses the order transition table and `canTransition()`.
 - **Access:** OPERATOR only (403 for CUSTOMER).
-- **Issue / owner:** #5 / A (vieng). Contract: `docs/sprints/sprint-1/F-04-*.md`.
+- **Issue / owner:** #5 / A (vieng). Contract: `docs/sprint_1/sprints/sprint-1/F-04-*.md`.
 
 ## Shared groundwork (not a feature)
 - Issue #1 setup: database schema (`users`, `sessions`, `menu_items`, `orders`, `order_lines`), seed data (2 customers, 1 operator, menu with one sold-out item; password from env `SEED_PASSWORD`), project skeleton and test setup. Used by all Sprint 1 features.

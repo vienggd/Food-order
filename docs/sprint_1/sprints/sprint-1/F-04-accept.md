@@ -111,7 +111,7 @@ Levels as in F-01 (unit / API with real Postgres / E2E). The test ID is at the s
 | TEST-F04-12 | AC-F04-12 | E2E | As 11 | Press Accept order on the first card | "Order #N accepted."; 1 card left |
 | TEST-F04-13 | AC-F04-13 | E2E | As 11; then order N set to ACCEPTED directly in the E2E database | Press Accept order on N | 409 message; N not in the list |
 
-TDD: TEST-F04-01..10 are committed failing first (`[red]`, `docs/evidence/tdd/F-04-red.txt`), then the code (`[green]`, `F-04-green.txt`). E2E tests run in Issue #10.
+TDD: TEST-F04-01..10 are committed failing first (`[red]`, `docs/sprint_1/evidence/tdd/F-04-red.txt`), then the code (`[green]`, `F-04-green.txt`). E2E tests run in Issue #10.
 
 ## 8. Definition of Done
 
@@ -123,4 +123,4 @@ See [`definition-of-done.md`](definition-of-done.md). F-04 specific: TEST-F04-07
 |---|---|---|---|
 | 6 Nov 2026 | 1 | First contract; adds `accepted_at` | Before implementation (Issue #5); accepted time requested for the order detail timeline (chat with ninja, 6 Nov) |
 | 6 Nov 2026 | 1.1 | AC-F04-08 + TEST-F04-14: id above 2147483647 → 400, not 500; TEST-F04-11/13 preconditions say orders are inserted in the E2E database; UI §3: desktop cards, table is known UI debt | Recheck (#37, agreed in chat #71/#72): bug found by ninja; contract made to match the tests and code |
-| 6 Nov 2026 | 1.2 | UI §3: desktop queue is a table, as in the design (no longer UI debt) | #43: desktop layouts made to match docs/ui/design |
+| 6 Nov 2026 | 1.2 | UI §3: desktop queue is a table, as in the design (no longer UI debt) | #43: desktop layouts made to match docs/sprint_1/ui/design |

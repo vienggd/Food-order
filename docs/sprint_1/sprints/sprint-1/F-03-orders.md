@@ -50,7 +50,7 @@ A customer builds a cart from the menu and places an order. The server checks ev
 
 ## 3. UI
 
-Source: `docs/ui/ui-spec.md` S2 (cart), S3, S4 and `docs/ui/design/Menu.html`, `Orders.html`, `DesktopMenu.html`, `DesktopOrders.html`.
+Source: `docs/sprint_1/ui/ui-spec.md` S2 (cart), S3, S4 and `docs/sprint_1/ui/design/Menu.html`, `Orders.html`, `DesktopMenu.html`, `DesktopOrders.html`.
 
 ### S2 cart (on `/menu`)
 - Line: name, stepper (− qty +), line subtotal, ✕ remove. "Pickup: ASAP". "Estimated total". **Place order →**.
@@ -186,7 +186,7 @@ Seed: alice, bob (CUSTOMER), staff (OPERATOR); Latte 6500 (id 1), Americano 5500
 | TEST-F03-19 | AC-F03-10 | E2E | alice logged in | add Latte twice + Thai Milk Tea, Place order | URL `/orders/N`; "Order #N placed!"; total ฿180.00; `/orders` lists it as PLACED |
 | TEST-F03-20 | AC-F03-11 | E2E | alice logged in; Latte in cart; Latte set sold out in DB before submit | Place order | error message shown naming Latte; cart still has Latte; line marked |
 
-Tests are written first and must fail before the code exists (`[red]` commit, output saved in `docs/evidence/tdd/`), then pass (`[green]` commit). Test names start with the test ID.
+Tests are written first and must fail before the code exists (`[red]` commit, output saved in `docs/sprint_1/evidence/tdd/`), then pass (`[green]` commit). Test names start with the test ID.
 
 ## 8. Definition of Done
 

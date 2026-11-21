@@ -20,7 +20,7 @@ npm run db:migrate && npm run db:seed       # tables + 3 accounts + 6 menu items
 npm run dev                                 # app http://localhost:5173, API :3000
 npm test                                    # server (cafe_test DB) + client tests
 npx playwright install chromium && npm run test:e2e   # end-to-end, phone + desktop (cafe_e2e DB)
-npm run evidence                            # re-runs everything, rewrites docs/evidence/*.md
+npm run evidence                            # re-runs everything, rewrites docs/sprint_1/evidence/*.md
 ```
 
 Seeded test accounts (synthetic data): `alice@cafe.test`, `bob@cafe.test` (CUSTOMER), `staff@cafe.test` (OPERATOR). The password is the `SEED_PASSWORD` each student sets locally; it is not in Git or in this PDF.
@@ -86,7 +86,7 @@ All screenshots were taken by the end-to-end tests (Playwright) on the commit in
 ![F-01 wrong password](screenshots/F01-login-wrong-password-phone.png)
 ![F-01 customer opens an operator page: redirected with a notice](screenshots/F01-forbidden-redirect-phone.png)
 
-Desktop (1280 px) versions of every screenshot are in `docs/evidence/screenshots/*-desktop.png`, for example:
+Desktop (1280 px) versions of every screenshot are in `docs/sprint_1/evidence/screenshots/*-desktop.png`, for example:
 
 ![F-03 menu + cart, desktop](screenshots/F03-cart-desktop.png)
 ![F-04 queue, desktop](screenshots/F04-queue-desktop.png)
@@ -111,7 +111,7 @@ All results below are **automated** tests. No manual check is counted as verific
 | e2e desktop | 11 | 11 | 0 | 0 |
 <!-- /COUNTS -->
 
-Every single test with its result: `docs/evidence/test-run.md`.
+Every single test with its result: `docs/sprint_1/evidence/test-run.md`.
 
 ### Acceptance criteria → planned test → actual test → result
 
@@ -234,13 +234,13 @@ The server filters by owner inside the query, so no data from bob's order is eve
 | F-03 Orders (ninja) | `3178514` 03:36 | `e922626` 03:50 — 29 failed | `13a2651` 03:57 — 29 passed | #26 (vieng) |
 | F-04 Accept (vieng) | `92470d8` 03:37 | `463f459` 03:46 — 10 failed | `f729818` 03:48 — 10 passed | #24 (ninja) |
 
-Times are 6 Nov 2026, +07:00, from `git log`. Full Issue / branch / PR / reviewer table for every Issue: `docs/evidence/history.md`.
+Times are 6 Nov 2026, +07:00, from `git log`. Full Issue / branch / PR / reviewer table for every Issue: `docs/sprint_1/evidence/history.md`.
 
 ### Two completed Issues and their pull requests
 
 | | Issue #5 — F-04 Operator queue and accept | Issue #4 — F-03 Place order, my orders, order detail |
 |---|---|---|
-| Contract | `docs/sprints/sprint-1/F-04-accept.md` (AC-F04-01..13, TEST-F04-01..13) | `docs/sprints/sprint-1/F-03-orders.md` (AC-F03-01..12, TEST-F03-01..21) |
+| Contract | `docs/sprint_1/sprints/sprint-1/F-04-accept.md` (AC-F04-01..13, TEST-F04-01..13) | `docs/sprint_1/sprints/sprint-1/F-03-orders.md` (AC-F03-01..12, TEST-F03-01..21) |
 | Branch (made from the Issue) | `feature/F-04-accept` | `feature/F-03-orders` |
 | PR | #24 into `sprint-1` | #26 into `sprint-1` |
 | Author → reviewer | vieng → ninja | ninja → vieng |
