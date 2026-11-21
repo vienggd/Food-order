@@ -28,3 +28,9 @@ Thumbs.db
 .vscode/
 .idea/
 *.log
+
+# Vite dependency cache
+.vite/
+
+# Raw JSON from npm run evidence
+docs/evidence/.raw/

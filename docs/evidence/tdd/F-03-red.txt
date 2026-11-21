@@ -1,0 +1,423 @@
+
+ RUN  v3.2.7 D:/Lab Software2026/Food-order/server
+
+warn The configuration property `package.json#prisma` is deprecated and will be removed in Prisma 7. Please migrate to a Prisma config file (e.g., `prisma.config.ts`).
+For more information, see: https://pris.ly/prisma-config
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "cafe_test", schema "public" at "localhost:5433"
+
+1 migration found in prisma/migrations
+
+
+No pending migrations to apply.
+ ❯ tests/orders.test.ts (29 tests | 29 failed) 11477ms
+   × F-03 POST /api/orders > TEST-F03-01 places an order: 201 PLACED, server total, lines with copied name and price, saved 333ms
+     → expected 404 to be 201 // Object.is equality
+   × F-03 POST /api/orders > TEST-F03-02 BR-01 boundary: quantity 1 and 10 are accepted 269ms
+     → expected 404 to be 201 // Object.is equality
+   × F-03 POST /api/orders > TEST-F03-03 BR-01 quantity 0 is rejected with 400 and nothing saved 267ms
+     → expected 404 to be 400 // Object.is equality
+   × F-03 POST /api/orders > TEST-F03-03 BR-01 quantity 11 is rejected with 400 and nothing saved 270ms
+     → expected 404 to be 400 // Object.is equality
+   × F-03 POST /api/orders > TEST-F03-03 BR-01 quantity 1.5 is rejected with 400 and nothing saved 264ms
+     → expected 404 to be 400 // Object.is equality
+   × F-03 POST /api/orders > TEST-F03-03 BR-01 quantity -1 is rejected with 400 and nothing saved 291ms
+     → expected 404 to be 400 // Object.is equality
+   × F-03 POST /api/orders > TEST-F03-03 BR-01 quantity 2 is rejected with 400 and nothing saved 279ms
+     → expected 404 to be 400 // Object.is equality
+   × F-03 POST /api/orders > TEST-F03-03 BR-01 quantity null is rejected with 400 and nothing saved 267ms
+     → expected 404 to be 400 // Object.is equality
+   × F-03 POST /api/orders > TEST-F03-04 BR-02 empty or missing items {"items":[]}: 400, nothing saved 462ms
+     → expected 404 to be 400 // Object.is equality
+   × F-03 POST /api/orders > TEST-F03-04 BR-02 empty or missing items {}: 400, nothing saved 531ms
+     → expected 404 to be 400 // Object.is equality
+   × F-03 POST /api/orders > TEST-F03-04 BR-02 empty or missing items {"items":"Latte"}: 400, nothing saved 468ms
+     → expected 404 to be 400 // Object.is equality
+   × F-03 POST /api/orders > TEST-F03-05 BR-02 boundary: 20 different lines are accepted 509ms
+     → expected 404 to be 201 // Object.is equality
+   × F-03 POST /api/orders > TEST-F03-06 BR-02 21 lines: 400, nothing saved 474ms
+     → expected 404 to be 400 // Object.is equality
+   × F-03 POST /api/orders > TEST-F03-07 BR-02 the same item twice: 400 DUPLICATE, nothing saved 352ms
+     → expected 404 to be 400 // Object.is equality
+   × F-03 POST /api/orders > TEST-F03-08 BR-03 a sold-out item rejects the whole order: 400 SOLD_OUT naming it, nothing saved 355ms
+     → expected 404 to be 400 // Object.is equality
+   × F-03 POST /api/orders > TEST-F03-09 BR-03 an unknown item: 400 NOT_FOUND reason, nothing saved 442ms
+     → expected 404 to be 400 // Object.is equality
+   × F-03 POST /api/orders > TEST-F03-10 BR-04 client sends price on a line: 400, nothing saved 412ms
+     → expected 404 to be 400 // Object.is equality
+   × F-03 POST /api/orders > TEST-F03-10 BR-04 client sends unitPrice on a line: 400, nothing saved 385ms
+     → expected 404 to be 400 // Object.is equality
+   × F-03 POST /api/orders > TEST-F03-10 BR-04 client sends total at top level: 400, nothing saved 512ms
+     → expected 404 to be 400 // Object.is equality
+   × F-03 GET /api/orders and /api/orders/:id > TEST-F03-11 BR-05 order keeps name and price from order time after the menu changes 367ms
+     → expected 404 to be 200 // Object.is equality
+   × F-03 GET /api/orders and /api/orders/:id > TEST-F03-12 list shows only my orders, newest first, with item count 389ms
+     → expected 404 to be 200 // Object.is equality
+   × F-03 GET /api/orders and /api/orders/:id > TEST-F03-13 my own order detail: 200 with lines and total 477ms
+     → expected 404 to be 200 // Object.is equality
+   × F-03 GET /api/orders and /api/orders/:id > TEST-F03-14 another customer's order and a missing id both give the same 404 350ms
+     → expected { error: { code: 'NOT_FOUND', …(2) } } to deeply equal { error: { code: 'NOT_FOUND', …(2) } }
+   × F-03 GET /api/orders and /api/orders/:id > TEST-F03-21 malformed id abc: 400 VALIDATION_ERROR 595ms
+     → expected 404 to be 400 // Object.is equality
+   × F-03 GET /api/orders and /api/orders/:id > TEST-F03-21 malformed id 0: 400 VALIDATION_ERROR 423ms
+     → expected 404 to be 400 // Object.is equality
+   × F-03 GET /api/orders and /api/orders/:id > TEST-F03-21 malformed id -1: 400 VALIDATION_ERROR 484ms
+     → expected 404 to be 400 // Object.is equality
+   × F-03 GET /api/orders and /api/orders/:id > TEST-F03-21 malformed id 1.5: 400 VALIDATION_ERROR 420ms
+     → expected 404 to be 400 // Object.is equality
+   × F-03 access > TEST-F03-15 not logged in: all F-03 endpoints give 401 430ms
+     → expected 404 to be 401 // Object.is equality
+   × F-03 access > TEST-F03-16 operator: all F-03 endpoints give 403, nothing saved 395ms
+     → expected 404 to be 403 // Object.is equality
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 29 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/orders.test.ts > F-03 POST /api/orders > TEST-F03-01 places an order: 201 PLACED, server total, lines with copied name and price, saved
+AssertionError: expected 404 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ tests/orders.test.ts:44:24
+     42|   it("TEST-F03-01 places an order: 201 PLACED, server total, lines wit…
+     43|     const res = await place(alice, { items: [{ menuItemId: menu["Latte…
+     44|     expect(res.status).toBe(201);
+       |                        ^
+     45|     expect(res.body).toMatchObject({ id: expect.any(Number), status: "…
+     46|     expect(res.body.lines).toEqual([
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/29]⎯
+
+ FAIL  tests/orders.test.ts > F-03 POST /api/orders > TEST-F03-02 BR-01 boundary: quantity 1 and 10 are accepted
+AssertionError: expected 404 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ tests/orders.test.ts:58:24
+     56|   it("TEST-F03-02 BR-01 boundary: quantity 1 and 10 are accepted", asy…
+     57|     const res = await place(alice, { items: [{ menuItemId: menu["Latte…
+     58|     expect(res.status).toBe(201);
+       |                        ^
+     59|     expect(res.body.total).toBe(6500 + 55000);
+     60|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/29]⎯
+
+ FAIL  tests/orders.test.ts > F-03 POST /api/orders > TEST-F03-03 BR-01 quantity 0 is rejected with 400 and nothing saved
+ FAIL  tests/orders.test.ts > F-03 POST /api/orders > TEST-F03-03 BR-01 quantity 11 is rejected with 400 and nothing saved
+ FAIL  tests/orders.test.ts > F-03 POST /api/orders > TEST-F03-03 BR-01 quantity 1.5 is rejected with 400 and nothing saved
+ FAIL  tests/orders.test.ts > F-03 POST /api/orders > TEST-F03-03 BR-01 quantity -1 is rejected with 400 and nothing saved
+ FAIL  tests/orders.test.ts > F-03 POST /api/orders > TEST-F03-03 BR-01 quantity 2 is rejected with 400 and nothing saved
+ FAIL  tests/orders.test.ts > F-03 POST /api/orders > TEST-F03-03 BR-01 quantity null is rejected with 400 and nothing saved
+AssertionError: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ tests/orders.test.ts:64:24
+     62|   it.each([0, 11, 1.5, -1, "2", null])("TEST-F03-03 BR-01 quantity %s …
+     63|     const res = await place(alice, { items: [{ menuItemId: menu["Latte…
+     64|     expect(res.status).toBe(400);
+       |                        ^
+     65|     expect(res.body.error.code).toBe("VALIDATION_ERROR");
+     66|     await expectNothingSaved();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/29]⎯
+
+ FAIL  tests/orders.test.ts > F-03 POST /api/orders > TEST-F03-04 BR-02 empty or missing items {"items":[]}: 400, nothing saved
+ FAIL  tests/orders.test.ts > F-03 POST /api/orders > TEST-F03-04 BR-02 empty or missing items {}: 400, nothing saved
+ FAIL  tests/orders.test.ts > F-03 POST /api/orders > TEST-F03-04 BR-02 empty or missing items {"items":"Latte"}: 400, nothing saved
+AssertionError: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ tests/orders.test.ts:71:24
+     69|   it.each([[{ items: [] }], [{}], [{ items: "Latte" }]])("TEST-F03-04 …
+     70|     const res = await place(alice, body);
+     71|     expect(res.status).toBe(400);
+       |                        ^
+     72|     expect(res.body.error.code).toBe("VALIDATION_ERROR");
+     73|     await expectNothingSaved();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/29]⎯
+
+ FAIL  tests/orders.test.ts > F-03 POST /api/orders > TEST-F03-05 BR-02 boundary: 20 different lines are accepted
+AssertionError: expected 404 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ tests/orders.test.ts:79:24
+     77|     const ids = (await addAvailableItems(15)).slice(0, 20);
+     78|     const res = await place(alice, { items: ids.map((menuItemId) => ({…
+     79|     expect(res.status).toBe(201);
+       |                        ^
+     80|     expect(res.body.lines).toHaveLength(20);
+     81|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/29]⎯
+
+ FAIL  tests/orders.test.ts > F-03 POST /api/orders > TEST-F03-06 BR-02 21 lines: 400, nothing saved
+AssertionError: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ tests/orders.test.ts:87:24
+     85|     expect(ids).toHaveLength(21);
+     86|     const res = await place(alice, { items: ids.map((menuItemId) => ({…
+     87|     expect(res.status).toBe(400);
+       |                        ^
+     88|     expect(res.body.error.code).toBe("VALIDATION_ERROR");
+     89|     await expectNothingSaved();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/29]⎯
+
+ FAIL  tests/orders.test.ts > F-03 POST /api/orders > TEST-F03-07 BR-02 the same item twice: 400 DUPLICATE, nothing saved
+AssertionError: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ tests/orders.test.ts:94:24
+     92|   it("TEST-F03-07 BR-02 the same item twice: 400 DUPLICATE, nothing sa…
+     93|     const res = await place(alice, { items: [{ menuItemId: menu["Latte…
+     94|     expect(res.status).toBe(400);
+       |                        ^
+     95|     expect(res.body.error.code).toBe("VALIDATION_ERROR");
+     96|     expect(res.body.error.details.items).toEqual([{ menuItemId: menu["…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/29]⎯
+
+ FAIL  tests/orders.test.ts > F-03 POST /api/orders > TEST-F03-08 BR-03 a sold-out item rejects the whole order: 400 SOLD_OUT naming it, nothing saved
+AssertionError: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ tests/orders.test.ts:102:24
+    100|   it("TEST-F03-08 BR-03 a sold-out item rejects the whole order: 400 S…
+    101|     const res = await place(alice, { items: [{ menuItemId: menu["Latte…
+    102|     expect(res.status).toBe(400);
+       |                        ^
+    103|     expect(res.body.error.code).toBe("VALIDATION_ERROR");
+    104|     expect(res.body.error.message).toContain("Croissant");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/29]⎯
+
+ FAIL  tests/orders.test.ts > F-03 POST /api/orders > TEST-F03-09 BR-03 an unknown item: 400 NOT_FOUND reason, nothing saved
+AssertionError: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ tests/orders.test.ts:111:24
+    109|   it("TEST-F03-09 BR-03 an unknown item: 400 NOT_FOUND reason, nothing…
+    110|     const res = await place(alice, { items: [{ menuItemId: 9999, quant…
+    111|     expect(res.status).toBe(400);
+       |                        ^
+    112|     expect(res.body.error.code).toBe("VALIDATION_ERROR");
+    113|     expect(res.body.error.details.items).toEqual([{ menuItemId: 9999, …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/29]⎯
+
+ FAIL  tests/orders.test.ts > F-03 POST /api/orders > TEST-F03-10 BR-04 client sends price on a line: 400, nothing saved
+ FAIL  tests/orders.test.ts > F-03 POST /api/orders > TEST-F03-10 BR-04 client sends unitPrice on a line: 400, nothing saved
+ FAIL  tests/orders.test.ts > F-03 POST /api/orders > TEST-F03-10 BR-04 client sends total at top level: 400, nothing saved
+AssertionError: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ tests/orders.test.ts:123:24
+    121|   ])("TEST-F03-10 BR-04 client sends %s: 400, nothing saved", async (_…
+    122|     const res = await place(alice, body(menu["Latte"]));
+    123|     expect(res.status).toBe(400);
+       |                        ^
+    124|     expect(res.body.error.code).toBe("VALIDATION_ERROR");
+    125|     await expectNothingSaved();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/29]⎯
+
+ FAIL  tests/orders.test.ts > F-03 GET /api/orders and /api/orders/:id > TEST-F03-11 BR-05 order keeps name and price from order time after the menu changes
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/orders.test.ts:134:24
+    132|     await prisma.menuItem.update({ where: { id: menu["Latte"] }, data:…
+    133|     const res = await get(alice, `/api/orders/${placed.body.id}`);
+    134|     expect(res.status).toBe(200);
+       |                        ^
+    135|     expect(res.body.lines[0]).toMatchObject({ name: "Latte", unitPrice…
+    136|     expect(res.body.total).toBe(6500);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/29]⎯
+
+ FAIL  tests/orders.test.ts > F-03 GET /api/orders and /api/orders/:id > TEST-F03-12 list shows only my orders, newest first, with item count
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/orders.test.ts:144:24
+    142|     const second = await place(alice, { items: [{ menuItemId: menu["La…
+    143|     const res = await get(alice, "/api/orders");
+    144|     expect(res.status).toBe(200);
+       |                        ^
+    145|     expect(res.body).toEqual([
+    146|       { id: second.body.id, status: "PLACED", total: 6500 + 16500, ite…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/29]⎯
+
+ FAIL  tests/orders.test.ts > F-03 GET /api/orders and /api/orders/:id > TEST-F03-13 my own order detail: 200 with lines and total
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/orders.test.ts:154:24
+    152|     const placed = await place(alice, { items: [{ menuItemId: menu["La…
+    153|     const res = await get(alice, `/api/orders/${placed.body.id}`);
+    154|     expect(res.status).toBe(200);
+       |                        ^
+    155|     expect(res.body).toEqual(placed.body);
+    156|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/29]⎯
+
+ FAIL  tests/orders.test.ts > F-03 GET /api/orders and /api/orders/:id > TEST-F03-14 another customer's order and a missing id both give the same 404
+AssertionError: expected { error: { code: 'NOT_FOUND', …(2) } } to deeply equal { error: { code: 'NOT_FOUND', …(2) } }
+
+- Expected
++ Received
+
+  {
+    "error": {
+      "code": "NOT_FOUND",
+      "details": null,
+-     "message": "Order not found.",
++     "message": "Not found.",
+    },
+  }
+
+ ❯ tests/orders.test.ts:164:24
+    162|     for (const res of [other, missing]) {
+    163|       expect(res.status).toBe(404);
+    164|       expect(res.body).toEqual({ error: { code: "NOT_FOUND", message: …
+       |                        ^
+    165|     }
+    166|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/29]⎯
+
+ FAIL  tests/orders.test.ts > F-03 GET /api/orders and /api/orders/:id > TEST-F03-21 malformed id abc: 400 VALIDATION_ERROR
+ FAIL  tests/orders.test.ts > F-03 GET /api/orders and /api/orders/:id > TEST-F03-21 malformed id 0: 400 VALIDATION_ERROR
+ FAIL  tests/orders.test.ts > F-03 GET /api/orders and /api/orders/:id > TEST-F03-21 malformed id -1: 400 VALIDATION_ERROR
+ FAIL  tests/orders.test.ts > F-03 GET /api/orders and /api/orders/:id > TEST-F03-21 malformed id 1.5: 400 VALIDATION_ERROR
+AssertionError: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ tests/orders.test.ts:170:24
+    168|   it.each(["abc", "0", "-1", "1.5"])("TEST-F03-21 malformed id %s: 400…
+    169|     const res = await get(alice, `/api/orders/${id}`);
+    170|     expect(res.status).toBe(400);
+       |                        ^
+    171|     expect(res.body.error.code).toBe("VALIDATION_ERROR");
+    172|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/29]⎯
+
+ FAIL  tests/orders.test.ts > F-03 access > TEST-F03-15 not logged in: all F-03 endpoints give 401
+AssertionError: expected 404 to be 401 // Object.is equality
+
+- Expected
++ Received
+
+- 401
++ 404
+
+ ❯ tests/orders.test.ts:182:26
+    180|       await get(null, "/api/orders/1"),
+    181|     ]) {
+    182|       expect(res.status).toBe(401);
+       |                          ^
+    183|       expect(res.body.error.code).toBe("UNAUTHENTICATED");
+    184|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/29]⎯
+
+ FAIL  tests/orders.test.ts > F-03 access > TEST-F03-16 operator: all F-03 endpoints give 403, nothing saved
+AssertionError: expected 404 to be 403 // Object.is equality
+
+- Expected
++ Received
+
+- 403
++ 404
+
+ ❯ tests/orders.test.ts:194:26
+    192|       await get(staff, "/api/orders/1"),
+    193|     ]) {
+    194|       expect(res.status).toBe(403);
+       |                          ^
+    195|       expect(res.body.error.code).toBe("FORBIDDEN");
+    196|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/29]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  29 failed (29)
+   Start at  03:50:04
+   Duration  14.53s (transform 111ms, setup 7ms, collect 516ms, tests 11.48s, environment 0ms, prepare 68ms)
+

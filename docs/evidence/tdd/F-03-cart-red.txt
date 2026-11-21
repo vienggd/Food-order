@@ -1,0 +1,81 @@
+
+> test
+> vitest run
+
+
+ RUN  v3.2.7 D:/Lab Software2026/Food-order/client
+
+ ✓ src/lib/money.test.ts (1 test) 2ms
+ ❯ src/lib/cart.test.ts (3 tests | 3 failed) 9ms
+   × cartReducer > TEST-F03-17 adding the same item twice gives one line with quantity 2 7ms
+     → expected [] to have a length of 2 but got +0
+   × cartReducer > TEST-F03-18 quantity is clamped to 1-10 and a 21st different item is refused 1ms
+     → Cannot read properties of undefined (reading 'quantity')
+   × cartReducer > remove deletes the line; clear empties the cart; estimated total is price x qty 1ms
+     → expected +0 to be 18000 // Object.is equality
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/cart.test.ts > cartReducer > TEST-F03-17 adding the same item twice gives one line with quantity 2
+AssertionError: expected [] to have a length of 2 but got +0
+
+- Expected
++ Received
+
+- 2
++ 0
+
+ ❯ src/lib/cart.test.ts:10:24
+      8|   it("TEST-F03-17 adding the same item twice gives one line with quant…
+      9|     const cart = apply(emptyCart, { type: "add", item: item(1) }, { ty…
+     10|     expect(cart.lines).toHaveLength(2);
+       |                        ^
+     11|     expect(cart.lines[0]).toMatchObject({ menuItemId: 1, quantity: 2 }…
+     12|     expect(cart.lines[1]).toMatchObject({ menuItemId: 2, quantity: 1 }…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/lib/cart.test.ts > cartReducer > TEST-F03-18 quantity is clamped to 1-10 and a 21st different item is refused
+TypeError: Cannot read properties of undefined (reading 'quantity')
+ ❯ src/lib/cart.test.ts:17:79
+     15|   it("TEST-F03-18 quantity is clamped to 1-10 and a 21st different ite…
+     16|     let cart = apply(emptyCart, { type: "add", item: item(1) });
+     17|     expect(apply(cart, { type: "setQty", menuItemId: 1, quantity: 0 })…
+       |                                                                               ^
+     18|     expect(apply(cart, { type: "setQty", menuItemId: 1, quantity: 11 }…
+     19|     expect(apply(cart, { type: "setQty", menuItemId: 1, quantity: 2.7 …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/lib/cart.test.ts > cartReducer > remove deletes the line; clear empties the cart; estimated total is price x qty
+AssertionError: expected +0 to be 18000 // Object.is equality
+
+- Expected
++ Received
+
+- 18000
++ 0
+
+ ❯ src/lib/cart.test.ts:31:70
+     29|   it("remove deletes the line; clear empties the cart; estimated total…
+     30|     const cart = apply(emptyCart, { type: "add", item: item(1, 6500) }…
+     31|     expect(cart.lines.reduce((s, l) => s + l.price * l.quantity, 0)).t…
+       |                                                                      ^
+     32|     expect(apply(cart, { type: "remove", menuItemId: 1 }).lines.map((l…
+     33|     expect(apply(cart, { type: "clear" }).lines).toEqual([]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  3 failed | 1 passed (4)
+   Start at  03:49:14
+   Duration  575ms (transform 111ms, setup 0ms, collect 123ms, tests 11ms, environment 0ms, prepare 295ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path D:\Lab Software2026\Food-order\client
+npm error workspace client
+npm error location D:\Lab Software2026\Food-order\client
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run

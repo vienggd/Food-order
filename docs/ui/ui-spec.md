@@ -1,6 +1,28 @@
 # UI Spec — Sprint 1 (Campus Café Pre-order)
 
-Low-fidelity wireframes: [`wireframes.html`](wireframes.html). Visual polish is out of scope. This file covers screens, navigation, and the states each screen must handle.
+Final screens (mobile with every state, plus desktop): [`design/index.html`](design/index.html), exported from the Claude Design canvas. First low-fidelity sketch: [`wireframes.html`](wireframes.html). This file covers screens, navigation, and the states each screen must handle; when a screen and this file disagree, this file wins.
+
+## Visual design
+
+- **Fonts** (Google Fonts): headings and the brand in **Fraunces** (600); everything else in **Plus Jakarta Sans** (400–800).
+- **Colours:**
+
+  | Token | Hex | Used for |
+  |---|---|---|
+  | forest | `#2F4A3A` | primary buttons, headings, active nav, accepted status |
+  | espresso | `#2B1B14` | body text, dark cart bar, desktop sidebar |
+  | beige | `#F3EBDD` | app background |
+  | cashmere | `#FAF5EC` | page background outside the app |
+  | sienna | `#D4874A` | "+" add buttons, badges, cart count (dark text on it) |
+  | caramel | `#E0B07A` | highlights on dark green or espresso |
+  | muted | `#6E5E4F` | secondary text |
+  | placed | `#F2DDC4` / `#6B3410` | PLACED status pill (background / text) |
+  | error | `#FDE3E0` / `#7A1C12` | error boxes |
+  | success | `#E2F2E6` / `#1E5631` | success boxes |
+
+- **Shapes:** white cards with soft shadows and 20px corners on phones (16px on desktop); pill-shaped buttons; inputs 14px corners.
+- **Motion:** buttons lift 1px on hover and press in on click; order cards lift 2px. An orange focus ring shows for keyboard users. All motion turns off under "reduce motion".
+- **Photos:** two stand-in café photos (credits on `design/index.html`). Menu items have no photos in Sprint 1 (the menu has no image field).
 
 Conventions:
 - Money is stored as integer satang and shown as `฿xx.xx` (e.g. `15500` → `฿155.00`).
@@ -36,15 +58,18 @@ Route guard: on app start the client calls `GET /api/auth/me`. No session → `/
 
 ## Shared UI behaviour
 
-**Shared header** (every screen except Login)
-- Left: app name. Middle: role-based links — CUSTOMER sees **Menu · My orders**; OPERATOR sees **Order queue**. The current page link is bold.
-- Right: `<name> · <role>` from `GET /api/auth/me`, and a **Logout** button.
-- Logout → `POST /api/auth/logout`, button shows "Logging out…" (disabled). Whatever the result, clear the client user and go to `/login`.
-- While `/me` is loading the header shows a placeholder and no links.
+**Shared layout** (every screen except Login)
+- **Phone:** a top bar with "Hey, `<name>`", the brand and a role chip, plus a **Log out** icon button. A bottom tab bar: CUSTOMER sees **Menu · Cart · My orders** (Cart is a raised centre button with the number of cart lines; it opens the cart view on `/menu`); OPERATOR sees **Order queue**.
+- **Desktop:** a dark sidebar on the left with the brand, the same role-based links (current page highlighted in green, the cart count next to Menu), the user's name and role, and **Log out** at the bottom. Above the content: a breadcrumb ("Pre-order / Menu") and the page title.
+- Name and role come from `GET /api/auth/me`.
+- Log out → `POST /api/auth/logout`; the button shows a spinner / "Logging out…" (disabled). Whatever the result, clear the client user and go to `/login`.
+- While `/me` is loading, show placeholders and no links.
 
 **Loading** — lists show grey placeholder rows; action buttons are disabled and change label ("Logging in…", "Placing order…", "Accepting…"). This also prevents double-submits.
 
-**Empty** — a dashed box with a short sentence and, where useful, a next step (e.g. "Go to menu").
+**Empty** — a white card with a bold one-line title, a short sentence and, where useful, a next step (e.g. "Browse the menu").
+
+**Button labels** — always a verb and an object: "Reload menu", "Refresh queue", "Accept order", "Place order".
 
 **Errors** — every API error has the shape `{ error: { code, message, details } }`.
 
@@ -88,12 +113,13 @@ Rule of thumb: the UI shows the server's `message` text; it does not invent its 
   - `GET /api/menu` → items `{ id, name, price, isAvailable }`.
   - `POST /api/orders` with body `{ items: [{ menuItemId, quantity }] }` — **never prices** (BR-04; server returns 400 if prices are sent). Response: the created order (incl. `id` and server total).
 - **Fields shown:**
-  - Menu list: item name, price `฿xx.xx`, **Add** button. Sold-out items (`isAvailable = false`) are greyed, show a **SOLD OUT** badge, and Add is disabled.
-  - Cart: one line per item with name, quantity stepper (− qty +), line subtotal, remove (✕); "Estimated total"; "Pickup: ASAP"; **Place order** button.
+  - Banner: "Order ahead. Skip the line." and "Coffee and snacks from ฿35. Pickup ASAP at the counter."
+  - Menu list (phone: one row per item; desktop: 3-column cards): item name, price `฿xx.xx`, round **+** button (label "Add `<item>`" for screen readers). An item already in the cart shows an "In cart · N" badge. Sold-out items (`isAvailable = false`) are greyed, show a **Sold out** badge, and + is disabled.
+  - Cart: one line per item with name, quantity stepper (− qty +), line subtotal, remove (✕); "Pickup: ASAP"; "Estimated total"; **Place order →** button. On a phone the cart is its own view, opened from the dark "2 items · ฿155.00 · View cart →" bar or the Cart tab, and closed with ✕. On desktop the cart is always shown as a panel on the right.
 - **States:**
   - Loading: placeholder rows.
-  - Empty menu: "No items on the menu right now. Please check back later."
-  - Error loading menu: "Couldn't load the menu." + Try again.
+  - Empty menu: "Nothing on the menu yet. Please check back later."
+  - Error loading menu: "Couldn't load the menu. Check your connection." + **Reload menu**.
   - Empty cart: "Your cart is empty. Add something from the menu." Place order disabled.
   - Submitting: "Placing order…", steppers and button disabled.
   - Error 400 from server: show `error.message` (e.g. "Order not placed. 'Croissant' is no longer available."). Nothing was saved (all-or-nothing, BR-03). Reload the menu so sold-out flags are fresh, and mark the bad cart line(s) using `error.details`. Cart is kept so the user can remove the line and retry.
@@ -111,11 +137,11 @@ Rule of thumb: the UI shows the server's `message` text; it does not invent its 
 - **Route:** `/orders`
 - **Feature:** F-03
 - **API:** `GET /api/orders` → only the logged-in customer's orders.
-- **Fields shown (table, newest first):** order number `#1042`, placed time, status badge (`PLACED`, `ACCEPTED`; later sprints add more), total `฿xx.xx`. Whole row is clickable → `/orders/:id`. **↻ Refresh** button (no auto-polling in Sprint 1).
+- **Fields shown (newest first):** order number `#1042`, placed time, item count, status pill (`PLACED` orange, `ACCEPTED` green; later sprints add more), total `฿xx.xx`. Phone: one card per order; desktop: a table on the left with the selected order's detail on the right. The whole card/row is clickable → `/orders/:id`. **Refresh list** button (no auto-polling in Sprint 1).
 - **States:**
-  - Loading: placeholder rows.
-  - Empty: "You haven't ordered yet." + Go to menu.
-  - Error: "Couldn't load your orders." + Try again.
+  - Loading: placeholder cards.
+  - Empty: "No orders yet. Your orders will show up here." + **Browse the menu**.
+  - Error: "Couldn't load your orders." + **Reload orders**.
   - Success: table as above.
 
 ## S4 — Order detail
@@ -125,12 +151,12 @@ Rule of thumb: the UI shows the server's `message` text; it does not invent its 
 - **Route:** `/orders/:id`
 - **Features / rules:** F-03; shows results of BR-04 (server total) and BR-05 (snapshot).
 - **API:** `GET /api/orders/:id`.
-- **Fields shown:** "← My orders" link; order number; status badge; placed time; "Pickup: ASAP"; line table — item name, unit price, × qty, line total; **Total** (from server). Under the total, a status hint ("Waiting for the café to accept." / "Accepted — being prepared soon.") and **↻ Refresh**.
+- **Fields shown:** "← My orders" link; order number; status badge; placed time; "Pickup: ASAP"; line table — item name, unit price, × qty, line total; **Total** (from server). Under the total, a status hint ("Waiting for the café to accept your order." / "Accepted — being prepared soon.") and **Refresh status**. Desktop also shows a small status timeline: Placed (time) → Accepted (time, or "Waiting for the café").
 - **Snapshot (BR-05):** name and unit price come from the order line, not the current menu, so they stay the same even if the menu price changes later.
 - **States:**
   - Loading: placeholder rows.
   - 404: "Order not found." + Back to my orders (covers another customer's order too).
-  - Error (other): "Couldn't load this order." + Try again.
+  - Error (other): "Couldn't load this order." + **Reload order**.
   - Success: as above. When arriving straight from Place order, also show "Order #N placed!".
 
 ## S5 — Operator order queue
@@ -142,11 +168,11 @@ Rule of thumb: the UI shows the server's `message` text; it does not invent its 
 - **API:**
   - `GET /api/operator/orders?status=PLACED`
   - `POST /api/operator/orders/:id/accept`
-- **Fields shown (cards, oldest first = first come, first served):** order number, customer name, placed time, items summary ("Latte ×2, Croissant ×1"), total, **Accept** button. Heading shows count: "New orders (PLACED) · 2". **↻ Refresh** button.
+- **Fields shown (oldest first = first come, first served):** order number, customer name, placed time, items summary ("Latte ×2, Croissant ×1"), total, **Accept order** button. Heading "New orders" with the count in an orange badge. **Refresh queue** button. Phone: one card per order. Desktop: four number cards on top (Waiting orders, Oldest waiting in minutes, Items to make, Queue value), all worked out on the client from the same list, then the orders as a table.
 - **States:**
   - Loading: placeholder rows.
-  - Empty: "No new orders."
-  - Error loading: "Couldn't load orders." + Try again.
+  - Empty: "No new orders. New orders appear here when you refresh."
+  - Error loading: "Couldn't load orders." + **Reload queue**.
   - Accepting: only that card's button shows "Accepting…" (disabled); other cards stay usable.
   - Success: "Order #N accepted." The card leaves the list (it's no longer PLACED).
   - Error 409 `INVALID_STATE` (BR-06 / BR-07): "Order #N: Already accepted by another staff member." Then reload the list automatically; the card disappears. Two staff pressing Accept at once → exactly one sees success, the other sees this message.

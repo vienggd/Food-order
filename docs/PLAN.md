@@ -129,7 +129,7 @@ Every error looks like `{ "error": { "code", "message", "details" } }`. No stack
 Full rules: `CLAUDE.md`. Short version:
 
 - Branches: `main` (protected) ← `sprint-1` ← `feature/F-0x-...` or `docs/...`.
-- Every task is an Issue on the [project board](https://github.com/users/vienggg/projects/4).
+- Every task is an Issue on the [project board](https://github.com/users/vienggd/projects/4).
 - Board columns: **Backlog → Specified → Started → PR Review → Fixing → Done**. Never skip a column.
 - **Contract before code**: write the feature's SDS/AC/STS/DoD and commit it (card → Specified) before any code.
 - **Tests first**: commit a failing test (`[red]`), then the code that makes it pass (`[green]`). Save the failing output in `docs/evidence/tdd/`.

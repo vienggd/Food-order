@@ -1,0 +1,39 @@
+
+> test
+> vitest run
+
+
+ RUN  v3.2.7 D:/Lab Software2026/Food-order/client
+
+ ❯ src/lib/money.test.ts (1 test | 1 failed) 5ms
+   × formatBaht > TEST-F02-07 formats integer satang as ฿xx.xx 4ms
+     → not implemented
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/money.test.ts > formatBaht > TEST-F02-07 formats integer satang as ฿xx.xx
+Error: not implemented
+ ❯ formatBaht src/lib/money.ts:3:9
+      1| // Implemented in the [green] commit.
+      2| export function formatBaht(_satang: number): string {
+      3|   throw new Error("not implemented");
+       |         ^
+      4| }
+      5| 
+ ❯ src/lib/money.test.ts:6:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  03:43:19
+   Duration  612ms (transform 50ms, setup 0ms, collect 38ms, tests 5ms, environment 0ms, prepare 148ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path D:\Lab Software2026\Food-order\client
+npm error workspace client
+npm error location D:\Lab Software2026\Food-order\client
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run

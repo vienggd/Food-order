@@ -63,7 +63,8 @@ Left to right: Backlog, Specified, Started, PR Review, Fixing, Done.
    - Check the approval is on GitHub before merging: `gh pr view <n> --json reviewDecision,reviews` must show `APPROVED`.
 8. If the reviewer asks for changes, move the card to Fixing. Fix on the same branch, push, reply to each comment, ask the partner to review again, then move the card back to PR Review.
 9. After the merge, check on GitHub that it really merged (`gh pr view <n> --json state,mergedAt`). Comment on the issue, move the card to Done and close the issue.
-10. At the end, open a pull request from staging into main. After it is merged, tag the release on the main commit.
+10. At the end of the sprint: when every task is merged into the staging branch, both AIs recheck everything on staging (tests, docs, board, links). When vieng and ninja both agree it is all done, stop and wait.
+    Never merge staging into main, open the release pull request or tag a release on your own. vieng decides that.
 
 ## Board rules
 - Every issue starts in Backlog and moves in order. Never skip a column and never put a new issue straight into Started or Done.
