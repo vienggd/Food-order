@@ -4,19 +4,19 @@ CPE 334 pair project. Customers pre-order food from one campus café; operators 
 The user is learning: explain each step in simple words.
 
 ## This repo
-- GitHub: `vienggg/Food-order` (public). Partner: `NinjoMUDA`.
+- GitHub: `vienggd/Food-order` (public). Partner: `NinjoMUDA`.
 - Default branch: `main` (protected: PR + 1 approval). Staging branch for Sprint 1: `sprint-1`.
 - Branch names: `feature/F-0x-short-name`, `docs/<part>-short-name`.
 - Merge with normal merge commits, never squash (keeps "contract before code" history visible).
 - Release tag for Sprint 1: `v0.1.0-sprint1` on the `main` commit.
 
 ## Project board
-- Board: https://github.com/users/vienggg/projects/4 (number `4`, owner `vienggg`, id `PVT_kwHOEtf6QM4BqYDf`)
+- Board: https://github.com/users/vienggd/projects/4 (number `4`, owner `vienggd`, id `PVT_kwHOEtf6QM4BqYDf`)
 - Status field id: `PVTSSF_lAHOEtf6QM4BqYDfzhovdf8`
 - Column option ids: Backlog `e17725a1`, Specified `8a27d274`, Started `bfd0853d`, PR Review `20caf965`, Fixing `3292dd06`, Done `9be18e02`
 - Move a card:
   `gh project item-edit --project-id PVT_kwHOEtf6QM4BqYDf --id <item-id> --field-id PVTSSF_lAHOEtf6QM4BqYDfzhovdf8 --single-select-option-id <option-id>`
-  (find `<item-id>` with `gh project item-list 4 --owner vienggg --format json`)
+  (find `<item-id>` with `gh project item-list 4 --owner vienggd --format json`)
 
 ## Stack and key decisions
 - React + Vite + TS (`/client`); Node 24 + Express + TS + Zod (`/server`); PostgreSQL 16 + Prisma.
