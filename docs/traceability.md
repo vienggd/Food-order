@@ -61,7 +61,7 @@ IDs agreed with the SRS author in chat on 6 Nov 2026.
 
 - Every FR/BR/NFR maps to a feature: **yes** (FR-01..FR-18, BR-01..BR-07, NFR-01..NFR-09).
 - Every Sprint 1 AC appears in at least one row above: **yes** — AC-F01-01..14, AC-F02-01..07, AC-F03-01..13, AC-F04-01..13 (47 AC).
-- Every Sprint 1 AC has at least one automated test: **yes** — 62 test IDs (TEST-F01-01..14, TEST-F02-01..09, TEST-F03-01..24, TEST-F04-01..14), all found in test names in `server/tests/`, `client/src/lib/`, `e2e/`.
+- Every Sprint 1 AC has at least one automated test: **yes** — 61 test IDs (TEST-F01-01..14, TEST-F02-01..09, TEST-F03-01..24, TEST-F04-01..14), all found in test names in `server/tests/`, `client/src/lib/`, `e2e/`.
 - Only manual check: NFR-07 (secrets and configuration), documented above.
 
 | Test files | Level | IDs |
@@ -82,3 +82,4 @@ IDs agreed with the SRS author in chat on 6 Nov 2026.
 | 6 Nov 2026 | AC, test IDs and results for all Sprint 1 rows (#28) | AC-B3 |
 | 6 Nov 2026 | Added TEST-F03-22, TEST-F03-23, TEST-F04-14 (recheck #37) | Bug fix and ui-spec alignment |
 | 13 Nov 2026 | Added AC-F03-13 / TEST-F03-24 phone tab order (#47) | QA finding on release PR #46 |
+| 21 Nov 2026 | Coverage count corrected: 61 test IDs (14 + 9 + 24 + 14), was written as 62 (#53, review on #54) | Counting error |
