@@ -1,34 +1,26 @@
-"""Public deployment checks. Credentials/tokens are never printed.
+"""Public deployment checks for Food-order. Passwords are never printed.
 
 WHAT THIS SCRIPT DOES
     Called by .github/workflows/deploy.yml after a deployment:
         python3 deploy/smoke_test.py SERVICE_URL
     It checks the live service and exits non-zero (failing the workflow) if any
     check fails. Each public check is retried up to 5 times, 3 seconds apart, to
-    tolerate Cloud Run cold starts.
+    allow for a Cloud Run cold start.
 
     Checks (in order)
-      1. GET /api/health      -> {"status": "ok"}
-      2. GET /api/ready       -> {"db": "connected"}   (proves the DB works)
-      3. GET /                -> HTML page (the built React app is served)
-      4. GET /api/categories  -> non-empty list (migration + seed worked)
-      5. OPTIONAL login test  -> login, /api/auth/me, logout. Runs only if BOTH
-         env vars SMOKE_EMAIL and SMOKE_PASSWORD are set (set both or neither).
-         The session is always logged out, even if a check fails.
+      1. GET /api/health  -> {"ok": true}
+      2. GET /api/ready   -> {"db": "connected"}   (proves the database works)
+      3. GET /            -> HTML page (the built React app is served)
+      4. OPTIONAL login   -> POST /api/auth/login, GET /api/menu (non-empty, so
+         migration + seed worked), POST /api/auth/logout. Runs only if BOTH env
+         vars SMOKE_EMAIL and SMOKE_PASSWORD are set (set both or neither).
+         Our app uses a session cookie, so these calls share one cookie jar.
+         After a successful login the session is always logged out.
 
-IMPORTANT
-    Uses only the Python standard library (no pip install needed).
-    Offline unit tests: deploy/tests/test_smoke.py
-
-REFERENCES
-    - urllib.request : https://docs.python.org/3/library/urllib.request.html
-    - unittest.mock  : https://docs.python.org/3/library/unittest.mock.html
-
-CHANGE ME (groups using another tech stack):
-    - the endpoint paths and expected responses in check() below
-      (/api/health, /api/ready, /, /api/categories, /api/auth/*)
-    - the login/logout endpoints and the 'token' field of the login response
+    Uses only the Python standard library. Offline tests: deploy/tests/test_smoke.py
+    Based on the Lab 5 starter kit (token login replaced by our cookie login).
 """
+import http.cookiejar
 import json
 import os
 import sys
@@ -39,30 +31,29 @@ import urllib.request
 
 # --- HTTP helper --------------------------------------------------------------
 # Returns the response body (bytes). Raises on HTTP errors / timeouts.
-def request(base, path, data=None, token=None):
-    headers = {}
-    if data is not None:
-        headers['Content-Type'] = 'application/json'
-    if token:
-        headers['Authorization'] = 'Bearer ' + token
+def request(opener, base, path, data=None):
+    headers = {'Content-Type': 'application/json'} if data is not None else {}
     req = urllib.request.Request(base + path, headers=headers,
         data=json.dumps(data).encode() if data is not None else None)
-    with urllib.request.urlopen(req, timeout=30) as response:
+    with opener.open(req, timeout=30) as response:
         return response.read()
 
 
+def new_session():
+    return urllib.request.build_opener(urllib.request.HTTPCookieProcessor(http.cookiejar.CookieJar()))
+
+
 def check(base):
-    # --- Public checks (CHANGE ME: paths + predicates for your own API) -------
+    public = new_session()
     for path, predicate in (
-        ('/api/health', lambda b: json.loads(b).get('status') == 'ok'),
+        ('/api/health', lambda b: json.loads(b).get('ok') is True),
         ('/api/ready', lambda b: json.loads(b).get('db') == 'connected'),
         ('/', lambda b: b'<html' in b.lower()),
-        ('/api/categories', lambda b: isinstance(json.loads(b), list) and len(json.loads(b)) > 0),
     ):
         # Retry: a cold Cloud Run instance may need a few seconds to start.
         for attempt in range(5):
             try:
-                if not predicate(request(base, path)):
+                if not predicate(request(public, base, path)):
                     raise ValueError('Unexpected response')
                 break
             except (urllib.error.URLError, TimeoutError, ValueError):
@@ -78,22 +69,24 @@ def check(base):
     if not email:
         print('SKIP login: optional smoke credentials not configured')
         return
-    token = None
+    session = new_session()
+    logged_in = False
     try:
-        login = json.loads(request(base, '/api/auth/login', {'email': email, 'password': password}))
-        token = login['token']
-        request(base, '/api/auth/me', token=token)
-        print('PASS login and authenticated /api/auth/me')
-    except (urllib.error.URLError, TimeoutError, ValueError, KeyError):
+        request(session, base, '/api/auth/login', {'email': email, 'password': password})
+        logged_in = True
+        menu = json.loads(request(session, base, '/api/menu'))
+        if not isinstance(menu, list) or not menu:
+            raise ValueError('Empty menu')
+        print('PASS login and /api/menu (' + str(len(menu)) + ' items)')
+    except (urllib.error.URLError, TimeoutError, ValueError):
         raise RuntimeError('Login smoke check failed') from None
     finally:
-        # Always end the session, even when a check above failed.
-        if token:
-            request(base, '/api/auth/logout', data={}, token=token)
+        # Always end the session, even when the menu check failed.
+        if logged_in:
+            request(session, base, '/api/auth/logout', data={})
             print('PASS logout')
 
 
-# --- Entry point ----------------------------------------------------------------
 if __name__ == '__main__':
     if len(sys.argv) != 2:
         sys.exit('Usage: python3 deploy/smoke_test.py SERVICE_URL')
