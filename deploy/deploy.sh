@@ -172,7 +172,7 @@ fi
 # ==============================================================================
 if [ "$DRY_RUN" = "1" ]; then
   run_cmd gcloud sql instances describe "$SQL_INSTANCE" --project "$PROJECT_ID"
-  run_cmd gcloud sql instances create "$SQL_INSTANCE" --database-version=POSTGRES_16 --edition=enterprise --tier=db-f1-micro --region="$REGION" --storage-size=10GB --storage-type=SSD --backup-start-time=03:00 --project "$PROJECT_ID"
+  run_cmd gcloud sql instances create "$SQL_INSTANCE" --database-version=POSTGRES_16 --edition=enterprise --tier=db-f1-micro --region="$REGION" --storage-size=10GB --storage-type=SSD --no-storage-auto-increase --backup-start-time=03:00 --project "$PROJECT_ID"
 else
   if ! gcloud sql instances describe "$SQL_INSTANCE" --project "$PROJECT_ID" >/dev/null 2>&1; then
     run_cmd gcloud sql instances create "$SQL_INSTANCE" \
@@ -182,6 +182,7 @@ else
       --region="$REGION" \
       --storage-size=10GB \
       --storage-type=SSD \
+      --no-storage-auto-increase \
       --backup-start-time=03:00 \
       --project "$PROJECT_ID"
   fi

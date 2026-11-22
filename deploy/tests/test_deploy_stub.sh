@@ -140,6 +140,7 @@ for MODE in first_run rerun partial job-fail smoke; do
   case "$MODE" in
     first_run)
       grep -q -- '--edition=enterprise' "$GCLOUD_LOG"
+      grep -q '^sql instances create .*--no-storage-auto-increase' "$GCLOUD_LOG"
       grep -q '^sql users create ' "$GCLOUD_LOG" ;;
     partial) grep -q '^sql users set-password ' "$GCLOUD_LOG" ;;
     rerun)
