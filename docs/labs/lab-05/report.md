@@ -40,9 +40,9 @@ Every PR went into `lab-5` (or `lab-5` → `main` for a release) and was reviewe
 | Rubric part | Artifact / direct link | IDs / version | Verification result |
 |---|---|---|---|
 | 1. CI and quality gate | PR [#74](https://github.com/vienggd/Food-order/pull/74) + run [45006187151](https://github.com/vienggd/Food-order/actions/runs/45006187151) | C-01, commit `e9b1bf8` | `test-and-docker` passed: 71 server + 6 client tests, deploy-script tests, build, `docker build` |
-| 1. CI and quality gate | PR [#79](https://github.com/vienggd/Food-order/pull/79) from `test/prove-gate` + run [45027958632](https://github.com/vienggd/Food-order/actions/runs/45027958632); ruleset `protect-main` | C-02 (R-06), commit `0853d5b` | Check failed (1 failed / 70 passed); merge blocked; PR closed unmerged |
+| 1. CI and quality gate | PR [#79](https://github.com/vienggd/Food-order/pull/79) from `test/prove-gate` + run [45027958632](https://github.com/vienggd/Food-order/actions/runs/45027958632); ruleset `protect-main` | C-02 (R-06), commit `0853d5b` | Check failed (1 failed / 70 passed); "Merging is blocked" (Figure @merge-blocked); PR closed unmerged |
 | 2. Docker and config | `Dockerfile`, `.dockerignore`, `docker-compose.yml`, `server/.env.example`, `deployment.md` | C-03, commit `6cace22` | Fresh clone → `docker compose --profile app up --build` → migrate exit 0, `/api/ready` = connected |
-| 3. GCP deployment | Public URL; live API checks; API log `c05-api-log.txt`; UI figures __C04_UI_REF__ | C-04, release `ca0ce13` | Sign in, place an order, staff accepts it; sold-out item rejected; customer gets 403 on the operator queue |
+| 3. GCP deployment | Public URL; live API checks; API log `c05-api-log.txt`; UI figures Figures @c04-menu–@c04-accepted | C-04, release `ca0ce13` | Sign in, place an order, staff accepts it; sold-out item rejected; customer gets 403 on the operator queue |
 | 3. GCP deployment | Persistence figures; restart + rollback runs | C-05, releases `6cace22` / `ca0ce13` | Order #1 unchanged after restart (00004), rollback (run 45034802615) and roll forward (run 45034922682) |
 | 4. Release pipeline | Issue [#68](https://github.com/vienggd/Food-order/issues/68) → PR [#81](https://github.com/vienggd/Food-order/pull/81) → release PR [#82](https://github.com/vienggd/Food-order/pull/82) → run [45029701876](https://github.com/vienggd/Food-order/actions/runs/45029701876) | C-06, commit `ca0ce13` | Service image digest = run summary digest; release note visible on the URL |
 
@@ -60,9 +60,9 @@ rules: deletion · non_fast_forward · pull_request (1 approving review)
        required_status_checks: test-and-docker (GitHub Actions), strict = branch must be up to date
 ```
 
-**C-02 blocked PR.** PR [#79](https://github.com/vienggd/Food-order/pull/79) from the temporary branch `test/prove-gate` breaks AC-1.4 on purpose (`/api/health` expected `{ ok: false }`). Run [45027958632](https://github.com/vienggd/Food-order/actions/runs/45027958632) failed (1 failed, 70 passed) and GitHub blocked the merge (`mergeStateStatus = BLOCKED`); the PR was closed without merging.
+**C-02 blocked PR.** PR [#79](https://github.com/vienggd/Food-order/pull/79) from the temporary branch `test/prove-gate` breaks AC-1.4 on purpose (`/api/health` expected `{ ok: false }`). Run [45027958632](https://github.com/vienggd/Food-order/actions/runs/45027958632) failed (1 failed, 70 passed) and GitHub blocked the merge (`mergeStateStatus = BLOCKED`, Figure @merge-blocked); the PR was closed without merging.
 
-__C02_MERGE_FIGURE__
+![Figure @merge-blocked. C-02 (R-06): PR #79 from test/prove-gate (commit 0853d5b), signed in as the repository owner: the required check test-and-docker failed (re-run 45044906098), "Merging is blocked" and the Merge button is disabled. The PR was reopened only for this capture and closed again unmerged.](evidence/crop/c02-merge-blocked.png)
 
 ![Figure @gate-run. C-02 (R-06): run 45027958632 for PR #79 (test/prove-gate, commit 0853d5b): the required check test-and-docker failed on AC-1.4.](evidence/crop/c02-gate-run-failed.png)
 
@@ -124,7 +124,19 @@ POST /api/orders      Latte × 2                                  201 order id 1
 GET  /api/operator/orders  as the customer                       403 FORBIDDEN                                               ← rejection (role)
 ```
 
-__C04_FIGURES__
+Browser walk-through on the live URL (22 Nov 2026, release #3 `ca0ce13`; the two accounts were signed in by vieng):
+
+![Figure @c04-menu. C-04: alice (CUSTOMER) on /menu of the live URL: six items, the sold-out Croissant cannot be added.](evidence/crop/c04-1-alice-menu.png)
+
+![Figure @c04-cart. C-04: alice's cart: Thai Milk Tea × 1 and Basil Chicken Rice × 2, estimated total ฿210.00.](evidence/crop/c04-2-alice-cart.png)
+
+![Figure @c04-placed. C-04: after Place order: "Order #2 placed!", status PLACED, total ฿210.00, waiting for the café.](evidence/crop/c04-3-alice-order-placed.png)
+
+![Figure @c04-denied. C-04 rejection: alice opens /operator/orders and is sent back with "You don't have access to that page." (the API also answers 403, see above).](evidence/crop/c04-4-alice-no-access.png)
+
+![Figure @c04-queue. C-04: staff (OPERATOR) sees the queue in arrival order: #1 (smoke-test customer, from C-05) and #2 (alice).](evidence/crop/c04-5-staff-queue.png)
+
+![Figure @c04-accepted. C-04: staff accepts #2: "Order #2 accepted." and it leaves the queue. Accepting #2 again returns 409 INVALID_STATE "Already accepted by another staff member."](evidence/crop/c04-6-staff-accepted.png)
 
 **C-05 persistence.** One order, checked through the API after each change (smoke-test customer; full log in [`evidence/c05-api-log.txt`](evidence/c05-api-log.txt)). Data lives in Cloud SQL, so replacing the containers does not touch it.
 
@@ -175,4 +187,4 @@ Deploy demo run 45029701876 (push of ca0ce13 to main):
 
 ### Use of AI
 
-Both students used Claude Code as a coding and operations assistant, each in their own session; the two sessions coordinated through a private chat relay. The AI wrote code and tests, ran the Cloud setup scripts with the project owner signed in, and collected this evidence. Passwords and keys were never typed by the AI or shown to it: deploy scripts generate them into Secret Manager, and GitHub uses keyless sign-in. Every PR was reviewed and merged by the other student's side; no side approved its own PR. Both students can explain every step.
+Both students used Claude Code as a coding and operations assistant, each in their own session; the two sessions coordinated through a private chat relay. The AI wrote code and tests, ran the Cloud setup scripts with the project owner signed in, and collected this evidence. Passwords and keys were never typed by the AI or shown to it: deploy scripts generate them into Secret Manager, and GitHub uses keyless sign-in. For the browser evidence (C-02, C-04) vieng signed in to GitHub and to the live site himself; the AI only clicked and captured the screen. Every PR was reviewed and merged by the other student's side; no side approved its own PR. Both students can explain every step.

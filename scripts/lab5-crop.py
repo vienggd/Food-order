@@ -10,6 +10,13 @@ from PIL import Image
 EVIDENCE = Path(__file__).resolve().parents[1] / "docs" / "labs" / "lab-05" / "evidence"
 CROPS = {
     "c02-gate-run-failed.png": (0, 45, 1530, 930),
+    "c02-merge-blocked.png": (0, 45, 1240, 640),
+    "c04-1-alice-menu.png": (0, 45, 1345, 760),
+    "c04-2-alice-cart.png": (0, 45, 1345, 760),
+    "c04-3-alice-order-placed.png": (0, 45, 1345, 620),
+    "c04-4-alice-no-access.png": (0, 45, 1345, 760),
+    "c04-5-staff-queue.png": (0, 45, 1345, 540),
+    "c04-6-staff-accepted.png": (0, 45, 1345, 540),
     "c06-deploy-run-release2.png": (0, 45, 1000, 645),
     "c06-deploy-run-release3.png": (0, 45, 1000, 645),
     "c06-live-release-note.png": (0, 45, 1920, 175),
