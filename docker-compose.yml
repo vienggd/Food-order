@@ -1,4 +1,8 @@
-# Local database for development and tests. Not used in production.
+# db: local database for development and tests (npm run db:up starts only this).
+# migrate + app: the whole app in Docker, from the root Dockerfile (same image as Cloud Run):
+#   SEED_PASSWORD=<your choice> docker compose --profile app up --build -d
+#   then open http://localhost:3000
+# The cafe/cafe database login is a local-only value, never used in the cloud.
 services:
   db:
     image: postgres:16
@@ -14,6 +18,30 @@ services:
       test: ["CMD-SHELL", "pg_isready -U cafe"]
       interval: 2s
       retries: 15
+
+  # Runs once: apply migrations, then seed (safe to rerun). Stops with a clear error if SEED_PASSWORD is empty.
+  migrate:
+    profiles: [app]
+    build: .
+    command: ["sh", "-c", "npx prisma migrate deploy && node dist/prisma/seed.js"]
+    environment:
+      DATABASE_URL: postgresql://cafe:cafe@db:5432/cafe
+      SEED_PASSWORD: ${SEED_PASSWORD:-}
+      SMOKE_PASSWORD: ${SMOKE_PASSWORD:-}
+    depends_on:
+      db:
+        condition: service_healthy
+
+  app:
+    profiles: [app]
+    build: .
+    environment:
+      DATABASE_URL: postgresql://cafe:cafe@db:5432/cafe
+    ports:
+      - "3000:3000"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
 
 volumes:
   pgdata:
