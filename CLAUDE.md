@@ -5,7 +5,7 @@ The user is learning: explain each step in simple words.
 
 ## This repo
 - GitHub: `vienggd/Food-order` (public). Partner: `NinjoMUDA`.
-- Default branch: `main` (protected: PR + 1 approval). Staging branch for Sprint 1: `sprint-1`.
+- Default branch: `main` (protected: PR + 1 approval). Staging branches: Sprint 1 `sprint-1`, Lab 5 `lab-5` (PRs for Lab 5 go into `lab-5`, label `lab5`).
 - Branch names: `feature/F-0x-short-name`, `docs/<part>-short-name`.
 - Merge with normal merge commits, never squash (keeps "contract before code" history visible).
 - Release tag for Sprint 1: `v0.1.0-sprint1` on the `main` commit.
