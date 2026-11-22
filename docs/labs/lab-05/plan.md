@@ -10,7 +10,7 @@ If the guide or kit disagrees with the handout, **the handout wins**.
 
 ## 0. Deadline
 
-The handout said Sun 15 Nov 2026; the TA has moved the due date. New due date: **____** (fill in).
+The handout said Sun 15 Nov 2026; the TA has moved the due date. We finish as soon as we can (no fixed date written here).
 Plan for **2 working days** of work anyway, so we have buffer.
 
 ---
@@ -78,7 +78,7 @@ feature branch ──PR──▶ lab-5 (staging) ──release PR──▶ main 
 | Dockerfile / `.dockerignore` | ❌ none (compose only starts Postgres) |
 | `.github/workflows/` | ❌ none |
 | `main` protection | ⚠️ old-style branch protection, 1 approval, **no required check**, and admins can probably bypass it (PR #15 merged into `main` with no approval). Lab 5 needs a **ruleset** with an empty bypass list. |
-| Label `lab5` | ❌ not created yet |
+| Label `lab5` | ✅ created and on every Lab 5 Issue |
 | Lab 5 course files | ✅ moved to `docs/labs/lab-05/Lab5/` and ignored by Git (`.gitignore`: `docs/labs/*/Lab*/`) |
 | `CLAUDE.md` / `AGENTS.md` | ⚠️ owner fixed to `vienggd` in #60, but the staging line still says `sprint-1` → add `lab-5` (L5-10). `AGENTS.md` is untracked |
 
@@ -124,7 +124,7 @@ feature branch ──PR──▶ lab-5 (staging) ──release PR──▶ main 
 
 - **vieng owns the GCP project** (Owner) and is the GitHub repo admin. Only the Owner can grant **IAM** roles, so vieng runs Ep. 5 and 6.2–6.3; only the repo admin can change Settings, so vieng runs 6.4–6.5.
 - **ninja** (GCP **Editor**, repo collaborator) therefore takes most of the **code** work (cloud-ready, Docker, CI, deploy pipeline) and the rollback runs, so both of us still touch every part (R-11). Every PR is reviewed by the other person.
-- Fill in the GCP **Project ID** here once (not secret): `__________`.
+- GCP **Project ID** (not secret): `cpe334-2026-team33` (billing enabled, checked in Cloud Shell on 22 Nov).
 
 ---
 
@@ -142,7 +142,7 @@ Owners alternate so **both** of us touch Docker, CI, GCP and review (R-11). The 
 | L5-4 (#65) | CI on Pull Requests (Ep. 4) | vieng | ninja | `feature/L5-4-ci` | `test-and-docker` runs and passes on the PR into `lab-5`; first release PR `lab-5 → main` passes too |
 | L5-5 (#66) | First deploy to GCP from Cloud Shell (Ep. 5) | vieng | ninja | none (script; `deploy/deploy.sh` adapted in L5-4) | Dry run read; URL loads; `/api/ready` OK; can sign in; storage auto-increase off |
 | L5-6 (#67) | Connect GitHub to GCP + merge gate (Ep. 6) | vieng (6.1–6.5), ninja (6.6 prove gate) | other | `test/prove-gate` (throwaway) | `demo` env + 4 variables; WIF provider; deployer has **no keys**; ruleset Active, empty bypass, `test-and-docker` required; ninja's failing PR blocked (C-02) |
-| L5-7 (#68) | Auto deploy + smoke test + visible change (Ep. 7) | ninja (deploy.yml), vieng (visible change) | other | `feature/L5-7-auto-deploy`, `feature/L5-7-deploy-proof` | Two green "Deploy demo" runs; second one shows a visible change on the URL; revision digest = run summary (C-06) |
+| L5-7 (#68) | Auto deploy + smoke test + visible change (Ep. 7) | vieng (deploy.yml, visible change), ninja (release #2 run) | other | `feature/L5-7-auto-deploy`, `feature/L5-7-deploy-proof` | Two green "Deploy demo" runs; second one shows a visible change on the URL; revision digest = run summary (C-06) |
 | L5-8 (#69) | Persistence, rollback, roll forward (Ep. 8) | ninja | vieng | none (Actions + app) | Order created → restart + rollback to release A → still there → roll forward → still there (C-05) |
 | L5-9 (#70) | `deployment.md` final + evidence + PDF (Sec. 4.3, 12) | both (pair) | — | `docs/L5-9-report` | PDF `lab5_sec<section>_<group>.pdf` with Answer Part 0–4 and evidence index |
 | L5-10 (#71) | Update `CLAUDE.md`/`AGENTS.md` (staging `lab-5`) | vieng | ninja | `docs/L5-10-agent-rules` | Both AI-agent rule files name `lab-5` as the Lab 5 staging branch |
@@ -244,3 +244,14 @@ PDF: `lab5_sec<section>_<group name>.pdf`, headings **Answer Part 0** to **Answe
 - [ ] Repo is public
 - [ ] `deployment.md` and the evidence index are complete; either of us can explain any step
 - [ ] PDF named `lab5_sec<section>_<group name>.pdf`
+
+---
+
+## 9. Agreed work order (22 Nov, vieng + ninja)
+
+Code is written first (by the AI agents, overnight), and the human steps come last in a few short blocks.
+
+- **ninja's AI:** #63 cloud-ready, then #64 Docker (branch started from #63's branch). Pull requests into `lab-5`.
+- **vieng's AI:** #61, #71, #65 CI (branch started from #64's branch), #68 `deploy.yml` + smoke test, one Cloud Shell script for #66 + #67, draft docs.
+- **Morning, humans:** ninja reviews and merges #61, #71, #63, #64, #65, #68 in order (vieng reviews #63, #64) → vieng runs the Cloud Shell script and sets the GitHub environment and ruleset → release PR `lab-5 → main` → prove-gate (ninja) → visible change + release #2 → rollback (ninja) → PDF together.
+- AI agents never merge, touch `main`, tag, run cloud commands or handle passwords.
