@@ -231,3 +231,6 @@ button[disabled] { cursor: not-allowed; }
   .orders-split .split-list, .orders-split .split-detail { display: block !important; }
   .split-detail .back { display: none; }
 }
+
+/* Lab 5 deploy proof: small note under the login tagline. */
+.release-note { margin: 6px 0 0; font-size: 12px; color: #d9e4d3; opacity: 0.85; }
