@@ -8,7 +8,7 @@ only where a link cannot show the result, cropped to the part that matters; no s
 
 | | |
 |---|---|
-| Team / topic | Team 33 — Theme 4 E-Commerce / Ordering: **Campus Café Pre-order** (Food-order) |
+| Team / topic | Section 131 · Team 33 · group **COOKS** (Cafe Online Ordering Knowledge System) — Theme 4 E-Commerce / Ordering: **Campus Café Pre-order** (Food-order) |
 | Students | **Garunyapas Danpitakkul** (vieng) — 67070503404 — GitHub [`vienggd`](https://github.com/vienggd)<br>**Dechayut Panyawutvorakul** (ninja) — 67070503414 — GitHub [`NinjoMUDA`](https://github.com/NinjoMUDA) |
 | Repository (public) | https://github.com/vienggd/Food-order |
 | Submitted release | Commit [`ca0ce13`](https://github.com/vienggd/Food-order/commit/ca0ce13bf18a4cd5f53e1f9d7972641080a62b01) on `main` (release PR [#82](https://github.com/vienggd/Food-order/pull/82)) |
