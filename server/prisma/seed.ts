@@ -18,8 +18,13 @@ export const SEED_MENU = [
   { name: "Basil Chicken Rice", price: 8000, isAvailable: true },
 ];
 
-// Safe to run many times: upsert by unique email / name.
-export async function seed(prisma: PrismaClient, password = process.env.SEED_PASSWORD) {
+// Safe to run on every deploy: users get the current password; menu items are only created,
+// so prices and sold-out flags an operator changed are kept.
+export async function seed(
+  prisma: PrismaClient,
+  password = process.env.SEED_PASSWORD,
+  smokePassword = process.env.SMOKE_PASSWORD,
+) {
   if (!password) {
     throw new Error("SEED_PASSWORD is not set. Put it in server/.env (see server/.env.example).");
   }
@@ -32,7 +37,13 @@ export async function seed(prisma: PrismaClient, password = process.env.SEED_PAS
     });
   }
   for (const m of SEED_MENU) {
-    await prisma.menuItem.upsert({ where: { name: m.name }, update: m, create: m });
+    await prisma.menuItem.upsert({ where: { name: m.name }, update: {}, create: m });
+  }
+  // Lowest-role account for the read-only smoke test after each deploy (never a demo account).
+  if (smokePassword) {
+    const smoke = { email: "smoke@cafe.test", name: "Smoke Test", role: "CUSTOMER" as const };
+    const hash = await bcrypt.hash(smokePassword, 10);
+    await prisma.user.upsert({ where: { email: smoke.email }, update: { passwordHash: hash }, create: { ...smoke, passwordHash: hash } });
   }
 }
 
