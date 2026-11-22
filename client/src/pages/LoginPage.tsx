@@ -47,6 +47,7 @@ export function LoginPage() {
           <em>Order ahead.</em>
         </p>
         <p className="tag">Skip the line. Pick up when it's ready.</p>
+        <p className="release-note">Release 2 · now on Google Cloud</p>
       </div>
       <form className="login-form" onSubmit={submit} noValidate>
         <div className="card-head">
