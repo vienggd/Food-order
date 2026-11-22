@@ -11,8 +11,8 @@ only where a link cannot show the result, cropped to the part that matters; no s
 | Team / topic | Section 131 · Team 33 · group **COOKS** (Cafe Online Ordering Knowledge System) — Theme 4 E-Commerce / Ordering: **Campus Café Pre-order** (Food-order) |
 | Students | **Garunyapas Danpitakkul** (vieng) — 67070503404 — GitHub [`vienggd`](https://github.com/vienggd)<br>**Dechayut Panyawutvorakul** (ninja) — 67070503414 — GitHub [`NinjoMUDA`](https://github.com/NinjoMUDA) |
 | Repository (public) | https://github.com/vienggd/Food-order |
-| Submitted release | Commit [`ca0ce13`](https://github.com/vienggd/Food-order/commit/ca0ce13bf18a4cd5f53e1f9d7972641080a62b01) on `main` (release PR [#82](https://github.com/vienggd/Food-order/pull/82)) |
-| Public URL | https://food-order-d4jdyxqbca-as.a.run.app — serving commit `ca0ce13` (Deploy demo run [45029701876](https://github.com/vienggd/Food-order/actions/runs/45029701876), revision `food-order-00003-f9z`) |
+| Submitted release | Commit [`b71cdb2`](https://github.com/vienggd/Food-order/commit/b71cdb21c92bb0224d34664b81d6b3a26c86da33) on `main` (release PR [#84](https://github.com/vienggd/Food-order/pull/84), which adds this report; the last app change came with [#82](https://github.com/vienggd/Food-order/pull/82), `ca0ce13`) |
+| Public URL | https://food-order-d4jdyxqbca-as.a.run.app — serving commit `b71cdb2` (Deploy demo run [45046550101](https://github.com/vienggd/Food-order/actions/runs/45046550101), revision `food-order-00007-z5k`, image `food-order@sha256:9a01ba2e…7810a655` = the run summary) |
 | GCP | Project `cpe334-2026-team33`, region `asia-southeast1`. Owner: vieng; ninja: Editor |
 | Staging / board | Staging branch `lab-5`; label `lab5` on every Lab 5 Issue and PR; board https://github.com/users/vienggd/projects/4 |
 
@@ -42,7 +42,7 @@ Every PR went into `lab-5` (or `lab-5` → `main` for a release) and was reviewe
 | 1. CI and quality gate | PR [#74](https://github.com/vienggd/Food-order/pull/74) + run [45006187151](https://github.com/vienggd/Food-order/actions/runs/45006187151) | C-01, commit `e9b1bf8` | `test-and-docker` passed: 71 server + 6 client tests, deploy-script tests, build, `docker build` |
 | 1. CI and quality gate | PR [#79](https://github.com/vienggd/Food-order/pull/79) from `test/prove-gate` + run [45027958632](https://github.com/vienggd/Food-order/actions/runs/45027958632); ruleset `protect-main` | C-02 (R-06), commit `0853d5b` | Check failed (1 failed / 70 passed); "Merging is blocked" (Figure @merge-blocked); PR closed unmerged |
 | 2. Docker and config | `Dockerfile`, `.dockerignore`, `docker-compose.yml`, `server/.env.example`, `deployment.md` | C-03, commit `6cace22` | Fresh clone → `docker compose --profile app up --build` → migrate exit 0, `/api/ready` = connected |
-| 3. GCP deployment | Public URL; live API checks; API log `c05-api-log.txt`; UI figures Figures @c04-menu–@c04-accepted | C-04, release `ca0ce13` | Sign in, place an order, staff accepts it; sold-out item rejected; customer gets 403 on the operator queue |
+| 3. GCP deployment | Public URL; live API checks; API log `c05-api-log.txt`; UI: Figures @c04-menu–@c04-accepted | C-04, release `ca0ce13` | Sign in, place an order, staff accepts it; sold-out item rejected; customer gets 403 on the operator queue |
 | 3. GCP deployment | Persistence figures; restart + rollback runs | C-05, releases `6cace22` / `ca0ce13` | Order #1 unchanged after restart (00004), rollback (run 45034802615) and roll forward (run 45034922682) |
 | 4. Release pipeline | Issue [#68](https://github.com/vienggd/Food-order/issues/68) → PR [#81](https://github.com/vienggd/Food-order/pull/81) → release PR [#82](https://github.com/vienggd/Food-order/pull/82) → run [45029701876](https://github.com/vienggd/Food-order/actions/runs/45029701876) | C-06, commit `ca0ce13` | Service image digest = run summary digest; release note visible on the URL |
 
@@ -185,6 +185,19 @@ Deploy demo run 45029701876 (push of ca0ce13 to main):
 
 ![Figure @budget. Budgets & caps: budget CPE334-Alert (฿5,000, alerts at 10/20/50/90%) on this project.](evidence/crop/gcp-03-budget.png)
 
-### Use of AI
+## Use of AI
 
-Both students used Claude Code as a coding and operations assistant, each in their own session; the two sessions coordinated through a private chat relay. The AI wrote code and tests, ran the Cloud setup scripts with the project owner signed in, and collected this evidence. Passwords and keys were never typed by the AI or shown to it: deploy scripts generate them into Secret Manager, and GitHub uses keyless sign-in. For the browser evidence (C-02, C-04) vieng signed in to GitHub and to the live site himself; the AI only clicked and captured the screen. Every PR was reviewed and merged by the other student's side; no side approved its own PR. Both students can explain every step.
+Both students used **Claude Code** (Anthropic), each in their own session. The two sessions talked through a private chat relay; each student read the chat and made the decisions.
+
+| | vieng (`vienggd`) and his AI session | ninja (`NinjoMUDA`) and his AI session |
+|---|---|---|
+| Built | CI workflow and deploy scripts (#74), `deploy.yml` + smoke test (#75), visible change (#81), report and PDF (#83) | Cloud-ready app (#76), Docker image and compose (#77), gate PR #79, rollback and roll-forward runs |
+| Ran in the cloud | First deploy and keyless GitHub access, from vieng's signed-in `gcloud` | Deploy demo runs for rollback (45034802615) and roll forward (45034922682) |
+| Reviewed | ninja's PRs #76, #77 | vieng's PRs #72–#75, #81, #83 and every release PR #78, #80, #82, #84 |
+| Done by the student in person | GCP account, billing and budget; signed in to Google Cloud, GitHub and the live site for the C-02/C-04 evidence; decided each release to `main` | GCP Editor on the project; owner of Issues #63, #64 and #69 (cloud-ready app, Docker, persistence and rollback) |
+
+**Rules we kept**
+
+- No AI typed or saw a password, key or token. Deploy scripts generate the passwords into Secret Manager; GitHub signs in to Google without a key; the students typed their own logins.
+- No side approved or merged its own pull request: every PR was reviewed, approved and merged by the other student's side, with a merge commit.
+- Every claim in this report links to a run, PR, commit or screenshot that can be checked, and both students can explain each step.
