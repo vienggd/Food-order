@@ -42,7 +42,7 @@ Every PR went into `lab-5` (or `lab-5` → `main` for a release) and was reviewe
 | 1. CI and quality gate | PR [#74](https://github.com/vienggd/Food-order/pull/74) + run [45006187151](https://github.com/vienggd/Food-order/actions/runs/45006187151) | C-01, commit `e9b1bf8` | `test-and-docker` passed: 71 server + 6 client tests, deploy-script tests, build, `docker build` |
 | 1. CI and quality gate | PR [#79](https://github.com/vienggd/Food-order/pull/79) from `test/prove-gate` + run [45027958632](https://github.com/vienggd/Food-order/actions/runs/45027958632); ruleset `protect-main` | C-02 (R-06), commit `0853d5b` | Check failed (1 failed / 70 passed); merge blocked; PR closed unmerged |
 | 2. Docker and config | `Dockerfile`, `.dockerignore`, `docker-compose.yml`, `server/.env.example`, `deployment.md` | C-03, commit `6cace22` | Fresh clone → `docker compose --profile app up --build` → migrate exit 0, `/api/ready` = connected |
-| 3. GCP deployment | Public URL; live API checks; Figures @c04-first–@c04-last | C-04, release `ca0ce13` | Sign in, place an order, staff accepts it; sold-out item rejected; customer gets 403 on the operator queue |
+| 3. GCP deployment | Public URL; live API checks; __C04_INDEX__ | C-04, release `ca0ce13` | Sign in, place an order, staff accepts it; sold-out item rejected; customer gets 403 on the operator queue |
 | 3. GCP deployment | Persistence figures; restart + rollback runs | C-05, releases `6cace22` / `ca0ce13` | Order #1 unchanged after restart (00004), rollback (run 45034802615) and roll forward (run 45034922682) |
 | 4. Release pipeline | Issue [#68](https://github.com/vienggd/Food-order/issues/68) → PR [#81](https://github.com/vienggd/Food-order/pull/81) → release PR [#82](https://github.com/vienggd/Food-order/pull/82) → run [45029701876](https://github.com/vienggd/Food-order/actions/runs/45029701876) | C-06, commit `ca0ce13` | Service image digest = run summary digest; release note visible on the URL |
 
@@ -113,7 +113,16 @@ Every Deploy demo run ends with [`deploy/smoke_test.py`](https://github.com/vien
 
 ![Figure @run. Cloud Run food-order: revision history and the runtime settings (URL project number blurred).](evidence/crop/gcp-09-cloud-run-revisions.png)
 
-**C-04 live workflow** (URL bar visible in each figure):
+**C-04 live workflow.** On the live URL a customer signs in, sees the menu, places an order, and the staff account sees it in the queue and accepts it. Rule checks on the same deployment (API, 22 Nov 14:47 UTC, from [`evidence/c05-api-log.txt`](evidence/c05-api-log.txt)):
+
+```
+POST /api/auth/login  smoke@cafe.test (CUSTOMER)                 200
+GET  /api/menu        #1 Latte … #4 Croissant (SOLD OUT) … #6     200
+POST /api/orders      Croissant × 1                              400 "Order not placed. 'Croissant' is no longer available."  ← rejection (sold out)
+POST /api/orders      Latte × 11                                 400 VALIDATION_ERROR quantity ≤ 10 (BR-01)                  ← rejection
+POST /api/orders      Latte × 2                                  201 order id 1, PLACED, total 13000 satang
+GET  /api/operator/orders  as the customer                       403 FORBIDDEN                                               ← rejection (role)
+```
 
 __C04_FIGURES__
 
