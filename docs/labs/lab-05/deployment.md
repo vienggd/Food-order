@@ -32,3 +32,20 @@ The client reads no environment variables (it calls `/api` on the same origin).
 | Build | `npm run build` |
 | Run (production mode) | `npm run build`, then in `server/`: `NODE_ENV=production npm start`, open http://localhost:3000 |
 | Health | `GET /api/health` → `{ ok: true }`; `GET /api/ready` → `{ status: "ready", db: "connected" }` or 503 |
+
+## Docker
+
+One image from the root `Dockerfile` (Node 24 alpine, non-root `node` user, port 3000): Express serves `/api/*` and the built React app.
+The same image runs the migration job: `npx prisma migrate deploy && node dist/prisma/seed.js` (both safe to run twice).
+We use only the root image, not the kit's separate `server/Dockerfile`, `client/Dockerfile` and `nginx.conf`: one image is what Cloud Run runs, and the session cookie stays on one origin.
+
+| Step | Command |
+|---|---|
+| Build the image | `docker build -t food-order .` |
+| Run everything locally (db + migrate + app) | `SEED_PASSWORD=<your choice> docker compose --profile app up --build -d`, open http://localhost:3000 |
+| Check | `curl http://localhost:3000/api/ready` → `{"status":"ready","db":"connected"}` |
+| Stop (data kept in volume `pgdata`) | `docker compose --profile app down` |
+| Start again | `docker compose --profile app up -d` |
+| Delete local data | `docker compose --profile app down -v` |
+
+`npm run db:up` still starts only the database, for development and tests.
