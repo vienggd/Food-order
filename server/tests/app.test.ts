@@ -7,7 +7,7 @@ describe("app skeleton", () => {
   it("AC-1.4 GET /api/health returns 200 { ok: true }", async () => {
     const res = await request(createApp()).get("/api/health");
     expect(res.status).toBe(200);
-    expect(res.body).toEqual({ ok: true });
+    expect(res.body).toEqual({ ok: false }); // L5-6 prove-gate: broken on purpose, never merge
   });
 
   it("AC-1.5 unknown /api route returns 404 NOT_FOUND in the shared error shape", async () => {
