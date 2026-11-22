@@ -29,7 +29,7 @@ Every PR went into `lab-5` (or `lab-5` → `main` for a release) and was reviewe
 | [#65](https://github.com/vienggd/Food-order/issues/65) | CI `test-and-docker`, deploy scripts + their tests, `deployment.md` | vieng | ninja | [#74](https://github.com/vienggd/Food-order/pull/74) |
 | [#66](https://github.com/vienggd/Food-order/issues/66) | First deploy (`deploy/deploy.sh`), Cloud SQL, secrets | vieng | ninja | Cloud (evidence in Part 3) |
 | [#67](https://github.com/vienggd/Food-order/issues/67) | Keyless GitHub → GCP (WIF), `demo` environment, ruleset; prove the gate | vieng (setup), ninja (gate) | other | [#79](https://github.com/vienggd/Food-order/pull/79) (gate, not merged) |
-| [#68](https://github.com/vienggd/Food-order/issues/68) | `deploy.yml` + smoke test; visible change | ninja (`deploy.yml`), vieng (visible change) | other | [#75](https://github.com/vienggd/Food-order/pull/75), [#81](https://github.com/vienggd/Food-order/pull/81) |
+| [#68](https://github.com/vienggd/Food-order/issues/68) | `deploy.yml` + cookie-login smoke test; visible change | vieng | ninja | [#75](https://github.com/vienggd/Food-order/pull/75), [#81](https://github.com/vienggd/Food-order/pull/81) |
 | [#69](https://github.com/vienggd/Food-order/issues/69) | Persistence, restart, rollback and roll forward | ninja | vieng | Deploy demo runs (Part 3) |
 | [#70](https://github.com/vienggd/Food-order/issues/70) | Evidence and this report | both | — | [#83](https://github.com/vienggd/Food-order/pull/83) |
 | [#71](https://github.com/vienggd/Food-order/issues/71) | Agent rule files name `lab-5` as staging | vieng | ninja | [#73](https://github.com/vienggd/Food-order/pull/73) |
