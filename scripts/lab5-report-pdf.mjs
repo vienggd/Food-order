@@ -24,9 +24,13 @@ md = md.replace(/Figures? @([\w-]+)(?:–@([\w-]+))?/g, (all, a, b) => {
 if (/__[A-Z0-9_]+__/.test(md)) console.warn("WARNING: placeholders left:", md.match(/__[A-Z0-9_]+__/g));
 
 const renderer = new marked.Renderer();
+// Every screenshot is shown at the same scale (half its pixel width, capped at the page width), so text in a
+// narrow crop is not blown up and all figures read alike.
+const pngWidth = (file) => readFileSync(file).readUInt32BE(16);
 renderer.image = ({ href, text }) => {
-  const src = pathToFileURL(resolve(dirname(SRC), href)).href;
-  return `<figure><img src="${src}" alt=""><figcaption>${marked.parseInline(text)}</figcaption></figure>`;
+  const file = resolve(dirname(SRC), href);
+  const src = pathToFileURL(file).href;
+  return `<figure><img src="${src}" alt="" style="width:${Math.round(pngWidth(file) / 2)}px"><figcaption>${marked.parseInline(text)}</figcaption></figure>`;
 };
 const body = marked.parse(md, { renderer, gfm: true }).replace(/<p>(<figure>[\s\S]*?<\/figure>)<\/p>/g, "$1");
 
