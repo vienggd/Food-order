@@ -30,4 +30,21 @@ describe("seed", () => {
     expect(menu.filter((m) => !m.isAvailable)).toHaveLength(1);
     expect(menu.every((m) => Number.isInteger(m.price) && m.price > 0)).toBe(true);
   });
+
+  it("Lab 5 #63 rerunning the seed (every deploy) keeps an operator's price and sold-out changes", async () => {
+    await seed(prisma, "test-only-pass", "");
+    await prisma.menuItem.update({ where: { name: "Latte" }, data: { price: 7000, isAvailable: false } });
+    await seed(prisma, "test-only-pass", "");
+    const latte = await prisma.menuItem.findUniqueOrThrow({ where: { name: "Latte" } });
+    expect([latte.price, latte.isAvailable]).toEqual([7000, false]);
+  });
+
+  it("Lab 5 #63 adds the smoke-test customer only when a smoke password is given", async () => {
+    await seed(prisma, "test-only-pass", "");
+    expect(await prisma.user.findUnique({ where: { email: "smoke@cafe.test" } })).toBeNull();
+    await seed(prisma, "test-only-pass", "smoke-only-pass");
+    const smoke = await prisma.user.findUniqueOrThrow({ where: { email: "smoke@cafe.test" } });
+    expect(smoke.role).toBe("CUSTOMER");
+    expect(await bcrypt.compare("smoke-only-pass", smoke.passwordHash)).toBe(true);
+  });
 });
