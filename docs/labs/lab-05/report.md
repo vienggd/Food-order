@@ -43,7 +43,7 @@ Every PR went into `lab-5` (or `lab-5` → `main` for a release) and was reviewe
 | 1. CI and quality gate | PR [#79](https://github.com/vienggd/Food-order/pull/79) from `test/prove-gate` + run [45027958632](https://github.com/vienggd/Food-order/actions/runs/45027958632); ruleset `protect-main` | C-02 (R-06), commit `0853d5b` | Check failed (1 failed / 70 passed); merge blocked; PR closed unmerged |
 | 2. Docker and config | `Dockerfile`, `.dockerignore`, `docker-compose.yml`, `server/.env.example`, `deployment.md` | C-03, commit `6cace22` | Fresh clone → `docker compose --profile app up --build` → migrate exit 0, `/api/ready` = connected |
 | 3. GCP deployment | Public URL; live API checks; Figures @c04-first–@c04-last | C-04, release `ca0ce13` | Sign in, place an order, staff accepts it; sold-out item rejected; customer gets 403 on the operator queue |
-| 3. GCP deployment | Persistence figures; restart + rollback runs | C-05, releases `6cace22` / `ca0ce13` | Same order present after restart, rollback and roll forward |
+| 3. GCP deployment | Persistence figures; restart + rollback runs | C-05, releases `6cace22` / `ca0ce13` | Order #1 unchanged after restart (00004), rollback (run 45034802615) and roll forward (run 45034922682) |
 | 4. Release pipeline | Issue [#68](https://github.com/vienggd/Food-order/issues/68) → PR [#81](https://github.com/vienggd/Food-order/pull/81) → release PR [#82](https://github.com/vienggd/Food-order/pull/82) → run [45029701876](https://github.com/vienggd/Food-order/actions/runs/45029701876) | C-06, commit `ca0ce13` | Service image digest = run summary digest; release note visible on the URL |
 
 ## Answer Part 1: CI and Quality Gate
@@ -117,9 +117,16 @@ Every Deploy demo run ends with [`deploy/smoke_test.py`](https://github.com/vien
 
 __C04_FIGURES__
 
-**C-05 persistence.** __C05_TEXT__
+**C-05 persistence.** One order, checked through the API after each change (smoke-test customer; full log in [`evidence/c05-api-log.txt`](evidence/c05-api-log.txt)). Data lives in Cloud SQL, so replacing the containers does not touch it.
 
-__C05_FIGURES__
+| Step (22 Nov 2026, UTC) | How | Running revision / image | Order #1 |
+|---|---|---|---|
+| 14:47 place order | `POST /api/orders` 2 × Latte → **201**, id 1, total 13000 satang | `food-order-00003-f9z` · `3516ec33…` (release #3) | created `14:47:26.304Z`, `PLACED` |
+| 14:48 restart | `gcloud run services update food-order --update-labels=restarted=c05` (new revision, same image, all instances replaced) | `food-order-00004-rq6` · `3516ec33…` | same id, lines, total, `createdAt` |
+| 14:49 rollback | Deploy demo [45034802615](https://github.com/vienggd/Food-order/actions/runs/45034802615), `image_tag = 6cace22…` (tests, build, migration skipped) | `food-order-00005-hj2` · `5f88cada…` (release #2, no release note) | same |
+| 14:51 roll forward | Deploy demo [45034922682](https://github.com/vienggd/Food-order/actions/runs/45034922682), `image_tag = ca0ce13…` | `food-order-00006-9zh` · `3516ec33…` (release note back) | same |
+
+![Figure @rollback. C-05: the live login page right after the rollback (run 45034802615, release #2 image 5f88cada…): the release note is gone; compare Figure @note. Order #1 was still returned by GET /api/orders/1 at this point.](evidence/crop/c05-login-after-rollback.png)
 
 ## Answer Part 4: Repeatable Release Pipeline
 

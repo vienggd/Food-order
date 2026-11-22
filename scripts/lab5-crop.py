@@ -13,6 +13,7 @@ CROPS = {
     "c06-deploy-run-release2.png": (0, 45, 1000, 645),
     "c06-deploy-run-release3.png": (0, 45, 1000, 645),
     "c06-live-release-note.png": (0, 45, 1920, 175),
+    "c05-login-after-rollback.png": (0, 45, 1920, 175),
     "gcp-01-billing-overview.png": (0, 45, 1610, 760),
     "gcp-03-budget.png": (0, 45, 1610, 600),
     "gcp-04-iam.png": (0, 45, 1600, 765),

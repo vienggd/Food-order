@@ -1,0 +1,54 @@
+== C-04/C-05 step 1: place order (revision food-order-00003-f9z, 2026-11-22T14:47:19Z)
+POST /api/auth/login {"email": "smoke@cafe.test", "password": "<from Secret Manager, not shown>"}
+  -> 200 {"id":4,"name":"Smoke Test","role":"CUSTOMER"}
+GET /api/menu  -> #1 Latte, #2 Americano, #3 Thai Milk Tea, #4 Croissant (SOLD OUT), #5 Ham & Cheese Sandwich, #6 Basil Chicken Rice
+POST /api/orders {"items": [{"menuItemId": 4, "quantity": 1}]}
+  -> 400 {"error":{"code":"VALIDATION_ERROR","message":"Order not placed. 'Croissant' is no longer available.","details":{"items":[{"menuItemId":4,"reason":"SOLD_OUT"}]}}}
+POST /api/orders {"items": [{"menuItemId": 1, "quantity": 11}]}
+  -> 400 {"error":{"code":"VALIDATION_ERROR","message":"Invalid request.","details":[{"origin":"number","code":"too_big","maximum":10,"inclusive":true,"path":["items",0,"quantity"],"message":"Too big: expected number to be <=10"}]}}
+POST /api/orders {"items": [{"menuItemId": 1, "quantity": 2}]}
+  -> 201 {"id":1,"status":"PLACED","total":13000,"createdAt":"2026-11-22T14:47:26.304Z","acceptedAt":null,"lines":[{"menuItemId":1,"name":"Latte","unitPrice":6500,"quantity":2,"lineTotal":13000}]}
+GET /api/orders
+  -> 200 [{"id":1,"status":"PLACED","total":13000,"itemCount":2,"createdAt":"2026-11-22T14:47:26.304Z"}]
+POST /api/auth/logout null
+  -> 204 
+
+== C-05 step 2: restart = new revision, same image (2026-11-22T14:47:35Z)
+$ gcloud run services update food-order --region asia-southeast1 --update-labels=restarted=c05
+Routing traffic.....done
+Done.
+Service [food-order] revision [food-order-00004-rq6] has been deployed and is serving 100 percent of traffic.
+food-order-00004-rq6	asia-southeast1-docker.pkg.dev/cpe334-2026-team33/food-order/food-order@sha256:3516ec33e51f2b0697df7e3739d76cc992576a46abb7d28198483ab9ed79fef7
+== after restart
+POST /api/auth/login {"email": "smoke@cafe.test", "password": "<from Secret Manager, not shown>"}
+  -> 200 {"id":4,"name":"Smoke Test","role":"CUSTOMER"}
+GET /api/orders
+  -> 200 [{"id":1,"status":"PLACED","total":13000,"itemCount":2,"createdAt":"2026-11-22T14:47:26.304Z"}]
+GET /api/orders/1
+  -> 200 {"id":1,"status":"PLACED","total":13000,"createdAt":"2026-11-22T14:47:26.304Z","acceptedAt":null,"lines":[{"menuItemId":1,"name":"Latte","unitPrice":6500,"quantity":2,"lineTotal":13000}]}
+POST /api/auth/logout null
+  -> 204 
+
+== C-05 step 3: after rollback, Deploy demo run 45034802615 image_tag 6cace22 (2026-11-22T14:49:46Z)
+food-order-00005-hj2	asia-southeast1-docker.pkg.dev/cpe334-2026-team33/food-order/food-order@sha256:5f88cadab63c891c9016d88a829c474a82a068b0d0c7552ab9ba1fe65cc75049
+release note in live bundle assets/index-DMmCGDIn.js: 0
+POST /api/auth/login {"email": "smoke@cafe.test", "password": "<from Secret Manager, not shown>"}
+  -> 200 {"id":4,"name":"Smoke Test","role":"CUSTOMER"}
+GET /api/orders
+  -> 200 [{"id":1,"status":"PLACED","total":13000,"itemCount":2,"createdAt":"2026-11-22T14:47:26.304Z"}]
+GET /api/orders/1
+  -> 200 {"id":1,"status":"PLACED","total":13000,"createdAt":"2026-11-22T14:47:26.304Z","acceptedAt":null,"lines":[{"menuItemId":1,"name":"Latte","unitPrice":6500,"quantity":2,"lineTotal":13000}]}
+POST /api/auth/logout null
+  -> 204 
+
+== C-05 step 4: after roll forward, Deploy demo run 45034922682 completed success image_tag ca0ce13 (2026-11-22T14:50:58Z)
+food-order-00006-9zh	asia-southeast1-docker.pkg.dev/cpe334-2026-team33/food-order/food-order@sha256:3516ec33e51f2b0697df7e3739d76cc992576a46abb7d28198483ab9ed79fef7
+release note in live bundle assets/index-DiHrQZz2.js: 1
+POST /api/auth/login {"email": "smoke@cafe.test", "password": "<from Secret Manager, not shown>"}
+  -> 200 {"id":4,"name":"Smoke Test","role":"CUSTOMER"}
+GET /api/orders
+  -> 200 [{"id":1,"status":"PLACED","total":13000,"itemCount":2,"createdAt":"2026-11-22T14:47:26.304Z"}]
+GET /api/orders/1
+  -> 200 {"id":1,"status":"PLACED","total":13000,"createdAt":"2026-11-22T14:47:26.304Z","acceptedAt":null,"lines":[{"menuItemId":1,"name":"Latte","unitPrice":6500,"quantity":2,"lineTotal":13000}]}
+POST /api/auth/logout null
+  -> 204 
