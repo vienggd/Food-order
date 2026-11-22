@@ -64,7 +64,7 @@ We use only the root image, not the kit's separate `server/Dockerfile`, `client/
 
 ## Google Cloud
 
-Project `cpe334-2026-team33`, region `asia-southeast1`.
+Project `cpe334-2026-team33`, region `asia-southeast1`. Public URL: https://food-order-d4jdyxqbca-as.a.run.app
 
 | What | Name |
 |---|---|
@@ -80,6 +80,10 @@ Project `cpe334-2026-team33`, region `asia-southeast1`.
 
 First setup (once, by the project Owner in Cloud Shell): `deploy/deploy.sh --smoke`, then
 `deploy/setup-github-access.sh` — both with `DRY_RUN=1` first. Step by step: `docs/labs/lab-05/runbook.md`.
+Done on 22 Nov 2026 from `main` `e3a4a84`. The gcloud CLI on Windows also works (Git Bash); there, call
+`lib/gcloud.py` with the bundled Python, because `gcloud.cmd` breaks on arguments that contain spaces.
+A new service account can take a few seconds before roles can be granted to it; if that step fails,
+run the script again (it skips what already exists).
 
 ## CI (every pull request into `lab-5` and `main`)
 
