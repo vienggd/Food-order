@@ -17,6 +17,11 @@ test.describe("F-01 login, logout, guards", () => {
     await expect(page.getByText("Staff").locator("visible=true").first()).toBeVisible();
   });
 
+  test("TEST-L5-7 login page shows the release note (visible change for the deploy proof)", async ({ page }) => {
+    await page.goto("/login");
+    await expect(page.getByText("Release 2 · now on Google Cloud")).toBeVisible();
+  });
+
   test("TEST-F01-13 wrong password shows the message, clears the password, keeps the email", async ({ page }, info) => {
     await loginAs(page, "alice@cafe.test", "definitely-wrong");
     await expect(page.getByRole("alert")).toHaveText("Incorrect email or password.");
