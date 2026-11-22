@@ -74,9 +74,10 @@ jobs:
       # Guards deploy.sh / release.sh / smoke_test.py without touching GCP.
       - name: Check deployment scripts without accessing GCP
         run: |
-          bash -n deploy/deploy.sh deploy/teardown.sh deploy/release.sh
+          bash -n deploy/deploy.sh deploy/teardown.sh deploy/release.sh deploy/setup-github-access.sh
           bash deploy/tests/test_deploy_stub.sh
           bash deploy/tests/test_release_stub.sh
+          bash deploy/tests/test_github_access_stub.sh
           python3 -m unittest discover -s deploy/tests -p 'test_smoke.py'
 
       # One npm workspace: install once at the root (server postinstall runs prisma generate).
