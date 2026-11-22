@@ -31,7 +31,7 @@ Every PR went into `lab-5` (or `lab-5` → `main` for a release) and was reviewe
 | [#67](https://github.com/vienggd/Food-order/issues/67) | Keyless GitHub → GCP (WIF), `demo` environment, ruleset; prove the gate | vieng (setup), ninja (gate) | other | [#79](https://github.com/vienggd/Food-order/pull/79) (gate, not merged) |
 | [#68](https://github.com/vienggd/Food-order/issues/68) | `deploy.yml` + smoke test; visible change | ninja (`deploy.yml`), vieng (visible change) | other | [#75](https://github.com/vienggd/Food-order/pull/75), [#81](https://github.com/vienggd/Food-order/pull/81) |
 | [#69](https://github.com/vienggd/Food-order/issues/69) | Persistence, restart, rollback and roll forward | ninja | vieng | Deploy demo runs (Part 3) |
-| [#70](https://github.com/vienggd/Food-order/issues/70) | Evidence and this report | both | — | __REPORT_PR__ |
+| [#70](https://github.com/vienggd/Food-order/issues/70) | Evidence and this report | both | — | [#83](https://github.com/vienggd/Food-order/pull/83) |
 | [#71](https://github.com/vienggd/Food-order/issues/71) | Agent rule files name `lab-5` as staging | vieng | ninja | [#73](https://github.com/vienggd/Food-order/pull/73) |
 | — | Releases `lab-5` → `main` | vieng (opened) | ninja (approved, merged) | [#78](https://github.com/vienggd/Food-order/pull/78), [#80](https://github.com/vienggd/Food-order/pull/80), [#82](https://github.com/vienggd/Food-order/pull/82) |
 
@@ -42,7 +42,7 @@ Every PR went into `lab-5` (or `lab-5` → `main` for a release) and was reviewe
 | 1. CI and quality gate | PR [#74](https://github.com/vienggd/Food-order/pull/74) + run [45006187151](https://github.com/vienggd/Food-order/actions/runs/45006187151) | C-01, commit `e9b1bf8` | `test-and-docker` passed: 71 server + 6 client tests, deploy-script tests, build, `docker build` |
 | 1. CI and quality gate | PR [#79](https://github.com/vienggd/Food-order/pull/79) from `test/prove-gate` + run [45027958632](https://github.com/vienggd/Food-order/actions/runs/45027958632); ruleset `protect-main` | C-02 (R-06), commit `0853d5b` | Check failed (1 failed / 70 passed); merge blocked; PR closed unmerged |
 | 2. Docker and config | `Dockerfile`, `.dockerignore`, `docker-compose.yml`, `server/.env.example`, `deployment.md` | C-03, commit `6cace22` | Fresh clone → `docker compose --profile app up --build` → migrate exit 0, `/api/ready` = connected |
-| 3. GCP deployment | Public URL; live API checks; __C04_INDEX__ | C-04, release `ca0ce13` | Sign in, place an order, staff accepts it; sold-out item rejected; customer gets 403 on the operator queue |
+| 3. GCP deployment | Public URL; live API checks; API log `c05-api-log.txt`; UI figures __C04_UI_REF__ | C-04, release `ca0ce13` | Sign in, place an order, staff accepts it; sold-out item rejected; customer gets 403 on the operator queue |
 | 3. GCP deployment | Persistence figures; restart + rollback runs | C-05, releases `6cace22` / `ca0ce13` | Order #1 unchanged after restart (00004), rollback (run 45034802615) and roll forward (run 45034922682) |
 | 4. Release pipeline | Issue [#68](https://github.com/vienggd/Food-order/issues/68) → PR [#81](https://github.com/vienggd/Food-order/pull/81) → release PR [#82](https://github.com/vienggd/Food-order/pull/82) → run [45029701876](https://github.com/vienggd/Food-order/actions/runs/45029701876) | C-06, commit `ca0ce13` | Service image digest = run summary digest; release note visible on the URL |
 

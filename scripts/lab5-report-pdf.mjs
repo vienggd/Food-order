@@ -21,7 +21,14 @@ md = md.replace(/Figures? @([\w-]+)(?:–@([\w-]+))?/g, (all, a, b) => {
   const n = (k) => numbers.get(k) ?? (unknown.push(k), `?${k}`);
   return b ? `Figures ${n(a)}–${n(b)}` : `Figure ${n(a)}`;
 });
+// Anything not filled in yet is printed as a red PENDING box, so a draft can never pass for the final PDF.
+const PENDING = {
+  __C02_MERGE_FIGURE__: "Figure: PR #79 merge box (red test-and-docker, “Merging is blocked”) — screenshot by ninja",
+  __C04_FIGURES__: "Figures: alice signs in and places an order; staff accepts it; sold-out Croissant message — screenshots by ninja",
+  __C04_UI_REF__: "(ninja’s screenshots)",
+};
 if (/__[A-Z0-9_]+__/.test(md)) console.warn("WARNING: placeholders left:", md.match(/__[A-Z0-9_]+__/g));
+md = md.replace(/__[A-Z0-9_]+__/g, (k) => `<span class="todo">PENDING: ${PENDING[k] ?? k}</span>`);
 
 const renderer = new marked.Renderer();
 // Every screenshot is shown at the same scale (half its pixel width, capped at the page width), so text in a
@@ -53,6 +60,7 @@ const CSS = `
   figure img { display: block; max-width: 100%; max-height: 215mm; border: 1px solid #c9c0b4; }
   figcaption { font-size: 7.8pt; color: #4d4438; margin-top: 2px; }
   a { color: #1f5f3f; }
+  .todo { display: inline-block; background: #fde3e0; color: #7a1c12; border: 1px solid #e2a59d; font-weight: 600; padding: 2px 5px; border-radius: 3px; }
 `;
 const footer = `<div style="font-size:7px;width:100%;text-align:center;color:#6e5e4f">Food-order · Lab 5 · report commit ${commit} · page <span class="pageNumber"></span> of <span class="totalPages"></span></div>`;
 
