@@ -1,0 +1,95 @@
+# CI & Docker Build (Lab 5, Food-order). Based on the Lab 5 starter kit.
+#
+# Runs on every pull request into main or lab-5, by hand, and from deploy.yml
+# (workflow_call) so a deploy only starts after these checks pass.
+# Steps: offline deploy-script tests -> install -> server + client tests
+#        (real PostgreSQL service) -> production build -> docker build (no push).
+# It deploys nothing and needs no secrets.
+#
+# Do not rename the job id `test-and-docker`: the ruleset `protect-main`
+# requires a check with exactly that name.
+
+name: CI & Docker Build
+
+on:
+  workflow_call:
+  pull_request:
+    branches: [main, lab-5]
+  workflow_dispatch:
+
+# Least privilege: this workflow only reads the repository.
+permissions:
+  contents: read
+
+# A newer run on the same branch cancels the older one.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-and-docker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    # Throw-away test database. These are CI-only values, not real secrets.
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: cafe
+          POSTGRES_PASSWORD: cafe
+          POSTGRES_DB: cafe_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      # Server tests read these from the environment (no server/.env in CI).
+      TEST_DATABASE_URL: postgresql://cafe:cafe@localhost:5432/cafe_test
+      SEED_PASSWORD: ci-only-not-secret
+
+    steps:
+      # Actions are pinned to a commit SHA (comment = version); Dependabot updates them.
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js 24
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+          cache: npm
+
+      # Python is only needed for the smoke-test unit tests.
+      - name: Setup Python 3.14
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.14"
+
+      # Guards deploy.sh / release.sh / smoke_test.py without touching GCP.
+      - name: Check deployment scripts without accessing GCP
+        run: |
+          bash -n deploy/deploy.sh deploy/teardown.sh deploy/release.sh
+          bash deploy/tests/test_deploy_stub.sh
+          bash deploy/tests/test_release_stub.sh
+          python3 -m unittest discover -s deploy/tests -p 'test_smoke.py'
+
+      # One npm workspace: install once at the root (server postinstall runs prisma generate).
+      - name: Install dependencies
+        run: npm ci
+
+      # Server tests migrate the test database themselves (tests/global-setup.ts).
+      - name: Test server and client
+        run: npm test
+
+      - name: Build server and client
+        run: npm run build
+
+      # Make sure the production image still builds (not pushed here).
+      - name: Verify production Dockerfile build
+        run: docker build -t food-order-ci:${{ github.sha }} .
