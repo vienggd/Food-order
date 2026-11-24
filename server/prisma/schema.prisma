@@ -15,6 +15,12 @@ enum Role {
 }
 
 // Whole product lifecycle. Sprint 1 only uses PLACED -> ACCEPTED.
+enum PaymentStatus {
+  UNPAID
+  PAID
+  REFUNDED
+}
+
 enum OrderStatus {
   PLACED
   ACCEPTED
@@ -60,15 +66,24 @@ model MenuItem {
 }
 
 model Order {
-  id         Int         @id @default(autoincrement())
-  customerId Int         @map("customer_id")
-  customer   User        @relation(fields: [customerId], references: [id])
-  status     OrderStatus @default(PLACED)
-  total      Int // satang, calculated by the server (BR-04)
-  createdAt  DateTime    @default(now()) @map("created_at")
-  updatedAt  DateTime    @updatedAt @map("updated_at")
-  acceptedAt DateTime?   @map("accepted_at") // set by F-04 accept
-  lines      OrderLine[]
+  id            Int           @id @default(autoincrement())
+  customerId    Int           @map("customer_id")
+  customer      User          @relation(fields: [customerId], references: [id])
+  status        OrderStatus   @default(PLACED)
+  total         Int // satang, calculated by the server (BR-04)
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+  acceptedAt    DateTime?     @map("accepted_at") // set by F-04 accept
+  rejectReason  String?       @map("reject_reason") // F-06
+  cancelledAt   DateTime?     @map("cancelled_at") // F-06
+  rejectedAt    DateTime?     @map("rejected_at") // F-06
+  preparingAt   DateTime?     @map("preparing_at") // F-07
+  readyAt       DateTime?     @map("ready_at") // F-07
+  pickedUpAt    DateTime?     @map("picked_up_at") // F-07
+  paymentStatus PaymentStatus @default(UNPAID) @map("payment_status") // F-08
+  paidAt        DateTime?     @map("paid_at") // F-08
+  refundedAt    DateTime?     @map("refunded_at") // F-08
+  lines         OrderLine[]
 
   @@index([status, createdAt])
   @@index([customerId])
