@@ -1,6 +1,6 @@
-# Head plan: Lab 6 + Lab 7 + Sprint 2 (team COOKS)
+# Head plan: Lab 6 + Lab 7 + Sprint 2 (team Est)
 
-Plan name: **COOKS-29NOV**. All three are due **Sun 29 Nov 23:59**; we submit by **21:00**.
+Plan name: **Est-29NOV** (was COOKS-29NOV). All three are due **Sun 29 Nov 23:59**; we submit by **21:00**.
 Details, rubrics and rules (BR-08..BR-16, UAT-01..06) stay in `docs/PLAN.md`. This file is the agreed run plan.
 
 ## 1. Projects
@@ -108,3 +108,6 @@ Wake up
 - Own worker stopped (limit reset, or crashed): its head sends it "continue from your last UPDATE".
 - A whole side stopped (head silent 30+ min, no `pausing` message): the other head posts `UPDATE: <side> looks asleep` and tells its human, who messages the other human. After the reset the timer on the sleeping side fires and resumes by itself.
 - While one side sleeps, the other side keeps going on its own files only. Reviews wait (author never approves own). Near a deadline (Sat 12:00 or later) and asleep 2h+, the awake head may take over a blocked task after posting what it takes.
+
+## 9. Team name
+Our team name is now **Est** (was COOKS). Use "Est" in every new file, PDF name (`lab6_sec131_Est.pdf`, `lab7_sec131_Est.pdf`, Deliverable 2) and message. Do not change Lab 5 files: they are submitted as they are.
