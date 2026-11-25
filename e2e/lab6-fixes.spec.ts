@@ -26,7 +26,7 @@ test.describe("Lab 6 UAT defect regressions", () => {
     expect(btnBox!.y + btnBox!.height).toBeLessThanOrEqual(barBox!.y);
 
     await addLast.click();
-    await expect(page.locator("li", { hasText: "Basil Chicken Rice" })).toContainText("In cart · 1");
+    await expect(page.locator("li.menu-item", { hasText: "Basil Chicken Rice" })).toContainText("In cart · 1");
   });
 
   test("TEST-L6-122 access warning clears on logout and on next navigation (#122)", async ({ page }, info) => {

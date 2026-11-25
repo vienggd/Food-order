@@ -170,6 +170,7 @@ button[disabled] { cursor: not-allowed; }
 .lines .num { text-align: right; }
 .timeline { font-size: 13px; color: var(--muted); padding-left: 18px; }
 @media (max-width: 899px) {
+  .menu-main { padding-bottom: 72px; }
   .order-row { grid-template-columns: auto 1fr auto; }
   .order-row strong { grid-column: 3; }
 }

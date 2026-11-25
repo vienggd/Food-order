@@ -32,11 +32,11 @@ Triage date: 26 Nov 2026 (findings received 25 Nov 2026).
 
 | Issue | Defect | RED test (on `b71cdb2`) | GREEN commit | PR | Re-test version | Partner decision |
 |---|---|---|---|---|---|---|
-| #121 | Reject non-decimal/coerced order ids (`0x2`, `2e0`, etc.) with 400 | `TEST-L6-121` (`orders.test.ts`, `operator.test.ts`) | TBD | TBD | TBD | Pending re-test |
-| #122 | Clear route-guard access notice on logout and subsequent navigation | `TEST-L6-122` (`e2e/lab6-fixes.spec.ts`) | TBD | TBD | TBD | Pending re-test |
-| #123 | Clear `.cart-bar` overlap over last menu item on phone (`max-width: 899px`) | `TEST-L6-123` (`e2e/lab6-fixes.spec.ts`) | TBD | TBD | TBD | Pending re-test |
-| #124 | Do not persist `"Order #N placed!"` across reload or non-PLACED statuses | `TEST-L6-124` (`e2e/lab6-fixes.spec.ts`) | TBD | TBD | TBD | Pending re-test |
-| #125 | Keep desktop My orders list status synced when detail view refreshes | `TEST-L6-125` (`e2e/lab6-fixes.spec.ts`) | TBD | TBD | TBD | Pending re-test |
-| #126 | Show server 400 `error.message` on login instead of generic network error | `TEST-L6-126` (`e2e/lab6-fixes.spec.ts`) | TBD | TBD | TBD | Pending re-test |
-| #128 | Count cart lines (not total quantity) in Cart tab and desktop Menu badge | `TEST-L6-128` (`e2e/lab6-fixes.spec.ts`) | TBD | TBD | TBD | Pending re-test |
-| #129 | Show `Campus Café` brand in phone top bar (`<header className="top">`) | `TEST-L6-129` (`e2e/lab6-fixes.spec.ts`) | TBD | TBD | TBD | Pending re-test |
+| #121 | Reject non-decimal/coerced order ids (`0x2`, `2e0`, etc.) with 400 | `TEST-L6-121` (`orders.test.ts`, `operator.test.ts`; RED `cd56600`) | Fixed in PR (pending ninja review) | TBD | TBD | Pending re-test |
+| #122 | Clear route-guard access notice on logout and subsequent navigation | `TEST-L6-122` (`e2e/lab6-fixes.spec.ts`; RED `cd56600`) | Fixed in PR (pending ninja review) | TBD | TBD | Pending re-test |
+| #123 | Clear `.cart-bar` overlap over last menu item on phone (`max-width: 899px`) | `TEST-L6-123` (`e2e/lab6-fixes.spec.ts`; RED `cd56600`) | Fixed in PR (pending ninja review) | TBD | TBD | Pending re-test |
+| #124 | Do not persist `"Order #N placed!"` across reload or non-PLACED statuses | `TEST-L6-124` (`e2e/lab6-fixes.spec.ts`; RED `cd56600`) | Fixed in PR (pending ninja review) | TBD | TBD | Pending re-test |
+| #125 | Keep desktop My orders list status synced when detail view refreshes | `TEST-L6-125` (`e2e/lab6-fixes.spec.ts`; RED `cd56600`) | Fixed in PR (pending ninja review) | TBD | TBD | Pending re-test |
+| #126 | Show server 400 `error.message` on login instead of generic network error | `TEST-L6-126` (`e2e/lab6-fixes.spec.ts`; RED `cd56600`) | Fixed in PR (pending ninja review) | TBD | TBD | Pending re-test |
+| #128 | Count cart lines (not total quantity) in Cart tab and desktop Menu badge | `TEST-L6-128` (`e2e/lab6-fixes.spec.ts`; RED `cd56600`) | Fixed in PR (pending ninja review) | TBD | TBD | Pending re-test |
+| #129 | Show `Campus Café` brand in phone top bar (`<header className="top">`) | `TEST-L6-129` (`e2e/lab6-fixes.spec.ts`; RED `cd56600`) | Fixed in PR (pending ninja review) | TBD | TBD | Pending re-test |

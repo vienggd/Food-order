@@ -13,7 +13,7 @@ const LINKS: Record<Role, { to: string; label: string }[]> = {
 
 function WrongRole({ home }: { home: string }) {
   const { setNotice } = useAuth();
-  useEffect(() => setNotice("You don't have access to that page."), [setNotice]);
+  useEffect(() => setNotice("You don't have access to that page.", home), [home, setNotice]);
   return <Navigate to={home} replace />;
 }
 
@@ -37,7 +37,7 @@ export function RequireRole({ role, title, children }: { role: Role; title: stri
 
   const links = LINKS[user.role];
   const clearNotice = () => setNotice(null); // a notice is for one redirect, not every page after it
-  const cartCount = cart.lines.reduce((n, l) => n + l.quantity, 0);
+  const cartCount = cart.lines.length;
   const roleChip = user.role === "OPERATOR" ? "Operator" : "Customer";
   const logoutButton = (cls: string) => (
     <button className={cls} onClick={doLogout} disabled={leaving}>
@@ -67,6 +67,7 @@ export function RequireRole({ role, title, children }: { role: Role; title: stri
 
       <header className="top">
         <div>
+          <p className="brand small">Campus Café</p>
           <p className="hey">Hey, {user.name}</p>
           <p className="role">{roleChip}</p>
         </div>
