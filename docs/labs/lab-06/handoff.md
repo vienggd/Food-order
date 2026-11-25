@@ -2,7 +2,7 @@
 
 ## Who
 - Owning team: **Est**, section 131 — vieng and ninja.
-- Testing team: **TBD (vieng fills in)** — students: TBD.
+- Testing team: **EN-009_P3** (Product Team of "Event Registration and Attendance System") — Kirakit Kingkaew and Nattakit Prasertsak. We test their app in turn (their repo: songt888/event-registration-system, tag `v0.1.2-lab5`, commit `04e8590`).
 
 ## What to test
 - **Version:** commit `b71cdb2` (merge of PR #84, `lab-5` into `main`, the Lab 5 version). No tag points exactly at this commit. The nearest tag, `v0.1.0-sprint1` (commit `12c1052`, PR #46), is an older ancestor: do not use it as the version name. Write `b71cdb2` in every result row.

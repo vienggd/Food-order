@@ -25,7 +25,7 @@ Check, as real users, that our Sprint 1 café pre-order app does what its contra
 | Fri | we triage every finding and answer in writing |
 | Sat | we send a fixed version if there are real defects; you re-run the failed cases and record a decision |
 
-Exact dates and times: TBD (vieng fills in).
+Exact dates and times: to be agreed on Discord (vieng fills in).
 
 ## 5. Before you start (entry criteria)
 - You have the live URL, the three account labels and the password (sent privately).
