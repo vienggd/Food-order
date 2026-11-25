@@ -17,6 +17,20 @@ Sprint 1 AC and test IDs come from the contracts in `docs/sprint_1/sprints/sprin
 | BR-05 | Order line keeps item name and unit price at order time | F-03 | 1 | AC-F03-06 | TEST-F03-11 (API) | Pass |
 | BR-06 | Only a PLACED order can be accepted, else 409 | F-04 | 1 | AC-F04-05, AC-F04-06, AC-F04-10 | TEST-F04-05, -06 (API); -10 (unit) | Pass |
 | BR-07 | Two operators accept at once → one 200, one 409 | F-04 | 1 | AC-F04-07, AC-F04-13 | TEST-F04-07 (API, 20 parallel); -13 (E2E) | Pass |
+| BR-08 | Menu name 1–60 characters, unique ignoring case | F-05 | 2 | AC-5.3, AC-5.4, AC-5.5, AC-5.17 | TEST-5.3, -5.4, -5.5 (API); -5.17 (E2E) | Pass (branch run, 25 Nov 2026; not released) |
+| BR-09 | Menu price whole satang 1–100000 | F-05 | 2 | AC-5.6, AC-5.7 | TEST-5.6, -5.7 (API) | Pass (branch run, 25 Nov 2026; not released) |
+| BR-10 | Sold out / price edit affects new orders only | F-05 | 2 | AC-5.8, AC-5.9, AC-5.10 | TEST-5.8, -5.9, -5.10 (API) | Pass (branch run, 25 Nov 2026; not released) |
+| BR-11 | Customer cancels own order only while PLACED | F-06 | 2 | AC-F06-01..06 | TEST-F06-01..06 (API) | Planned (not run) (code not written yet) |
+| BR-12 | Reject only PLACED, reason 3–200, accept/reject race | F-06 | 2 | AC-F06-07..14 | TEST-F06-07..14 (API) | Planned (not run) |
+| BR-13 | One step at a time ACCEPTED→PREPARING→READY→PICKED_UP | F-07 | 2 | AC-F07-01..(see contract) | TEST-F07-xx (API, E2E) | Planned (not run) (contract in PR #102) |
+| BR-14 | Pay own order once; not CANCELLED/REJECTED/PICKED_UP | F-08 | 2 | AC-8.1..AC-8.10, AC-8.16 | TEST-8.1..8.10 (API); -8.16 (E2E) | Pass (branch run, 25 Nov 2026; not released) |
+| BR-15 | PICKED_UP needs payment PAID | F-08 (in F-07 route) | 2 | AC-8.14, AC-8.15, AC-8.17 | TEST-8.14, -8.15 (API); -8.17 (E2E) | Planned (not run) (waits for F-07 code) |
+| BR-16 | Cancel/reject of a PAID order → REFUNDED | F-08 (in F-06 routes) | 2 | AC-8.11, AC-8.12, AC-8.13 | TEST-8.11..8.13 (API) | Planned (not run) (waits for F-06 code) |
+| BR-17 | Only PICKED_UP and PAID orders count as sales | F-10 | 3 | AC-10.1, AC-10.2 | TEST-10.1, -10.2 (API) | Planned (not run) (Sprint 3) |
+| BR-18 | Sales days are Asia/Bangkok days | F-10 | 3 | AC-10.3 | TEST-10.3 (API) | Planned (not run) (Sprint 3) |
+| BR-19 | Top 3 items by quantity, ties by name | F-10 | 3 | AC-10.4 | TEST-10.4 (API) | Planned (not run) (Sprint 3) |
+| BR-20 | Successful login clears failed count | F-12 | 3 | AC-12.5 | TEST-12.5 (API) | Planned (not run) (Sprint 3) |
+| BR-21 | Failed logins counted per email | F-12 | 3 | AC-12.3, AC-12.7 | TEST-12.3, -12.7 (API) | Planned (not run) (Sprint 3) |
 
 ## 2. Functional requirements
 
@@ -34,11 +48,11 @@ IDs agreed with the SRS author in chat on 6 Nov 2026.
 | FR-08 | View my order detail | F-03 | 1 | AC-F03-06, AC-F03-08, AC-F03-10 | TEST-F03-11, -13, -14, -21, -22 (API); -19 (E2E) | Pass |
 | FR-09 | Operator queue of PLACED orders, oldest first | F-04 | 1 | AC-F04-01..03, AC-F04-11 | TEST-F04-01..03 (API); -11 (E2E) | Pass |
 | FR-10 | Accept an order | F-04 | 1 | AC-F04-04..08, AC-F04-12, AC-F04-13 | TEST-F04-04..08, -14 (API); -12, -13 (E2E) | Pass |
-| FR-11 | Menu management | F-05 | 2 | Sprint 2 contract | — | — |
+| FR-11 | Menu management | F-05 | 2 | AC-5.1..AC-5.17 | TEST-5.1..5.14 (API); -5.15..5.17 (E2E) | Pass (branch run, 25 Nov 2026; not released) |
 | FR-12 | Customer cancel | F-06 | 2 | Sprint 2 contract | — | — |
 | FR-13 | Operator reject with reason | F-06 | 2 | Sprint 2 contract | — | — |
 | FR-14 | Fulfilment PREPARING → READY → PICKED_UP | F-07 | 2 | Sprint 2 contract | — | — |
-| FR-15 | Simulated payment | F-08 | 2 | Sprint 2 contract | — | — |
+| FR-15 | Simulated payment | F-08 | 2 | AC-8.1..AC-8.18 | TEST-8.1..8.18 | Partly run: 8.1–8.10, 8.16, 8.18 pass (branch run, 25 Nov 2026); 8.11–8.15, 8.17 planned |
 | FR-16 | Pickup time slots | F-09 | 3 | Sprint 3 contract | — | — |
 | FR-17 | Sales summary | F-10 | 3 | Sprint 3 contract | — | — |
 | FR-18 | Order search / filter | F-11 | 3 | Sprint 3 contract | — | — |
@@ -59,9 +73,10 @@ IDs agreed with the SRS author in chat on 6 Nov 2026.
 
 ## 4. Coverage check
 
-- Every FR/BR/NFR maps to a feature: **yes** (FR-01..FR-18, BR-01..BR-07, NFR-01..NFR-09).
+- Every FR/BR/NFR maps to a feature: **yes** (FR-01..FR-18, BR-01..BR-21, NFR-01..NFR-09).
 - Every Sprint 1 AC appears in at least one row above: **yes** — AC-F01-01..14, AC-F02-01..07, AC-F03-01..13, AC-F04-01..13 (47 AC).
 - Every Sprint 1 AC has at least one automated test: **yes** — 61 test IDs (TEST-F01-01..14, TEST-F02-01..09, TEST-F03-01..24, TEST-F04-01..14), all found in test names in `server/tests/`, `client/src/lib/`, `e2e/`.
+- Sprint 2 and 3 (25 Nov 2026): AC and test IDs come from the contracts in `docs/sprint_2/sprints/`. A row says Pass only when the test ran; "Planned (not run)" means the test is specified but not written or not executed. Nothing from Sprint 2 is released yet.
 - Only manual check: NFR-07 (secrets and configuration), documented above.
 
 | Test files | Level | IDs |
@@ -72,6 +87,10 @@ IDs agreed with the SRS author in chat on 6 Nov 2026.
 | `server/tests/operator.test.ts`, `transitions.test.ts` | API, unit | TEST-F04-01..09, -14; -10 |
 | `server/tests/app.test.ts`, `seed.test.ts` | API, DB | setup AC-1.2..1.5 (#1) |
 | `client/src/lib/money.test.ts`, `cart.test.ts` | unit | TEST-F02-07, TEST-F03-17, -18, -23 |
+| `server/tests/menu-management.test.ts` | API | TEST-5.1..5.14 |
+| `server/tests/payments.test.ts` | API | TEST-8.1..8.10 (plus order JSON fields) |
+| `client/src/lib/price.test.ts` | unit | price conversion for F-05 form |
+| `e2e/menu-admin.spec.ts`, `payment.spec.ts` | E2E | TEST-5.15..5.17; TEST-8.16, -8.18 |
 | `e2e/auth.spec.ts`, `menu.spec.ts`, `orders.spec.ts`, `queue.spec.ts` | E2E | TEST-F01-12..14, TEST-F02-08..09, TEST-F03-19..20, -24, TEST-F04-11..13 |
 
 ## Change log
@@ -83,3 +102,4 @@ IDs agreed with the SRS author in chat on 6 Nov 2026.
 | 6 Nov 2026 | Added TEST-F03-22, TEST-F03-23, TEST-F04-14 (recheck #37) | Bug fix and ui-spec alignment |
 | 13 Nov 2026 | Added AC-F03-13 / TEST-F03-24 phone tab order (#47) | QA finding on release PR #46 |
 | 21 Nov 2026 | Coverage count corrected: 61 test IDs (14 + 9 + 24 + 14), was written as 62 (#53, review on #54) | Counting error |
+| 25 Nov 2026 | Added BR-08..BR-21 and Sprint 2 rows with actual results (F-05, F-08 part 1); F-06, F-07, F-10, F-12 shown as planned | Deliverable 2 part D |

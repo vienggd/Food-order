@@ -146,6 +146,11 @@ menu_items 1 ─ * order_lines     (menu_item_id; name and price are copied, BR-
 | | `created_at` | timestamp | default now; queue and list ordering |
 | | `updated_at` | timestamp | set by Prisma on every update |
 | | `accepted_at` | timestamp, null | set by F-04 when accepted (migration in F-04) |
+| | `reject_reason` | text, null | F-06: operator's reason, 3–200 characters (BR-12); migration `20261124171440_add_order_step_and_payment_fields` |
+| | `cancelled_at`, `rejected_at` | timestamp, null | F-06: time of cancel / reject |
+| | `preparing_at`, `ready_at`, `picked_up_at` | timestamp, null | F-07: time of each step (BR-13); `picked_up_at` also decides the sales day (F-10) |
+| | `payment_status` | enum `PaymentStatus` | F-08: `UNPAID` (default) \| `PAID` \| `REFUNDED` (BR-14, BR-16) |
+| | `paid_at`, `refunded_at` | timestamp, null | F-08: set when paid / refunded |
 | `order_lines` | `id` | int | PK, auto |
 | | `order_id` | int | FK → `orders.id`, on delete cascade |
 | | `menu_item_id` | int | FK → `menu_items.id` |
@@ -163,6 +168,10 @@ PLACED ──accept──► ACCEPTED ──► PREPARING ──► READY ──
 PLACED ──reject──► REJECTED                                           (F-06)
 PLACED ──cancel──► CANCELLED                                          (F-06)
 ```
+
+Payment is a separate field (`payment_status`, F-08): `UNPAID → PAID` by the customer (BR-14), `PAID → REFUNDED` automatically when a paid order is cancelled or rejected (BR-16). An order can become PICKED_UP only when PAID (BR-15).
+
+Planned for Sprint 3 (F-12): table `login_failures(id, email, created_at)`, index `(email, created_at)`; not built yet.
 
 The enum already holds every status so later sprints need no enum migration. Allowed moves live in one transition table read by `canTransition(from, to)` (DEC-05); Sprint 1 allows only `PLACED → ACCEPTED`. Payment status (F-08) will be a separate column (DEC-08).
 
@@ -252,6 +261,16 @@ Details, all error cases and tests are in the feature contracts (`docs/sprint_1/
 | `GET /api/orders/:id` | — | 200 Order | 400, 401, 403, 404 | F-03 |
 | `GET /api/operator/orders?status=PLACED` | — | 200 Queue order[] oldest first | 400, 401, 403 | F-04 |
 | `POST /api/operator/orders/:id/accept` | — | 200 Order (ACCEPTED, `acceptedAt` set) | 400, 401, 403, 404, 409 | F-04 |
+| `GET /api/operator/menu` | — | 200 Menu item[] by `id`, sold-out included | 401, 403 | F-05 (implemented) |
+| `POST /api/operator/menu` | `{ name, price, isAvailable? }` | 201 Menu item | 400 (`details.field`), 401, 403 | F-05 (implemented) |
+| `PATCH /api/operator/menu/:id` | any of `{ name, price, isAvailable }` | 200 Menu item | 400, 401, 403, 404 | F-05 (implemented) |
+| `POST /api/orders/:id/pay` | — (amount = order total on the server) | 200 Order (`paymentStatus: PAID`) | 400, 401, 403, 404, 409 | F-08 (implemented) |
+| `POST /api/orders/:id/cancel` | — | 200 Order (CANCELLED) | 400, 401, 403, 404, 409 | F-06 (contract only) |
+| `POST /api/operator/orders/:id/reject` | `{ reason }` | 200 Order (REJECTED) | 400, 401, 403, 404, 409 | F-06 (contract only) |
+| `POST /api/operator/orders/:id/advance` | `{ from }` | 200 Order (next step) | 400, 401, 403, 404, 409 | F-07 (contract only) |
+| `GET /api/operator/sales?from&to` | — | 200 `{ days, topItems }` | 400, 401, 403 | F-10 (contract only) |
+
+Order JSON (4.3) gained `paymentStatus`, `paidAt`, `refundedAt` in Sprint 2 (F-08); the order list items gained `paymentStatus`. `POST /api/auth/login` gets a 429 `RATE_LIMITED` answer in Sprint 3 (F-12, planned).
 
 Later sprints add endpoints with the same conventions (planned paths in section 5.2).
 
@@ -277,15 +296,15 @@ Later sprints add endpoints with the same conventions (planned paths in section 
 | Order detail | `GET /api/orders/:id` | ✘ 401 | ✔ own; other's → 404 | ✘ 403 | only own orders | 1 |
 | Order queue | `GET /api/operator/orders?status=PLACED` | ✘ 401 | ✘ 403 | ✔ | all orders (one shop) | 1 |
 | Accept order | `POST /api/operator/orders/:id/accept` | ✘ 401 | ✘ 403 | ✔ | any PLACED order | 1 |
-| Manage menu / sold-out | `/api/operator/menu…` | ✘ 401 | ✘ 403 | ✔ | all menu items | 2 |
+| Manage menu / sold-out | `GET`, `POST /api/operator/menu`, `PATCH /api/operator/menu/:id` | ✘ 401 | ✘ 403 | ✔ | all menu items | 2 |
 | Cancel order | `POST /api/orders/:id/cancel` | ✘ 401 | ✔ own, PLACED only | ✘ 403 | own orders | 2 |
 | Reject order | `POST /api/operator/orders/:id/reject` | ✘ 401 | ✘ 403 | ✔ | any PLACED order | 2 |
-| Prepare / ready / picked up | `POST /api/operator/orders/:id/{prepare,ready,pickup}` | ✘ 401 | ✘ 403 | ✔ | any order in the right status | 2 |
+| Advance one step (prepare / ready / picked up) | `POST /api/operator/orders/:id/advance` | ✘ 401 | ✘ 403 | ✔ | any order in the right status | 2 |
 | Pay (simulated) | `POST /api/orders/:id/pay` | ✘ 401 | ✔ own | ✘ 403 | own orders | 2 |
 | Sales summary | `GET /api/operator/sales` | ✘ 401 | ✘ 403 | ✔ | all orders (totals only) | 3 |
 | Search orders | `GET /api/orders?…` / `GET /api/operator/orders?…` | ✘ 401 | ✔ own | ✔ all | as above | 3 |
 
-Sprint 2–3 paths are planned names; their feature contracts confirm them.
+Sprint 2–3 paths are the ones in the feature contracts (`docs/sprint_2/sprints/`). Implemented so far: menu management (F-05) and pay (F-08). Cancel, reject, advance, sales and rate limit are contract only.
 
 ## 6. Authentication and sessions
 
@@ -354,3 +373,4 @@ Sprint 2–3 paths are planned names; their feature contracts confirm them.
 | 6 Nov 2026 | 1.1 | Sections 3 data model and 4 API conventions (B) | Deliverable 1 part C |
 | 6 Nov 2026 | 1.2 | 2.2 empty-state wording matches ui-spec; 7.1 says serving the built client comes in Lab 5 | Recheck #38: doc must match the code |
 | 6 Nov 2026 | 1.3 | 4.1 ids: upper bound 2147483647 (recheck #37: larger ids gave 500) | Bug fix |
+| 25 Nov 2026 | 2 | Sprint 2 schema (3.2, 3.3), Sprint 2–3 endpoints (4.4), permission matrix paths (5.2) | Deliverable 2 part D |

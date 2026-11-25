@@ -77,6 +77,20 @@ Each rule is enforced by the server, whatever the client sends. Money is stored 
 | BR-05 | Each order line keeps a copy of the item name and unit price at the time the order was placed; later menu changes do not change existing orders. | — (checked by reading the order after a menu change) |
 | BR-06 | Only an order with status PLACED can be accepted. | 409 INVALID_STATE; status unchanged |
 | BR-07 | If two operators accept the same order at the same moment, exactly one succeeds and the other is told it was already accepted. | One 200, one 409 INVALID_STATE; order accepted once |
+| BR-08 | A menu item name is 1–60 characters after trimming and unique, ignoring upper/lower case. (F-05) | 400 VALIDATION_ERROR, `details.field = name` |
+| BR-09 | A menu price is a whole number of satang from 1 to 100000 (฿0.01–฿1,000.00). (F-05) | 400 VALIDATION_ERROR, `details.field = price` |
+| BR-10 | Marking an item sold out or changing its price affects new orders only; placed orders keep their lines (BR-05). (F-05) | — |
+| BR-11 | A customer can cancel only their own order, and only while it is PLACED. (F-06) | 404 for someone else's order; 409 INVALID_STATE otherwise |
+| BR-12 | An operator can reject only a PLACED order, with a reason of 3–200 characters that the customer sees. Accept, reject and cancel racing on one order: exactly one wins. (F-06) | 400 bad reason; 409 INVALID_STATE |
+| BR-13 | An order moves ACCEPTED → PREPARING → READY → PICKED_UP, one step at a time, by an operator; no skipping, no going back. (F-07) | 409 INVALID_STATE; 403 for a customer |
+| BR-14 | A customer can pay only their own order, once (UNPAID → PAID), and not when it is CANCELLED, REJECTED or PICKED_UP. (F-08) | 404 for someone else's order; 409 INVALID_STATE |
+| BR-15 | An order can become PICKED_UP only when its payment is PAID. (F-08, enforced in the F-07 advance route) | 409 INVALID_STATE "not paid yet" |
+| BR-16 | Cancelling or rejecting a PAID order sets its payment to REFUNDED in the same step. (F-08, enforced in the F-06 routes) | — |
+| BR-17 | Only orders that are PICKED_UP and PAID count as sales. (F-10, Sprint 3, planned) | — |
+| BR-18 | Sales days are Asia/Bangkok calendar days, by the time of pickup. (F-10, Sprint 3, planned) | — |
+| BR-19 | The top items are the 3 with the most quantity sold; ties are broken by name. (F-10, Sprint 3, planned) | — |
+| BR-20 | A successful login clears that email's failed-login count. (F-12, Sprint 3, planned) | — |
+| BR-21 | Failed logins are counted per email (lower-case), not per IP address. (F-12, Sprint 3, planned) | — |
 
 ## 6. Non-functional requirements
 
@@ -132,3 +146,4 @@ Each rule is enforced by the server, whatever the client sends. Money is stored 
 | Date | Version | Change | Why |
 |---|---|---|---|
 | 6 Nov 2026 | 1 | First version | Deliverable 1 part A |
+| 25 Nov 2026 | 2 | Added BR-08..BR-21 (Sprint 2 and Sprint 3 rules) from the feature contracts F-05, F-06, F-07, F-08, F-10, F-12 | Deliverable 2 part D: living SRS |
