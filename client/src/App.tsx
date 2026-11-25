@@ -6,6 +6,7 @@ import { MenuPage } from "./pages/MenuPage";
 import { OrdersSplit } from "./pages/OrdersPage";
 import { CartProvider } from "./cart";
 import { QueuePage } from "./pages/QueuePage";
+import { OperatorMenuPage } from "./pages/OperatorMenuPage";
 
 function Home() {
   const { user, loading } = useAuth();
@@ -36,6 +37,7 @@ export function App() {
       <Route path="/orders" element={<RequireRole role="CUSTOMER" title="My orders"><OrdersSplit /></RequireRole>} />
       <Route path="/orders/:id" element={<RequireRole role="CUSTOMER" title="My orders"><OrdersSplit /></RequireRole>} />
       <Route path="/operator/orders" element={<RequireRole role="OPERATOR" title="Order queue"><QueuePage /></RequireRole>} />
+      <Route path="/operator/menu" element={<RequireRole role="OPERATOR" title="Menu items"><OperatorMenuPage /></RequireRole>} />
       <Route path="*" element={<NotFound />} />
     </Routes>
     </CartProvider>

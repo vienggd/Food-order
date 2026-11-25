@@ -7,8 +7,7 @@ Definition of Done: [`../../sprint_1/sprints/sprint-1/definition-of-done.md`](..
 
 | Linked | Text (short) |
 |---|---|
-| FR-11 | Operator sees all menu items (sold-out included), adds an item, edits name and price |
-| FR-12 | Operator marks an item sold out and puts it back |
+| FR-11 | Operator adds and edits menu items (name, price) and marks an item sold out or available again |
 | BR-08 | Name 1–60 characters after trimming, unique (ignoring upper/lower case) |
 | BR-09 | Price is a whole number of satang from 1 to 100000 (฿0.01–฿1,000.00) |
 | BR-10 | Sold out affects new orders only; placed orders keep their lines (BR-05 snapshot) |

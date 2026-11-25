@@ -7,8 +7,7 @@ Definition of Done: [`../../sprint_1/sprints/sprint-1/definition-of-done.md`](..
 
 | Linked | Text (short) |
 |---|---|
-| FR-13 | Customer pays for own order (simulated, no real money, no card data) |
-| FR-14 | Payment status (UNPAID / PAID / REFUNDED) shown to customer and operator |
+| FR-15 | Simulated payment: payment status UNPAID → PAID (customer, no real money, no card data) → REFUNDED (automatic), shown to customer and operator |
 | BR-14 | Own order only; UNPAID → PAID; refused (409) if the order is CANCELLED, REJECTED or PICKED_UP, or already PAID |
 | BR-15 | An order can become PICKED_UP only when PAID (409 otherwise) |
 | BR-16 | Cancel or reject of a PAID order sets payment REFUNDED in the same step |

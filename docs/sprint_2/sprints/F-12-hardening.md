@@ -26,7 +26,7 @@ Depends on: F-01 login. Adds error code `RATE_LIMITED` → HTTP 429.
 ### Rules, validation, boundaries
 - Unknown emails are counted too, so the answer does not show whether an account exists.
 - Failures are kept in a database table so they survive a restart and work with more than one server instance.
-- The window is a fixed 15 minutes from the first counted failure in the window; boundary: the 5th failure triggers the lock, the 4th does not.
+- Failures count when they are less than 15 minutes old. The 5th failure within that time starts the lock; the lock lasts 15 minutes from that 5th failure (the 4th does not lock).
 - Other endpoints are not limited in Sprint 3.
 
 ### Permissions
