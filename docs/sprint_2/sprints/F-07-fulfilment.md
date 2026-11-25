@@ -7,8 +7,8 @@ Definition of Done: [`../../sprint_1/sprints/sprint-1/definition-of-done.md`](..
 
 | Linked | Text (short) |
 |---|---|
-| FR-17 | Operator moves an accepted order step by step: PREPARING → READY → PICKED_UP |
-| FR-18 | Operator sees all open orders (PLACED, ACCEPTED, PREPARING, READY) in one queue; the customer sees the current step |
+| FR-14 | Operator moves an order ACCEPTED → PREPARING → READY → PICKED_UP, one step at a time |
+| FR-09 | (Sprint 1) operator queue; now it shows all open orders (PLACED, ACCEPTED, PREPARING, READY) in one call |
 | BR-13 | ACCEPTED → PREPARING → READY → PICKED_UP, one step at a time; no skipping, no going back (409); OPERATOR only (customer 403) |
 | BR-15 | (F-08) PICKED_UP needs payment PAID. **Not in F-07**: vieng adds it to the advance route after F-07 merges (see section 9) |
 | BR-07 | (Sprint 1) races decided by the database |

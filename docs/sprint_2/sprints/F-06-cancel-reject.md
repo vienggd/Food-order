@@ -7,8 +7,8 @@ Definition of Done: [`../../sprint_1/sprints/sprint-1/definition-of-done.md`](..
 
 | Linked | Text (short) |
 |---|---|
-| FR-15 | Customer cancels own order before the café accepts it |
-| FR-16 | Operator rejects an order with a reason; the customer sees the reason |
+| FR-12 | Customer cancels own order while it is still PLACED |
+| FR-13 | Operator rejects a PLACED order with a reason; the customer sees the reason |
 | BR-11 | Customer cancels own order only while PLACED; someone else's order → 404; after accept → 409 |
 | BR-12 | Operator rejects only while PLACED; reason 3–200 characters, shown to the customer |
 | BR-06, BR-07 | (Sprint 1) accept needs PLACED; races decided by the database |
