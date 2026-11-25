@@ -1,5 +1,7 @@
 # Software Requirements Specification — Campus Café Pre-order
 
+> **Frozen as submitted for Deliverable 1.** Do not edit. The living version is [`../srs.md`](../srs.md).
+
 Deliverable 1, part A. Issue #6. Owner: A (vieng). Source of decisions: [`PLAN.md`](PLAN.md).
 Requirement IDs are stable and match [`traceability.md`](traceability.md) and [`features.md`](features.md).
 Version 1 — 6 Nov 2026. Later changes go in the change log at the bottom.
