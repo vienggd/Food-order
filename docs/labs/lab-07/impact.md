@@ -89,3 +89,7 @@ Regression suites to run: `server/tests/orders.test.ts`, `operator.test.ts`, `au
 3. **Fix:** total-quantity check in the `placeBody` schema block of `server/src/orders/routes.ts`; warning and cap in `client/src/lib/cart.ts` (+ cart UI).
 4. **GREEN:** the same tests all pass → `docs/labs/lab-07/evidence/green.txt`.
 5. **Regression:** full `orders`, `operator`, `auth` suites plus client unit tests, with command, version and pass/fail/skip counts → `docs/labs/lab-07/evidence/regression.txt`. No existing test is weakened.
+
+## 6. Evidence files and where the docs live
+- `e2e/helpers.ts` (`shot()`) writes screenshots to `docs/sprint_1/evidence/screenshots/`. The two TEST-L7-5 screenshots were moved by hand to `docs/labs/lab-07/evidence/screenshots/`; a new E2E run writes them to the Sprint 1 folder again, so move them after every run and never commit changes to the Sprint 1 PNGs.
+- The Lab 7 contract change is written into `docs/sprint_1/srs.md`, `F-03-orders.md`, `system-sds.md` and `traceability.md` because these are the only copies on `lab7` today. The living copies (`docs/srs.md` etc.) exist only on `sprint2`; the change must be carried into them at merge (see PLAN.md merge order).
