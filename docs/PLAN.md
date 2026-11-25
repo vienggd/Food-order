@@ -84,7 +84,7 @@ feature/F-0x-*  fix/L6-*  feature/L7-*  docs/*
 | D Resolution & independent re-test | 35 | per accepted defect: Issue → **RED test on the tested version** → GREEN → regression → PR from `sprint-2` with real review → CI → release → deploy → smoke; partner re-tests and records **Accepted / Accepted with limitations / Not Accepted** with names, version, date. If no real defect: TA's **controlled exercise** on an isolated branch (never invent one) | Issues `lab6`, PRs, test output, version table, partner's signed decision | V fixes, N reviews |
 
 Never: test our own app as "independent", claim acceptance with open critical/major defects or BLOCKED cases, relabel a broken rule as an enhancement.
-PDF `lab6_sec131_COOKS.pdf`: contents table A–D with pages + evidence IDs, version table, contribution table, AI-use note, limitations.
+PDF `lab6_sec131_Est.pdf`: contents table A–D with pages + evidence IDs, version table, contribution table, AI-use note, limitations.
 
 UAT cases (draft): **UAT-01** alice: Latte×2 + Americano×1 → ฿185.00 → PLACED → staff accepts → alice sees ACCEPTED · **UAT-02** qty 10 ok / 11 refused; sold-out Croissant cannot be ordered, nothing saved · **UAT-03** alice opens staff queue → refused; alice opens bob's order → not found · **UAT-04** order still there after log out/in; second accept → "already accepted" · **UAT-05** logout ends the session · **UAT-06** tampered price/total refused (API, optional).
 
@@ -99,7 +99,7 @@ UAT cases (draft): **UAT-01** alice: Latte×2 + Americano×1 → ฿185.00 → P
 | C Metrics | 15 | **5 dated metrics** with definition, scope, window/snapshot, value, source ID; compact source lists embedded (≥2 reconcilable without links); percentages show numerator/denominator; **≤100 words**: one concrete problem/risk + action + owner | completed Issues, merged PRs, test counts on the release commit, UAT defects opened/resolved, CI runs success/fail (window 24–29 Nov) | N |
 | D Readiness & retro | 10 | checklist: deployed version, defects by severity/status, test results incl. failed/skipped, tech debt table (item, impact, priority, action), config/secrets, docs, deploy/smoke; **READY / NOT READY** for the maintained Sprint 1 scope with reasons; 3 retro answers (helped / hurt / will change + next action) | `docs/labs/lab-07/readiness.md` | V |
 
-PDF `lab7_sec131_COOKS.pdf`: contents table A–D, version table (Sprint 1 baseline → version accepted in Lab 6 → pre-change commit → test commit → fix commit → release → revision; later-sprint changes named), contribution table, AI-use note, limitations.
+PDF `lab7_sec131_Est.pdf`: contents table A–D, version table (Sprint 1 baseline → version accepted in Lab 6 → pre-change commit → test commit → fix commit → release → revision; later-sprint changes named), contribution table, AI-use note, limitations.
 
 ---
 
@@ -173,7 +173,7 @@ PDF must include: cover (names, IDs, theme, repo, tag/commit, URL + version), **
 
 ## 10. TA message (draft — V sends)
 
-> Hello, this is team COOKS (sec 131, Food-order). Three questions:
+> Hello, this is team Est (sec 131, Food-order). Three questions:
 > 1. **Lab 7 change approval:** we propose changing Sprint 1 rule BR-01 (quantity 1–10 per line) to also limit the whole order to at most 15 items (15 accepted, 16 rejected with a validation error; the cart warns at 15). Old orders are unaffected; access rules unchanged. May we proceed? (Backups if you prefer: flag orders older than 15 min as LATE in the operator queue; or a minimum order of ฿40.00.)
 > 2. Since Lab 6, Lab 7 and Deliverable 2 are all due 29 Nov, may we run them in parallel, using the Sprint 1 version our UAT partner accepts as the Lab 7 baseline?
 > 3. Our Lab 5 submission names release `b71cdb2` (tag `v0.1.1-lab5`). Is it OK to deploy newer releases to the same URL for Labs 6–7 and Deliverable 2?
