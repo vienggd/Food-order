@@ -1,0 +1,14 @@
+   × F-08 pay own order > TEST-8.1 pays a PLACED order: PAID, paidAt set, order status unchanged 691ms
+   × F-08 pay own order > TEST-8.2 a newly placed order is UNPAID in the response and in the list 758ms
+   × F-08 pay own order > TEST-8.3 pays ACCEPTED, PREPARING and READY orders 709ms
+   × F-08 pay own order > TEST-8.4 refuses CANCELLED, REJECTED and PICKED_UP orders with 409 826ms
+   × F-08 pay own order > TEST-8.5 paying twice gives 409 and keeps the first paidAt 792ms
+   × F-08 pay own order > TEST-8.6 ten parallel pays: exactly one 200, nine 409 1111ms
+   ✓ F-08 pay own order > TEST-8.7 another customer's order and a missing order both give 404  956ms
+   × F-08 pay own order > TEST-8.8 a bad id is 400, never 500 1038ms
+   ✓ F-08 pay own order > TEST-8.9 anonymous gets 401 and staff gets 403; order unchanged  1096ms
+   × F-08 pay own order > TEST-8.10 an amount in the body is ignored 881ms
+   × F-08 pay own order > order JSON and the order list show the payment fields 795ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  1 failed (1)
+      Tests  9 failed | 2 passed (11)
