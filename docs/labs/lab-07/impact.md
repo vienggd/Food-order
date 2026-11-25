@@ -72,3 +72,10 @@ Regression suites to run: `server/tests/orders.test.ts`, `operator.test.ts`, `au
 |---|---|
 | 24 Nov | vieng sent the TA message. |
 | 25 Nov | TA Prapatsorn Sangrod approved C-1 with the 4 answers recorded in Issue #96. |
+
+## 5. RED / GREEN plan
+1. **Test commit first:** TEST-L7-1..5 are committed before any fix (API tests in `server/tests/orders.test.ts`, unit test in `client/src/lib/cart.test.ts`, E2E in `e2e/orders.spec.ts`). The test commit changes no production code.
+2. **RED:** run the new tests on the pre-change behaviour (this branch without the fix = `b71cdb2` code). Expected: TEST-L7-3 (16 → 400 with the new message and details), TEST-L7-4 (cart warning and cap at 15) and TEST-L7-5 (warning visible, + disabled) **fail because the rule is missing**, not because of a compile error. TEST-L7-1 (14) and TEST-L7-2 (15) **pass on the old code by design**: the old rule already accepts them; they guard the boundary against an over-strict fix. Output saved in `docs/labs/lab-07/evidence/red.txt` and committed before the fix.
+3. **Fix:** total-quantity check in the `placeBody` schema block of `server/src/orders/routes.ts`; warning and cap in `client/src/lib/cart.ts` (+ cart UI).
+4. **GREEN:** the same tests all pass → `docs/labs/lab-07/evidence/green.txt`.
+5. **Regression:** full `orders`, `operator`, `auth` suites plus client unit tests, with command, version and pass/fail/skip counts → `docs/labs/lab-07/evidence/regression.txt`. No existing test is weakened.
