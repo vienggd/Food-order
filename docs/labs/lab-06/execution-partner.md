@@ -3,10 +3,10 @@
 Empty sheet. Rows are filled only by the real testers (vieng, ninja) after the human slot. Never copy expected into actual. BLOCKED is not PASS.
 
 ## Partner product
-- Partner team: TODO
+- Partner team: EN-009_P3 (Kirakit Kingkaew, Nattakit Prasertsak), "Event Registration and Attendance System"
 - App URL: TODO
-- Repo: TODO
-- Version tested (tag/commit + deployed revision): TODO
+- Repo: songt888/event-registration-system
+- Version tested (tag/commit + deployed revision): tag `v0.1.2-lab5`, commit `04e8590`, Cloud Run revision `s47a6b53b-00005-5l7` (from their handoff)
 - Account labels (no passwords): TODO
 - Case pack received (date/link): TODO
 
