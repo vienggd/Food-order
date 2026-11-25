@@ -38,3 +38,30 @@ operatorRouter.post("/orders/:id/accept", async (req, res) => {
   }
   res.json(toOrderJson(order));
 });
+
+// F-06 reject (BR-12). Reason is checked first (400); one conditional update decides races with accept and cancel.
+const rejectBody = z.strictObject({
+  reason: z.string({ error: "Reason must be 3–200 characters." }).trim().min(3, "Reason must be 3–200 characters.").max(200, "Reason must be 3–200 characters."),
+});
+
+operatorRouter.post("/orders/:id/reject", async (req, res) => {
+  const id = dbId.parse(req.params.id);
+  const parsed = rejectBody.safeParse(req.body);
+  if (!parsed.success) throw new AppError(400, "VALIDATION_ERROR", parsed.error.issues[0].message, { field: "reason" });
+  const { count } = await prisma.order.updateMany({
+    where: { id, status: { in: statusesThatCanMoveTo("REJECTED") } },
+    data: { status: "REJECTED", rejectedAt: new Date(), rejectReason: parsed.data.reason },
+  });
+  const order = await prisma.order.findUnique({ where: { id }, include: { lines: { orderBy: { id: "asc" } } } });
+  if (!order) throw new AppError(404, "NOT_FOUND", "Order not found.");
+  if (count === 0) {
+    const message =
+      order.status === "CANCELLED"
+        ? `Order #${id} was already cancelled by the customer.`
+        : order.status === "REJECTED"
+          ? `Order #${id} was already rejected.`
+          : `Order #${id} was already accepted by another staff member.`;
+    throw new AppError(409, "INVALID_STATE", message, { status: order.status });
+  }
+  res.json(toOrderJson(order));
+});
