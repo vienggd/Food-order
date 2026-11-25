@@ -39,7 +39,7 @@ operatorRouter.post("/orders/:id/accept", async (req, res) => {
   res.json(toOrderJson(order));
 });
 
-// F-06 reject (BR-12). Reason is checked first (400); one conditional update decides races with accept and cancel.
+// F-06 reject (BR-12) + F-08 automatic refund if PAID (BR-16). Reason is checked first (400); one conditional update decides races.
 const rejectBody = z.strictObject({
   reason: z.string({ error: "Reason must be 3–200 characters." }).trim().min(3, "Reason must be 3–200 characters.").max(200, "Reason must be 3–200 characters."),
 });
@@ -48,10 +48,18 @@ operatorRouter.post("/orders/:id/reject", async (req, res) => {
   const id = dbId.parse(req.params.id);
   const parsed = rejectBody.safeParse(req.body);
   if (!parsed.success) throw new AppError(400, "VALIDATION_ERROR", parsed.error.issues[0].message, { field: "reason" });
-  const { count } = await prisma.order.updateMany({
-    where: { id, status: { in: statusesThatCanMoveTo("REJECTED") } },
-    data: { status: "REJECTED", rejectedAt: new Date(), rejectReason: parsed.data.reason },
-  });
+  const allowed = statusesThatCanMoveTo("REJECTED");
+  const count = await prisma.$executeRaw`
+    UPDATE "orders"
+    SET "status" = 'REJECTED'::"OrderStatus",
+        "rejected_at" = NOW(),
+        "reject_reason" = ${parsed.data.reason},
+        "updated_at" = NOW(),
+        "payment_status" = CASE WHEN "payment_status" = 'PAID'::"PaymentStatus" THEN 'REFUNDED'::"PaymentStatus" ELSE "payment_status" END,
+        "refunded_at" = CASE WHEN "payment_status" = 'PAID'::"PaymentStatus" THEN NOW() ELSE "refunded_at" END
+    WHERE "id" = ${id}
+      AND "status"::text = ANY(${allowed})
+  `;
   const order = await prisma.order.findUnique({ where: { id }, include: { lines: { orderBy: { id: "asc" } } } });
   if (!order) throw new AppError(404, "NOT_FOUND", "Order not found.");
   if (count === 0) {
