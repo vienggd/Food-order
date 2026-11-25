@@ -1,0 +1,52 @@
+RED run, 26 Nov 2026, on lab6 baseline commit e1057b7 (b71cdb2 app code before Lab 6 fixes).
+
+== Server API: cd server && npx vitest run tests/orders.test.ts tests/operator.test.ts ==
+   × F-03 GET /api/orders and /api/orders/:id > TEST-L6-121 rejects non-decimal/coerced id 0x1 with 400 VALIDATION_ERROR 768ms
+     → expected 200 to be 400 // Object.is equality
+   × F-03 GET /api/orders and /api/orders/:id > TEST-L6-121 rejects non-decimal/coerced id 1e0 with 400 VALIDATION_ERROR 1172ms
+     → expected 200 to be 400 // Object.is equality
+   × F-03 GET /api/orders and /api/orders/:id > TEST-L6-121 rejects non-decimal/coerced id 1.0 with 400 VALIDATION_ERROR 798ms
+     → expected 200 to be 400 // Object.is equality
+   × F-03 GET /api/orders and /api/orders/:id > TEST-L6-121 rejects non-decimal/coerced id +1 with 400 VALIDATION_ERROR 973ms
+     → expected 200 to be 400 // Object.is equality
+   × F-03 GET /api/orders and /api/orders/:id > TEST-L6-121 rejects non-decimal/coerced id 0b1 with 400 VALIDATION_ERROR 1240ms
+     → expected 200 to be 400 // Object.is equality
+   × F-03 GET /api/orders and /api/orders/:id > TEST-L6-121 rejects non-decimal/coerced id 0o1 with 400 VALIDATION_ERROR 991ms
+     → expected 200 to be 400 // Object.is equality
+   × F-03 GET /api/orders and /api/orders/:id > TEST-L6-121 rejects non-decimal/coerced id %201 with 400 VALIDATION_ERROR 878ms
+     → expected 200 to be 400 // Object.is equality
+   × F-04 accept > TEST-L6-121 accept rejects non-decimal/coerced id 0x1 with 400 VALIDATION_ERROR 501ms
+     → expected 200 to be 400 // Object.is equality
+   × F-04 accept > TEST-L6-121 accept rejects non-decimal/coerced id 1e0 with 400 VALIDATION_ERROR 420ms
+     → expected 200 to be 400 // Object.is equality
+   × F-04 accept > TEST-L6-121 accept rejects non-decimal/coerced id 1.0 with 400 VALIDATION_ERROR 529ms
+     → expected 200 to be 400 // Object.is equality
+   × F-04 accept > TEST-L6-121 accept rejects non-decimal/coerced id +1 with 400 VALIDATION_ERROR 630ms
+     → expected 200 to be 400 // Object.is equality
+   × F-04 accept > TEST-L6-121 accept rejects non-decimal/coerced id 0b1 with 400 VALIDATION_ERROR 402ms
+     → expected 200 to be 400 // Object.is equality
+   × F-04 accept > TEST-L6-121 accept rejects non-decimal/coerced id 0o1 with 400 VALIDATION_ERROR 418ms
+     → expected 200 to be 400 // Object.is equality
+   × F-04 accept > TEST-L6-121 accept rejects non-decimal/coerced id %201 with 400 VALIDATION_ERROR 810ms
+     → expected 200 to be 400 // Object.is equality
+ Test Files  2 failed (2)
+      Tests  14 failed | 40 passed (54)
+
+== E2E: npx playwright test e2e/lab6-fixes.spec.ts ==
+  x   1 [phone] › e2e\lab6-fixes.spec.ts:11:7 › TEST-L6-123 phone cart bar does not cover the last menu item (#123)
+      Expected: <= 676, Received: 701.140625
+  x   6 [phone] › e2e\lab6-fixes.spec.ts:120:7 › TEST-L6-128 cart badge counts cart lines rather than total item quantities (#128)
+      Expected: "Cart (1)", Received: "Cart (2)"
+  x   7 [phone] › e2e\lab6-fixes.spec.ts:139:7 › TEST-L6-129 phone top bar displays Campus Café brand without horizontal overflow (#129)
+      Expected substring: "Campus Café", Received string: "Hey, AliceCustomerLog out"
+  x   9 [desktop] › e2e\lab6-fixes.spec.ts:32:7 › TEST-L6-122 access warning clears on logout and on next navigation (#122)
+      getByText("You don't have access to that page.") Expected: 0, Received: 1
+  x  10 [desktop] › e2e\lab6-fixes.spec.ts:56:7 › TEST-L6-124 Order placed banner disappears after reload and after status becomes ACCEPTED (#124)
+      getByText("Order #2 placed!") Expected: 0, Received: 1
+  x  11 [desktop] › e2e\lab6-fixes.spec.ts:83:7 › TEST-L6-125 desktop split view keeps list status synced when Refresh status runs (#125)
+      locator('.order-list button').filter({ hasText: '#1' }) Expected substring: "ACCEPTED", Received: "#100:56 · 1 itemPLACED฿65.00"
+  x  12 [desktop] › e2e\lab6-fixes.spec.ts:101:7 › TEST-L6-126 login 400 shows server validation message instead of generic network error (#126)
+      Expected substring: not "Something went wrong", Received: "Something went wrong. Please try again."
+  x  13 [desktop] › e2e\lab6-fixes.spec.ts:120:7 › TEST-L6-128 cart badge counts cart lines rather than total item quantities (#128)
+      Expected: "1", Received: "2"
+  8 failed (0 passed, 6 skipped project-specific tests)
