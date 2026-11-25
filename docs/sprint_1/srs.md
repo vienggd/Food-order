@@ -71,7 +71,7 @@ Each rule is enforced by the server, whatever the client sends. Money is stored 
 | ID | Rule | When broken |
 |---|---|---|
 | BR-01 | The quantity on each order line is a whole number from 1 to 10. **Lab 7 change C-1 adds:** the whole order has at most 15 items in total (sum of all line quantities; 10 + 5 is accepted, 10 + 6 is not). Old orders are not re-checked. | 400 VALIDATION_ERROR; nothing saved |
-| BR-02 | An order has 1 to 20 lines, and the same menu item cannot appear on two lines. | 400 VALIDATION_ERROR; nothing saved |
+| BR-02 | An order has 1 to 20 lines, and the same menu item cannot appear on two lines. **Note (C-1):** with at most 15 items in total, an order can in practice have at most 15 lines; the limit of 20 stays in the schema. | 400 VALIDATION_ERROR; nothing saved |
 | BR-03 | Every ordered item must exist and be available (not sold out) at the moment the order is placed. If any one item fails, the whole order is rejected and nothing is saved (one database transaction). | 400 VALIDATION_ERROR naming the bad item(s); no order and no lines stored |
 | BR-04 | The server calculates the total from the database prices. A request that contains any price or total field is rejected. | 400 VALIDATION_ERROR; nothing saved |
 | BR-05 | Each order line keeps a copy of the item name and unit price at the time the order was placed; later menu changes do not change existing orders. | — (checked by reading the order after a menu change) |

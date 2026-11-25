@@ -67,6 +67,16 @@ Status: **TA approved 25 Nov 2026.** Order of commits: contract, then RED test, 
 
 Regression suites to run: `server/tests/orders.test.ts`, `operator.test.ts`, `auth.test.ts` (plus full `npm test`); `client` unit `cart.test.ts`.
 
+### Old tests that need new numbers (found while writing the fix)
+20 lines need at least 20 items, which is above the new limit of 15, so 20 lines can no longer be placed. The checks stay the same; only the numbers change. No test is removed or weakened.
+
+| Old test | Old numbers | New numbers | Why |
+|---|---|---|---|
+| TEST-F03-05 (API, AC-F03-03) | 20 different lines ×1 → 201 | 15 different lines ×1 → 201 | 20 items > 15 |
+| TEST-F03-06 (API) | 21 lines → 400 | unchanged (now also fails the total rule) | still protects the schema limit of 20 lines |
+| TEST-F03-18 (unit) | build 20 lines with the reducer, 21st refused | 20-line cart built directly, 21st refused | the reducer stops at 15 items |
+| TEST-F03-23 (unit) | `canAddFromMenu` true at 19 lines, false at 20 | true at 14 lines, false at 15 (and false for a 20-line cart) | the limit is reached at 15 items |
+
 ## 4. TA record
 | Date | Event |
 |---|---|
