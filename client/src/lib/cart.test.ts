@@ -41,3 +41,20 @@ describe("cartReducer", () => {
     expect(canAddFromMenu(cart)).toBe(false);
   });
 });
+
+// Lab 7, change C-1: at most 15 items in total.
+describe("Lab 7 C-1 cart limit of 15 items in total", () => {
+  const itemCount = (c: Cart) => c.lines.reduce((n, l) => n + l.quantity, 0);
+  it("TEST-L7-4 total never goes above 15; + is refused at 15; every + on the menu is disabled only at 15", () => {
+    let cart = apply(emptyCart, { type: "add", item: item(1) }, { type: "add", item: item(2) });
+    cart = apply(cart, { type: "setQty", menuItemId: 1, quantity: 10 }, { type: "setQty", menuItemId: 2, quantity: 4 });
+    expect(itemCount(cart)).toBe(14);
+    expect(itemCount(apply(cart, { type: "add", item: item(2) }))).toBe(15); // the 15th is allowed
+    cart = apply(cart, { type: "setQty", menuItemId: 2, quantity: 9 }); // asks for 19 in total
+    expect(itemCount(cart)).toBe(15); // capped
+    expect(itemCount(apply(cart, { type: "add", item: item(2) }))).toBe(15); // + at 15 does nothing
+    expect(itemCount(apply(cart, { type: "add", item: item(3) }))).toBe(15); // a new item is refused too
+    expect(canAddFromMenu(cart)).toBe(false);
+    expect(canAddFromMenu(apply(cart, { type: "setQty", menuItemId: 2, quantity: 4 }))).toBe(true); // 14
+  });
+});
