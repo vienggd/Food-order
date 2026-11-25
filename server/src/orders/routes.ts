@@ -82,6 +82,7 @@ ordersRouter.get("/", async (req, res) => {
     orders.map((o) => ({
       id: o.id,
       status: o.status,
+      paymentStatus: o.paymentStatus,
       total: o.total,
       itemCount: o.lines.reduce((n, l) => n + l.quantity, 0),
       createdAt: o.createdAt.toISOString(),

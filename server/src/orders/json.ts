@@ -8,6 +8,9 @@ export function toOrderJson(order: Order & { lines: OrderLine[] }) {
     total: order.total,
     createdAt: order.createdAt.toISOString(),
     acceptedAt: order.acceptedAt?.toISOString() ?? null,
+    paymentStatus: order.paymentStatus,
+    paidAt: order.paidAt?.toISOString() ?? null,
+    refundedAt: order.refundedAt?.toISOString() ?? null,
     lines: order.lines.map((l) => ({
       menuItemId: l.menuItemId,
       name: l.name,
