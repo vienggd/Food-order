@@ -67,6 +67,16 @@ Status: **TA approved 25 Nov 2026.** Order of commits: contract, then RED test, 
 
 Regression suites to run: `server/tests/orders.test.ts`, `operator.test.ts`, `auth.test.ts` (plus full `npm test`); `client` unit `cart.test.ts`.
 
+### Old tests that need new numbers (found while writing the fix)
+20 lines need at least 20 items, which is above the new limit of 15, so 20 lines can no longer be placed. The checks stay the same; only the numbers change. No test is removed or weakened.
+
+| Old test | Old numbers | New numbers | Why |
+|---|---|---|---|
+| TEST-F03-05 (API, AC-F03-03) | 20 different lines ×1 → 201 | 15 different lines ×1 → 201 | 20 items > 15 |
+| TEST-F03-06 (API) | 21 lines → 400 | unchanged (now also fails the total rule) | still protects the schema limit of 20 lines |
+| TEST-F03-18 (unit) | build 20 lines with the reducer, 21st refused | 20-line cart built directly, 21st refused | the reducer stops at 15 items |
+| TEST-F03-23 (unit) | `canAddFromMenu` true at 19 lines, false at 20 | true at 14 lines, false at 15 (and false for a 20-line cart) | the limit is reached at 15 items |
+
 ## 4. TA record
 | Date | Event |
 |---|---|
@@ -79,3 +89,7 @@ Regression suites to run: `server/tests/orders.test.ts`, `operator.test.ts`, `au
 3. **Fix:** total-quantity check in the `placeBody` schema block of `server/src/orders/routes.ts`; warning and cap in `client/src/lib/cart.ts` (+ cart UI).
 4. **GREEN:** the same tests all pass → `docs/labs/lab-07/evidence/green.txt`.
 5. **Regression:** full `orders`, `operator`, `auth` suites plus client unit tests, with command, version and pass/fail/skip counts → `docs/labs/lab-07/evidence/regression.txt`. No existing test is weakened.
+
+## 6. Evidence files and where the docs live
+- `e2e/helpers.ts` (`shot()`) writes screenshots to `docs/sprint_1/evidence/screenshots/`. The two TEST-L7-5 screenshots were moved by hand to `docs/labs/lab-07/evidence/screenshots/`; a new E2E run writes them to the Sprint 1 folder again, so move them after every run and never commit changes to the Sprint 1 PNGs.
+- The Lab 7 contract change is written into `docs/sprint_1/srs.md`, `F-03-orders.md`, `system-sds.md` and `traceability.md` because these are the only copies on `lab7` today. The living copies (`docs/srs.md` etc.) exist only on `sprint2`; the change must be carried into them at merge (see PLAN.md merge order).

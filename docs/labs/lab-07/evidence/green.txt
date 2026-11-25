@@ -1,0 +1,18 @@
+GREEN run, 25 Nov 2026, after the fix (fix commit follows the RED commit 1b9e604 and the contract follow-up 41031b7). Node v24.14.0, vitest 3.2.7, playwright Version 1.64.1
+
+== server: cd server && npx vitest run tests/orders.test.ts ==
+   ✓ F-03 POST /api/orders > TEST-F03-05 BR-02 boundary: 15 different lines are accepted (20 lines need 20 items, above the C-1 limit)  322ms
+   ✓ Lab 7 C-1 BR-01b at most 15 items in total > TEST-L7-2 total 15 (10 + 5) is accepted  304ms
+   ✓ Lab 7 C-1 BR-01b at most 15 items in total > TEST-L7-3 details.total is the real sum: 10 + 10 gives total 20  304ms
+   ✓ Lab 7 C-1 BR-01b at most 15 items in total > TEST-L7-3 16 lines of 1 are rejected (total 16), nothing saved  316ms
+ Test Files  1 passed (1)
+      Tests  37 passed (37)
+
+== client: cd client && npx vitest run ==
+ Test Files  3 passed (3)
+      Tests  7 passed (7)
+
+== e2e: npx playwright test e2e/orders.spec.ts -g TEST-L7-5 ==
+  ok 1 [phone] › e2e\orders.spec.ts:20:7 › F-03 place order › TEST-L7-5 at 15 items the cart shows a warning and + is disabled; the order is still placed (1.0s)
+  ok 2 [desktop] › e2e\orders.spec.ts:20:7 › F-03 place order › TEST-L7-5 at 15 items the cart shows a warning and + is disabled; the order is still placed (804ms)
+  2 passed (11.2s)

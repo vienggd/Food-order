@@ -1,0 +1,40 @@
+RED run, 25 Nov 2026. Production code = pre-change behaviour of main b71cdb2.
+Check: git diff b71cdb2 --stat -- server/src client/src ':!*.test.ts'  =>  0 lines (0 = production code identical to b71cdb2)
+Node v24.14.0, vitest vitest/3.2.7 win32-x64 node-v24.14.0, playwright Version 1.64.1
+
+== server: cd server && npx vitest run tests/orders.test.ts ==
+   ✓ Lab 7 C-1 BR-01b at most 15 items in total > TEST-L7-1 total 14 (10 + 4) is accepted  310ms
+   ✓ Lab 7 C-1 BR-01b at most 15 items in total > TEST-L7-2 total 15 (10 + 5) is accepted 259ms
+   × Lab 7 C-1 BR-01b at most 15 items in total > TEST-L7-3 total 16 (10 + 6) is rejected with the C-1 message and details, nothing saved 256ms
+     → expected 201 to be 400 // Object.is equality
+   × Lab 7 C-1 BR-01b at most 15 items in total > TEST-L7-3 total 16 (8 + 8) is rejected with the C-1 message and details, nothing saved 260ms
+     → expected 201 to be 400 // Object.is equality
+   ✓ Lab 7 C-1 BR-01b at most 15 items in total > TEST-L7-3 a single line of 11 is still rejected by the per-line rule, nothing saved 262ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  tests/orders.test.ts > Lab 7 C-1 BR-01b at most 15 items in total > TEST-L7-3 total 16 (10 + 6) is rejected with the C-1 message and details, nothing saved
+ FAIL  tests/orders.test.ts > Lab 7 C-1 BR-01b at most 15 items in total > TEST-L7-3 total 16 (8 + 8) is rejected with the C-1 message and details, nothing saved
+    235|   ])("TEST-L7-3 total 16 (%s) is rejected with the C-1 message and det…
+ Test Files  1 failed (1)
+      Tests  2 failed | 33 passed (35)
+
+== client: cd client && npx vitest run ==
+   × Lab 7 C-1 cart limit of 15 items in total > TEST-L7-4 total never goes above 15; + is refused at 15; every + on the menu is disabled only at 15 5ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  src/lib/cart.test.ts > Lab 7 C-1 cart limit of 15 items in total > TEST-L7-4 total never goes above 15; + is refused at 15; every + on the menu is disabled only at 15
+AssertionError: expected 19 to be 15 // Object.is equality
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 6 passed (7)
+
+== e2e: npx playwright test e2e/orders.spec.ts -g TEST-L7-5 ==
+  x  1 [phone] › e2e\orders.spec.ts:20:7 › F-03 place order › TEST-L7-5 at 15 items the cart shows a warning and + is disabled; the order is still placed (5.9s)
+  x  2 [desktop] › e2e\orders.spec.ts:20:7 › F-03 place order › TEST-L7-5 at 15 items the cart shows a warning and + is disabled; the order is still placed (5.8s)
+  1) [phone] › e2e\orders.spec.ts:20:7 › F-03 place order › TEST-L7-5 at 15 items the cart shows a warning and + is disabled; the order is still placed 
+    Error: expect(locator).toBeVisible() failed
+    Error: element(s) not found
+      - Expect "toBeVisible" getByRole('region', { name: 'Cart' }).getByText(/at most 15 items in total/i) with timeout 5000ms
+    > 29 |     await expect(cart.getByText(/at most 15 items in total/i)).toBeVisible();
+  2) [desktop] › e2e\orders.spec.ts:20:7 › F-03 place order › TEST-L7-5 at 15 items the cart shows a warning and + is disabled; the order is still placed 
+    Error: expect(locator).toBeVisible() failed
+    Error: element(s) not found
+      - Expect "toBeVisible" getByRole('region', { name: 'Cart' }).getByText(/at most 15 items in total/i) with timeout 5000ms
+    > 29 |     await expect(cart.getByText(/at most 15 items in total/i)).toBeVisible();

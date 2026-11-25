@@ -145,7 +145,7 @@ No schema change; uses tables from #1.
 |---|---|
 | AC-F03-01 | Given a logged-in customer and available items, when they place an order with 1–20 lines of quantity 1–10, then the server answers 201 with status `PLACED`, the lines, and a total equal to the sum of database price × quantity; the order and lines are saved. |
 | AC-F03-02 | (BR-01) When any line has quantity 0, 11, a decimal, a negative number or a non-number, then 400 `VALIDATION_ERROR` and nothing is saved. Quantities 1 and 10 are accepted. |
-| AC-F03-03 | (BR-02) When `items` is empty or has 21 lines, or the same item appears twice, then 400 `VALIDATION_ERROR` and nothing is saved. 20 different lines are accepted. |
+| AC-F03-03 | (BR-02) When `items` is empty or has 21 lines, or the same item appears twice, then 400 `VALIDATION_ERROR` and nothing is saved. Different lines are accepted up to the 15-item total (15 lines of ×1; since Lab 7 / C-1 the schema limit of 20 lines is no longer reachable, see BR-01b). |
 | AC-F03-04 | (BR-03) When any item is sold out or does not exist, then 400 `VALIDATION_ERROR` naming the item(s) in `details.items`, and no order or line is saved, even if other lines were valid. |
 | AC-F03-05 | (BR-04) When the request contains `price`, `unitPrice` or `total` (top level or in a line), then 400 `VALIDATION_ERROR` and nothing is saved; a valid order's total never depends on client values. |
 | AC-F03-06 | (BR-05) Given a placed order, when the menu price or name changes later, then the order detail still shows the name, unit price and total from order time. |
@@ -154,7 +154,7 @@ No schema change; uses tables from #1.
 | AC-F03-09 | When not logged in, any F-03 endpoint answers 401; when logged in as operator, 403. |
 | AC-F03-10 | In the browser, a customer adds items (adding the same item twice gives quantity 2 on one line), places the order, lands on `/orders/:id` with "Order #N placed!", and sees the server total. |
 | AC-F03-11 | In the browser, when the server rejects the order with 400, the message is shown, the cart is kept, and the bad line is marked. |
-| AC-F03-12 | In the cart, the stepper cannot go below 1 or above 10, and at 20 lines no + on the menu adds anything (a 21st different item cannot be added; lines already in the cart change only with their stepper). |
+| AC-F03-12 | In the cart, the stepper cannot go below 1 or above 10, and at 15 items in total (C-1) no + on the menu adds anything (a new item cannot be added; lines already in the cart change only with their stepper, never above 15 in total). A cart object with 20 lines is still refused a 21st item. |
 | AC-L7-01 | (BR-01b, C-1) When the quantities add up to 14 or 15 (e.g. 10 + 4, 10 + 5), then 201 `PLACED`. |
 | AC-L7-02 | (BR-01b) When the quantities add up to 16 or more (10 + 6, 8 + 8), then 400 `VALIDATION_ERROR`, message "An order can have at most 15 items in total", `details { field: "lines", max: 15, total }`, and nothing is saved. |
 | AC-L7-03 | The per-line and per-order rules, roles (401/403) and old orders are unchanged; orders saved before C-1 are listed and opened as before. |
@@ -171,7 +171,7 @@ Seed: alice, bob (CUSTOMER), staff (OPERATOR); Latte 6500 (id 1), Americano 5500
 | TEST-F03-02 | AC-F03-02 | API | alice; quantity 1 and 10 | POST | 201 |
 | TEST-F03-03 | AC-F03-02 | API | alice; quantity 0, 11, 1.5, -1, "2" (one request each) | POST | each 400 `VALIDATION_ERROR`; order count unchanged |
 | TEST-F03-04 | AC-F03-03 | API | alice; `items: []`; missing `items` | POST | 400; nothing saved |
-| TEST-F03-05 | AC-F03-03 | API | alice; 20 different available items ×1 | POST | 201 with 20 lines |
+| TEST-F03-05 | AC-F03-03 | API | alice; 15 different available items ×1 (was 20; 20 lines need 20 items, more than the C-1 limit) | POST | 201 with 15 lines |
 | TEST-F03-06 | AC-F03-03 | API | alice; 21 different items | POST | 400; nothing saved |
 | TEST-F03-07 | AC-F03-03 | API | alice; Latte ×1 twice | POST | 400; `details.items[0]` = `{ menuItemId: 1, reason: "DUPLICATE" }`; nothing saved |
 | TEST-F03-08 | AC-F03-04 | API | alice; Latte ×1 + Croissant ×1 | POST | 400; message names Croissant; `reason: "SOLD_OUT"`; no order and no lines saved |
@@ -186,8 +186,8 @@ Seed: alice, bob (CUSTOMER), staff (OPERATOR); Latte 6500 (id 1), Americano 5500
 | TEST-F03-15 | AC-F03-09 | API | no cookie | POST, GET list, GET detail | all 401 |
 | TEST-F03-16 | AC-F03-09 | API | staff (OPERATOR) | POST, GET list, GET detail | all 403; nothing saved |
 | TEST-F03-17 | AC-F03-01 | unit | `cartReducer`: add Latte, add Latte, add Americano | apply | 2 lines; Latte qty 2 |
-| TEST-F03-18 | AC-F03-12 | unit | `cartReducer`: set qty 0, 11, 2.7; add 21st item | apply | qty clamped to 1, 10, 2; 21st item refused |
-| TEST-F03-23 | AC-F03-12 | unit | `canAddFromMenu(cart)` with 19 and 20 lines | call | true at 19, false at 20 (every menu + disabled) |
+| TEST-F03-18 | AC-F03-12 | unit | `cartReducer`: set qty 0, 11, 2.7; add to a 20-line cart object built directly (not by the reducer, which stops at 15 items) | apply | qty clamped to 1, 10, 2; 21st item refused |
+| TEST-F03-23 | AC-F03-12 | unit | `canAddFromMenu(cart)` with 14 and 15 lines of ×1 (was 19 and 20 lines) | call | true at 14, false at 15 (every menu + disabled by the C-1 limit); a directly built 20-line cart is also false |
 | TEST-F03-24 | AC-F03-13 | E2E | alice logged in | phone: read the bottom tab labels; desktop: read the sidebar links | phone: exactly Menu, Cart, My orders; desktop: Menu, My orders (unchanged) |
 | TEST-L7-1 | AC-L7-01 | API | alice; Latte ×10 + Americano ×4 (total 14) | POST | 201; 2 lines saved |
 | TEST-L7-2 | AC-L7-01 | API | alice; Latte ×10 + Americano ×5 (total 15) | POST | 201 |
@@ -212,5 +212,6 @@ Shared checklist: [`definition-of-done.md`](definition-of-done.md). F-03 extra e
 | 1.2 | 6 Nov 2026 | Recheck (#37): ids above 2147483647 gave 500 → now 400 (TEST-F03-22); cart limits and hints aligned with ui-spec S2 / design (every + disabled at 20 lines, "Min 1" hint, mark cleared on remove, empty-cart button; TEST-F03-23) | ninja |
 | 1.3 | 13 Nov 2026 | AC-F03-13 + TEST-F03-24: phone tab order Menu · Cart · My orders, as in the design (QA finding on release PR #46, issue #47) | ninja |
 | 1.4 | 25 Nov 2026 | Lab 7 change C-1: BR-01b (at most 15 items in total), AC-L7-01..04, TEST-L7-1..5; contract before test and code; TA approved 25 Nov (Issue #96) | ninja |
+| 1.5 | 25 Nov 2026 | C-1 follow-up: 20 lines can no longer be placed (20 items > 15). AC-F03-03, AC-F03-12, TEST-F03-05, -18, -23 use reachable numbers (15 lines; 20-line cart built directly). Same checks, no test weakened. BR-02 limit 20 stays in the schema | ninja |
 
 Agreed with F-04 (chat, 6 Nov): F-04 adds `orders.accepted_at` (nullable) and `acceptedAt` to the shared order JSON (`null` until accepted). Whichever of F-03 / F-04 merges second adds `acceptedAt` to the order response. S4 shows the accepted time when `acceptedAt` is not null.

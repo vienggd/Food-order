@@ -73,11 +73,11 @@ describe("F-03 POST /api/orders", () => {
     await expectNothingSaved();
   });
 
-  it("TEST-F03-05 BR-02 boundary: 20 different lines are accepted", async () => {
-    const ids = (await addAvailableItems(15)).slice(0, 20);
+  it("TEST-F03-05 BR-02 boundary: 15 different lines are accepted (20 lines need 20 items, above the C-1 limit)", async () => {
+    const ids = (await addAvailableItems(15)).slice(0, 15);
     const res = await place(alice, { items: ids.map((menuItemId) => ({ menuItemId, quantity: 1 })) });
     expect(res.status).toBe(201);
-    expect(res.body.lines).toHaveLength(20);
+    expect(res.body.lines).toHaveLength(15);
   });
 
   it("TEST-F03-06 BR-02 21 lines: 400, nothing saved", async () => {
@@ -206,6 +206,61 @@ describe("F-03 access", () => {
       expect(res.status).toBe(403);
       expect(res.body.error.code).toBe("FORBIDDEN");
     }
+    await expectNothingSaved();
+  });
+});
+
+// Lab 7, change C-1 (Issue #96): BR-01b, the whole order has at most 15 items in total.
+describe("Lab 7 C-1 BR-01b at most 15 items in total", () => {
+  const two = (a: number, b: number) => [
+    { menuItemId: menu["Latte"], quantity: a },
+    { menuItemId: menu["Americano"], quantity: b },
+  ];
+
+  it("TEST-L7-1 total 14 (10 + 4) is accepted", async () => {
+    const res = await place(alice, { items: two(10, 4) });
+    expect(res.status).toBe(201);
+    expect(res.body.lines).toHaveLength(2);
+  });
+
+  it("TEST-L7-2 total 15 (10 + 5) is accepted", async () => {
+    const res = await place(alice, { items: two(10, 5) });
+    expect(res.status).toBe(201);
+    expect(res.body.total).toBe(6500 * 10 + 5500 * 5);
+  });
+
+  it.each([
+    ["10 + 6", () => two(10, 6)],
+    ["8 + 8", () => two(8, 8)],
+  ])("TEST-L7-3 total 16 (%s) is rejected with the C-1 message and details, nothing saved", async (_name, items) => {
+    const res = await place(alice, { items: items() });
+    expect(res.status).toBe(400);
+    expect(res.body.error.code).toBe("VALIDATION_ERROR");
+    expect(res.body.error.message).toBe("An order can have at most 15 items in total");
+    expect(res.body.error.details).toEqual({ field: "lines", max: 15, total: 16 });
+    await expectNothingSaved();
+  });
+
+  it("TEST-L7-3 details.total is the real sum: 10 + 10 gives total 20", async () => {
+    const res = await place(alice, { items: two(10, 10) });
+    expect(res.status).toBe(400);
+    expect(res.body.error.details).toEqual({ field: "lines", max: 15, total: 20 });
+    await expectNothingSaved();
+  });
+
+  it("TEST-L7-3 16 lines of 1 are rejected (total 16), nothing saved", async () => {
+    const ids = (await addAvailableItems(11)).slice(0, 16);
+    const res = await place(alice, { items: ids.map((menuItemId) => ({ menuItemId, quantity: 1 })) });
+    expect(res.status).toBe(400);
+    expect(res.body.error.message).toBe("An order can have at most 15 items in total");
+    expect(res.body.error.details).toEqual({ field: "lines", max: 15, total: 16 });
+    await expectNothingSaved();
+  });
+
+  it("TEST-L7-3 a single line of 11 is still rejected by the per-line rule, nothing saved", async () => {
+    const res = await place(alice, { items: [{ menuItemId: menu["Latte"], quantity: 11 }] });
+    expect(res.status).toBe(400);
+    expect(res.body.error.code).toBe("VALIDATION_ERROR");
     await expectNothingSaved();
   });
 });
