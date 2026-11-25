@@ -9,6 +9,8 @@ import { dbId, MAX_DB_ID } from "../ids.js";
 export const ordersRouter = Router();
 ordersRouter.use(requireRole("CUSTOMER"));
 
+const MAX_ORDER_ITEMS = 15; // BR-01b
+
 // Strict: any extra key (price, unitPrice, total, customerId...) is a 400 (BR-04).
 const placeBody = z.strictObject({
   items: z
@@ -26,6 +28,16 @@ type BadItem = { menuItemId: number; reason: "DUPLICATE" | "NOT_FOUND" | "SOLD_O
 
 ordersRouter.post("/", async (req, res) => {
   const { items } = placeBody.parse(req.body);
+
+  // BR-01b (Lab 7, C-1): at most 15 items in total over all lines.
+  const total = items.reduce((n, i) => n + i.quantity, 0);
+  if (total > MAX_ORDER_ITEMS) {
+    throw new AppError(400, "VALIDATION_ERROR", `An order can have at most ${MAX_ORDER_ITEMS} items in total`, {
+      field: "lines",
+      max: MAX_ORDER_ITEMS,
+      total,
+    });
+  }
 
   const seen = new Set<number>();
   const duplicates: BadItem[] = [];

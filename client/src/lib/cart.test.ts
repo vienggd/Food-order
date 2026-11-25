@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { canAddFromMenu, cartReducer, emptyCart, MAX_LINES, type Cart } from "./cart";
+import { canAddFromMenu, cartReducer, emptyCart, MAX_ITEMS, MAX_LINES, type Cart } from "./cart";
 
 const item = (id: number, price = 1000) => ({ id, name: `Item ${id}`, price });
 const apply = (cart: Cart, ...actions: Parameters<typeof cartReducer>[1][]) => actions.reduce(cartReducer, cart);
@@ -20,9 +20,8 @@ describe("cartReducer", () => {
     cart = apply(cart, { type: "setQty", menuItemId: 1, quantity: 10 }, { type: "add", item: item(1) });
     expect(cart.lines[0].quantity).toBe(10); // + at 10 does nothing
 
-    let full = emptyCart;
-    for (let i = 1; i <= MAX_LINES; i++) full = apply(full, { type: "add", item: item(i) });
-    expect(full.lines).toHaveLength(20);
+    // 20 lines built directly: the reducer itself stops at 15 items (C-1)
+    const full: Cart = { lines: Array.from({ length: MAX_LINES }, (_, i) => ({ menuItemId: i + 1, name: `Item ${i + 1}`, price: 1000, quantity: 1 })) };
     expect(apply(full, { type: "add", item: item(21) }).lines).toHaveLength(20);
   });
 
@@ -33,12 +32,14 @@ describe("cartReducer", () => {
     expect(apply(cart, { type: "clear" }).lines).toEqual([]);
   });
 
-  it("TEST-F03-23 at 20 lines every menu + is disabled", () => {
+  it("TEST-F03-23 at 15 items every menu + is disabled (was 20 lines; 20 lines are no longer reachable)", () => {
     let cart = emptyCart;
-    for (let i = 1; i < MAX_LINES; i++) cart = apply(cart, { type: "add", item: item(i) });
-    expect(canAddFromMenu(cart)).toBe(true);
-    cart = apply(cart, { type: "add", item: item(MAX_LINES) });
-    expect(canAddFromMenu(cart)).toBe(false);
+    for (let i = 1; i < MAX_ITEMS; i++) cart = apply(cart, { type: "add", item: item(i) });
+    expect(canAddFromMenu(cart)).toBe(true); // 14 lines of 1
+    cart = apply(cart, { type: "add", item: item(MAX_ITEMS) });
+    expect(canAddFromMenu(cart)).toBe(false); // 15
+    const twenty: Cart = { lines: Array.from({ length: MAX_LINES }, (_, i) => ({ menuItemId: i + 1, name: "x", price: 1, quantity: 1 })) };
+    expect(canAddFromMenu(twenty)).toBe(false);
   });
 });
 
