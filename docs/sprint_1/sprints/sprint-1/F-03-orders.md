@@ -43,6 +43,7 @@ A customer builds a cart from the menu and places an order. The server checks ev
 | Rule | Server check | Error |
 |---|---|---|
 | BR-01 | Each `quantity` is a whole number 1–10 | 400 `VALIDATION_ERROR` |
+| BR-01b (Lab 7, C-1) | The sum of all `quantity` values in one order is at most 15 (10 + 5 ok, 10 + 6 rejected). Per-line 1–10 stays. | 400 `VALIDATION_ERROR` |
 | BR-02 | `items` has 1–20 lines; no `menuItemId` appears twice | 400 `VALIDATION_ERROR` |
 | BR-03 | Every `menuItemId` exists and `isAvailable = true`; else whole order rejected, nothing saved | 400 `VALIDATION_ERROR` |
 | BR-04 | Total and line prices come from `menu_items`; any extra field (e.g. `price`, `unitPrice`, `total`) anywhere in the body is rejected | 400 `VALIDATION_ERROR` |
@@ -110,6 +111,7 @@ Errors:
 | HTTP | code | When | `message` / `details` |
 |---|---|---|---|
 | 400 | `VALIDATION_ERROR` | Body shape wrong: missing/empty `items`, more than 20 lines, `quantity` not an integer 1–10, `menuItemId` not a positive integer, unknown key such as `price` or `total` | `message`: "Invalid request." (from the shared Zod handler); `details`: the list of problems with their path |
+| 400 | `VALIDATION_ERROR` | Total quantity over 15 (BR-01b) | "An order can have at most 15 items in total"; `details: { field: "lines", max: 15, total: 16 }` (`total` = the real sum) |
 | 400 | `VALIDATION_ERROR` | Same `menuItemId` twice (BR-02) | "Order not placed. Each item can appear only once."; `details: { items: [{ menuItemId, reason: "DUPLICATE" }] }` |
 | 400 | `VALIDATION_ERROR` | Item does not exist or is sold out (BR-03) | "Order not placed. 'Croissant' is no longer available." (names of all bad items, or "an item" when unknown); `details: { items: [{ menuItemId, reason: "NOT_FOUND" \| "SOLD_OUT" }] }` |
 | 401 | `UNAUTHENTICATED` | No or expired session | |
@@ -153,6 +155,10 @@ No schema change; uses tables from #1.
 | AC-F03-10 | In the browser, a customer adds items (adding the same item twice gives quantity 2 on one line), places the order, lands on `/orders/:id` with "Order #N placed!", and sees the server total. |
 | AC-F03-11 | In the browser, when the server rejects the order with 400, the message is shown, the cart is kept, and the bad line is marked. |
 | AC-F03-12 | In the cart, the stepper cannot go below 1 or above 10, and at 20 lines no + on the menu adds anything (a 21st different item cannot be added; lines already in the cart change only with their stepper). |
+| AC-L7-01 | (BR-01b, C-1) When the quantities add up to 14 or 15 (e.g. 10 + 4, 10 + 5), then 201 `PLACED`. |
+| AC-L7-02 | (BR-01b) When the quantities add up to 16 or more (10 + 6, 8 + 8), then 400 `VALIDATION_ERROR`, message "An order can have at most 15 items in total", `details { field: "lines", max: 15, total }`, and nothing is saved. |
+| AC-L7-03 | The per-line and per-order rules, roles (401/403) and old orders are unchanged; orders saved before C-1 are listed and opened as before. |
+| AC-L7-04 | In the cart, when the total reaches 15 a warning is shown and every + (menu and stepper) is disabled, so a 16th item cannot be added; below 15 the + works as before. |
 | AC-F03-13 | On a phone, the customer's bottom tabs read Menu, Cart, My orders, in that order. |
 
 ## 7. Test specification
@@ -183,6 +189,11 @@ Seed: alice, bob (CUSTOMER), staff (OPERATOR); Latte 6500 (id 1), Americano 5500
 | TEST-F03-18 | AC-F03-12 | unit | `cartReducer`: set qty 0, 11, 2.7; add 21st item | apply | qty clamped to 1, 10, 2; 21st item refused |
 | TEST-F03-23 | AC-F03-12 | unit | `canAddFromMenu(cart)` with 19 and 20 lines | call | true at 19, false at 20 (every menu + disabled) |
 | TEST-F03-24 | AC-F03-13 | E2E | alice logged in | phone: read the bottom tab labels; desktop: read the sidebar links | phone: exactly Menu, Cart, My orders; desktop: Menu, My orders (unchanged) |
+| TEST-L7-1 | AC-L7-01 | API | alice; Latte ×10 + Americano ×4 (total 14) | POST | 201; 2 lines saved |
+| TEST-L7-2 | AC-L7-01 | API | alice; Latte ×10 + Americano ×5 (total 15) | POST | 201 |
+| TEST-L7-3 | AC-L7-02, AC-L7-03 | API | alice; (a) Latte ×10 + Americano ×6; (b) Latte ×8 + Americano ×8; (c) Latte ×11 | POST (one request each) | (a), (b): 400 `VALIDATION_ERROR`, message "An order can have at most 15 items in total", `details` `{ field: "lines", max: 15, total: 16 }`; (c): 400 (per-line rule still applies); order count unchanged |
+| TEST-L7-4 | AC-L7-04 | unit | cart with total 14, then 15 | add / setQty towards 16 | warning flag true at 15; total never above 15; add and + refused at 15 |
+| TEST-L7-5 | AC-L7-04 | E2E | alice logged in; cart total 15 | look at cart, press + | warning visible; + disabled; Place order still works (201) |
 | TEST-F03-19 | AC-F03-10 | E2E | alice logged in | add Latte twice + Thai Milk Tea, Place order | URL `/orders/N`; "Order #N placed!"; total ฿180.00; `/orders` lists it as PLACED |
 | TEST-F03-20 | AC-F03-11 | E2E | alice logged in; Latte in cart; Latte set sold out in DB before submit | Place order | error message shown naming Latte; cart still has Latte; line marked |
 
@@ -200,5 +211,6 @@ Shared checklist: [`definition-of-done.md`](definition-of-done.md). F-03 extra e
 | 1.1 | 6 Nov 2026 | Shared order shape with F-04 agreed in chat: list is a plain array; malformed id → 400 (was 404). Still before implementation | ninja |
 | 1.2 | 6 Nov 2026 | Recheck (#37): ids above 2147483647 gave 500 → now 400 (TEST-F03-22); cart limits and hints aligned with ui-spec S2 / design (every + disabled at 20 lines, "Min 1" hint, mark cleared on remove, empty-cart button; TEST-F03-23) | ninja |
 | 1.3 | 13 Nov 2026 | AC-F03-13 + TEST-F03-24: phone tab order Menu · Cart · My orders, as in the design (QA finding on release PR #46, issue #47) | ninja |
+| 1.4 | 25 Nov 2026 | Lab 7 change C-1: BR-01b (at most 15 items in total), AC-L7-01..04, TEST-L7-1..5; contract before test and code; TA approved 25 Nov (Issue #96) | ninja |
 
 Agreed with F-04 (chat, 6 Nov): F-04 adds `orders.accepted_at` (nullable) and `acceptedAt` to the shared order JSON (`null` until accepted). Whichever of F-03 / F-04 merges second adds `acceptedAt` to the order response. S4 shows the accepted time when `acceptedAt` is not null.
