@@ -1,11 +1,11 @@
 # Lab 7 — Change request L7-1 and impact analysis (team Est)
 
-Status: **draft, waiting for TA approval.** No contract, test or code commit before the TA answers (fallback: Thu 26 Nov 12:00 Thai, the wait is recorded below).
+Status: **TA approved 25 Nov 2026.** Order of commits: contract, then RED test, then fix, then GREEN.
 
 | Field | Value |
 |---|---|
 | Change ID | C-1 (Issue L7-1) |
-| **TA approver + date** | _TBD — not answered yet (message sent by vieng)_ |
+| **TA approver + date** | Approved by TA Prapatsorn Sangrod, 25 Nov 2026 |
 | Sprint 1 baseline | tag `v0.1.0-sprint1` |
 | Actual pre-change commit | `main` `b71cdb2` (Lab 5, deployed to Cloud Run) |
 | Backups if refused | C-2 LATE flag in the operator queue; C-3 minimum order ฿40 |
@@ -24,7 +24,8 @@ Status: **draft, waiting for TA approval.** No contract, test or code commit bef
 - 14 items in total → 201 PLACED. 15 items → 201 PLACED.
 - 16 items → 400 `VALIDATION_ERROR`, nothing saved.
 - Per-line rule unchanged: a line with 11 → 400; 20 lines max; no duplicates.
-- Cart shows a warning when the total reaches 15 and does not let the customer go above 15.
+- Cart shows a warning when the total reaches 15 and the + button is disabled, so a 16th item cannot be added.
+- 16 → 400 `VALIDATION_ERROR`, message "An order can have at most 15 items in total", details `{ field: "lines", max: 15, total: 16 }`.
 
 **Invalid cases:** 16 items in one line is already blocked by BR-01 (max 10); 16 as 10 + 6, 8 + 8, or 16 lines of 1 → 400. Total is the sum of quantities, not the number of lines.
 
@@ -45,6 +46,7 @@ Status: **draft, waiting for TA approval.** No contract, test or code commit bef
 | API validation | `POST /api/orders` Zod schema: add a total-quantity check (`.refine`/`superRefine` on `items`), so it fails with the same 400 `VALIDATION_ERROR`. |
 | UI validation | Cart blocks + above 15 and warns at 15. The server stays the final check (NFR-02). |
 | Roles | N/A — same `requireRole("CUSTOMER")`; no role or permission change. |
+| Order editing | N/A (TA answer 4) — no edit after placing exists; if added later the same rule applies. |
 | Persistence / DB | N/A — no new column or table; the sum is checked before the transaction. |
 | Migration | N/A — no schema change, nothing to migrate. |
 | History / old orders | N/A — old orders are not re-checked and still display normally (read paths unchanged). |
@@ -69,4 +71,4 @@ Regression suites to run: `server/tests/orders.test.ts`, `operator.test.ts`, `au
 | Date | Event |
 |---|---|
 | 24 Nov | vieng sent the TA message. |
-| _TBD_ | TA answer: _TBD_ |
+| 25 Nov | TA Prapatsorn Sangrod approved C-1 with the 4 answers recorded in Issue #96. |
