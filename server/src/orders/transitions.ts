@@ -2,7 +2,7 @@ import type { OrderStatus } from "@prisma/client";
 
 // Every allowed status change in one place (DEC-05). Later sprints add targets here.
 const TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
-  PLACED: ["ACCEPTED"],
+  PLACED: ["ACCEPTED", "REJECTED", "CANCELLED"], // REJECTED, CANCELLED: F-06
   ACCEPTED: [],
   PREPARING: [],
   READY: [],

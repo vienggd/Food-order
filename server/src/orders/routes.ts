@@ -4,6 +4,7 @@ import { prisma } from "../db.js";
 import { AppError } from "../errors.js";
 import { requireRole } from "../auth/middleware.js";
 import { toOrderJson } from "./json.js";
+import { statusesThatCanMoveTo } from "./transitions.js";
 import { dbId, MAX_DB_ID } from "../ids.js";
 
 export const ordersRouter = Router();
@@ -98,5 +99,28 @@ ordersRouter.get("/:id", async (req, res) => {
     include: { lines: { orderBy: { id: "asc" } } },
   });
   if (!order) throw new AppError(404, "NOT_FOUND", "Order not found.");
+  res.json(toOrderJson(order));
+});
+
+// F-06 customer cancel (BR-11). One conditional update decides any race with accept.
+ordersRouter.post("/:id/cancel", async (req, res) => {
+  const id = dbId.parse(req.params.id);
+  const customerId = req.user!.id;
+  const { count } = await prisma.order.updateMany({
+    where: { id, customerId, status: { in: statusesThatCanMoveTo("CANCELLED") } },
+    data: { status: "CANCELLED", cancelledAt: new Date() },
+  });
+  // Only own orders are read: someone else's order looks exactly like a missing one.
+  const order = await prisma.order.findFirst({ where: { id, customerId }, include: { lines: { orderBy: { id: "asc" } } } });
+  if (!order) throw new AppError(404, "NOT_FOUND", "Order not found.");
+  if (count === 0) {
+    const message =
+      order.status === "CANCELLED"
+        ? "This order is already cancelled."
+        : order.status === "REJECTED"
+          ? "This order was already rejected, so it can't be cancelled."
+          : "This order was already accepted, so it can't be cancelled.";
+    throw new AppError(409, "INVALID_STATE", message, { status: order.status });
+  }
   res.json(toOrderJson(order));
 });
