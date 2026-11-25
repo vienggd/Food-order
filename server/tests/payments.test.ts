@@ -142,3 +142,82 @@ describe("F-08 pay own order", () => {
     expect(list.body[0].paymentStatus).toBe("PAID");
   });
 });
+
+describe("F-08 BR-16 refund on cancel and reject", () => {
+  const cancel = (id: number, cookie = alice) => request(app).post(`/api/orders/${id}/cancel`).set("Cookie", cookie);
+  const reject = (id: number, reason = "Out of milk", cookie = staff) =>
+    request(app).post(`/api/operator/orders/${id}/reject`).set("Cookie", cookie).send({ reason });
+
+  it("TEST-8.11 customer cancelling a PAID order refunds it in the same step", async () => {
+    const o = await makeOrder("alice@cafe.test", "PLACED", "PAID");
+    const res = await cancel(o.id);
+    expect(res.status).toBe(200);
+    expect(res.body).toMatchObject({ id: o.id, status: "CANCELLED", paymentStatus: "REFUNDED" });
+    expect(typeof res.body.refundedAt).toBe("string");
+    const r = await row(o.id);
+    expect([r.status, r.paymentStatus]).toEqual(["CANCELLED", "REFUNDED"]);
+    expect(r.refundedAt).not.toBeNull();
+  });
+
+  it("TEST-8.12 operator rejecting a PAID order refunds it in the same step", async () => {
+    const o = await makeOrder("alice@cafe.test", "PLACED", "PAID");
+    const res = await reject(o.id, "Out of milk");
+    expect(res.status).toBe(200);
+    expect(res.body).toMatchObject({
+      id: o.id,
+      status: "REJECTED",
+      paymentStatus: "REFUNDED",
+      rejectReason: "Out of milk",
+    });
+    expect(typeof res.body.refundedAt).toBe("string");
+    const r = await row(o.id);
+    expect([r.status, r.paymentStatus, r.rejectReason]).toEqual(["REJECTED", "REFUNDED", "Out of milk"]);
+    expect(r.refundedAt).not.toBeNull();
+  });
+
+  it("TEST-8.13 cancelling or rejecting an UNPAID order keeps it UNPAID with refundedAt null", async () => {
+    const o1 = await makeOrder("alice@cafe.test", "PLACED", "UNPAID");
+    const c = await cancel(o1.id);
+    expect(c.status).toBe(200);
+    expect(c.body).toMatchObject({ status: "CANCELLED", paymentStatus: "UNPAID", refundedAt: null });
+    const r1 = await row(o1.id);
+    expect([r1.status, r1.paymentStatus, r1.refundedAt]).toEqual(["CANCELLED", "UNPAID", null]);
+
+    const o2 = await makeOrder("alice@cafe.test", "PLACED", "UNPAID");
+    const rej = await reject(o2.id, "Out of milk");
+    expect(rej.status).toBe(200);
+    expect(rej.body).toMatchObject({ status: "REJECTED", paymentStatus: "UNPAID", refundedAt: null });
+    const r2 = await row(o2.id);
+    expect([r2.status, r2.paymentStatus, r2.refundedAt]).toEqual(["REJECTED", "UNPAID", null]);
+  });
+
+  it("409 failed cancel or reject never touches PAID paymentStatus", async () => {
+    const o1 = await makeOrder("alice@cafe.test", "ACCEPTED", "PAID");
+    expect((await cancel(o1.id)).status).toBe(409);
+    const r1 = await row(o1.id);
+    expect([r1.status, r1.paymentStatus, r1.refundedAt]).toEqual(["ACCEPTED", "PAID", null]);
+
+    const o2 = await makeOrder("alice@cafe.test", "ACCEPTED", "PAID");
+    expect((await reject(o2.id, "Out of milk")).status).toBe(409);
+    const r2 = await row(o2.id);
+    expect([r2.status, r2.paymentStatus, r2.refundedAt]).toEqual(["ACCEPTED", "PAID", null]);
+  });
+
+  it("pay and cancel at the same time never leave a CANCELLED order PAID", async () => {
+    for (let round = 0; round < 10; round++) {
+      const o = await makeOrder("alice@cafe.test", "PLACED", "UNPAID");
+      const [p, c] = await Promise.all([pay(o.id), cancel(o.id)]);
+      expect(c.status).toBe(200);
+      expect([200, 409]).toContain(p.status);
+      const r = await row(o.id);
+      expect(r.status).toBe("CANCELLED");
+      if (p.status === 200) {
+        expect(r.paymentStatus).toBe("REFUNDED");
+        expect(r.refundedAt).not.toBeNull();
+      } else {
+        expect(r.paymentStatus).toBe("UNPAID");
+        expect(r.refundedAt).toBeNull();
+      }
+    }
+  });
+});
