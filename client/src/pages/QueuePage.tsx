@@ -2,11 +2,14 @@ import { useCallback, useEffect, useState } from "react";
 import { api, ApiError, NETWORK_MESSAGE } from "../api";
 import { formatBaht as baht } from "../lib/money";
 import { formatPlacedTime } from "../lib/time";
+import { PaymentBadge } from "../components/Payment";
+import type { PaymentStatus } from "../lib/orders";
 
 type QueueOrder = {
   id: number;
   total: number;
   createdAt: string;
+  paymentStatus: PaymentStatus;
   customer: { id: number; name: string };
   lines: { name: string; quantity: number }[];
 };
@@ -123,7 +126,9 @@ export function QueuePage() {
             <li className="card order-card" key={o.id} data-testid={`order-${o.id}`}>
               <span className="q-no order-no">#{o.id}</span>
               <span className="q-pill pill placed">PLACED</span>
-              <span className="q-who">{o.customer.name}</span>
+              <span className="q-who">
+                {o.customer.name} <PaymentBadge status={o.paymentStatus} />
+              </span>
               <span className="q-time muted">{formatPlacedTime(o.createdAt)}</span>
               <span className="q-items muted">{items(o)}</span>
               <strong className="q-total">{baht(o.total)}</strong>

@@ -4,6 +4,7 @@ import { api, ApiError } from "../api";
 import { formatBaht } from "../lib/money";
 import type { Order, OrderStatus, OrderSummary } from "../lib/orders";
 import { formatPlacedTime } from "../lib/time";
+import { PaymentBadge, PaymentCard } from "../components/Payment";
 
 function StatusPill({ status }: { status: OrderStatus }) {
   return <span className={`pill ${status.toLowerCase()}`}>{status}</span>;
@@ -95,7 +96,9 @@ export function OrdersPage({ selectedId }: { selectedId?: string }) {
               <span className="muted">
                 {formatPlacedTime(o.createdAt)} · {o.itemCount} {o.itemCount === 1 ? "item" : "items"}
               </span>
-              <StatusPill status={o.status} />
+              <span>
+                <StatusPill status={o.status} /> <PaymentBadge status={o.paymentStatus} />
+              </span>
               <strong>{formatBaht(o.total)}</strong>
             </button>
           </li>
@@ -182,6 +185,7 @@ export function OrderDetailPage() {
           <strong>{formatBaht(order.total)}</strong>
         </div>
         <p className="muted">{HINT[order.status]}</p>
+        <PaymentCard order={order} onPaid={setOrder} />
         <ol className="timeline">
           <li>Placed {formatPlacedTime(order.createdAt)}</li>
           <li>{order.acceptedAt ? `Accepted ${formatPlacedTime(order.acceptedAt)}` : "Waiting for the café"}</li>
