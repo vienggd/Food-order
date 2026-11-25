@@ -234,3 +234,12 @@ button[disabled] { cursor: not-allowed; }
 
 /* Lab 5 deploy proof: small note under the login tagline. */
 .release-note { margin: 6px 0 0; font-size: 12px; color: #d9e4d3; opacity: 0.85; }
+
+/* F-08 payment: badge (square dot), Simulated tag, pay button, card. */
+.pay-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; border-radius: 999px; padding: 3px 10px; background: #fff; color: #6b3410; border: 1px solid #d9b48e; }
+.pay-badge.paid { background: var(--success-bg); color: var(--success-fg); border-color: transparent; }
+.pay-badge.refunded { background: #dde6ef; color: #23415e; border-color: transparent; }
+.pay-dot { width: 7px; height: 7px; background: currentColor; }
+.sim-tag { background: var(--espresso); color: #fff; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 2px 8px; }
+.pay-card { margin-top: 14px; padding-top: 12px; border-top: 1px solid #e9e2d8; }
+.pay-btn { background: var(--sienna); color: var(--espresso); }

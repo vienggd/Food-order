@@ -143,8 +143,8 @@ describe("F-03 GET /api/orders and /api/orders/:id", () => {
     const res = await get(alice, "/api/orders");
     expect(res.status).toBe(200);
     expect(res.body).toEqual([
-      { id: second.body.id, status: "PLACED", total: 6500 + 16500, itemCount: 4, createdAt: second.body.createdAt },
-      { id: first.body.id, status: "PLACED", total: 13000, itemCount: 2, createdAt: first.body.createdAt },
+      { id: second.body.id, status: "PLACED", paymentStatus: "UNPAID", total: 6500 + 16500, itemCount: 4, createdAt: second.body.createdAt },
+      { id: first.body.id, status: "PLACED", paymentStatus: "UNPAID", total: 13000, itemCount: 2, createdAt: first.body.createdAt },
     ]);
   });
 
