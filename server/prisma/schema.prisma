@@ -21,6 +21,7 @@ enum PaymentStatus {
   REFUNDED
 }
 
+// Whole product lifecycle. Sprint 1 only uses PLACED -> ACCEPTED.
 enum OrderStatus {
   PLACED
   ACCEPTED
