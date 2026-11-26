@@ -1,4 +1,4 @@
-# Final Delivery Part B — Engineering process and team evidence (draft by ninja's side)
+# Final Delivery Part B — Engineering process and team evidence (draft)
 
 Source facts come from `gh` (IDs and dates as shown on GitHub, UTC). Rows marked PENDING are not finished yet and are filled only when they happen. Repo: https://github.com/vienggd/Food-order. Handout: Final Delivery section 3.2 and 4.2 (release/history table, two Issue/PR chains from different sprints, contributions, AI-use declaration).
 

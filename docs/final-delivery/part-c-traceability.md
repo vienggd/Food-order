@@ -1,6 +1,6 @@
 # Final Delivery Part C — Final requirements and verification traceability (draft)
 
-Campus Café Pre-order. Issue #193. Draft by ninja; reviewer vieng. Handout: `project_final_delivery_v1.pdf` section 3.3 (20 points).
+Campus Café Pre-order. Issue #193. Author: ninja. Reviewer: vieng. Handout: `project_final_delivery_v1.pdf` section 3.3 (20 points).
 
 **Status of this draft.** Every "Final result" cell is **PENDING** until the final release `v1.0.0` is tagged on `main`, deployed, and the full suite has run on that exact commit. The handout is explicit that an old passing run does not prove the final release. The "Checkpoint result" column keeps what Deliverable 2 measured on `sprint2` `d10fac1` (27 Nov 2026: build ok, server 177, client 8, Playwright 67 pass / 7 skipped / 0 failed) so history is visible, but it is never copied into the Final column.
 

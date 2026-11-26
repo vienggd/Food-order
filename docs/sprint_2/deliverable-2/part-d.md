@@ -34,7 +34,7 @@ Every `TEST-…` ID in the four feature families' test specifications was looked
 | 5 | The SDS endpoint table said F-07, F-09, F-11 were "contract only"; the `GET /api/slots` response shape (`{ slots: […] }`) did not match the code and the F-09 contract (`[ { start, state, remaining } ]`). | `system-sds.md` 4.4 | Statuses and shape corrected; `pickupSlot` added to the order request. |
 | 6 | The SDS data model had no `orders.pickup_slot` column and no note on the slot lock. | `system-sds.md` 3.2 | Added with the migration name. |
 | 7 | The SDS screens list had S5 only for F-04 and no menu-admin screen. | `system-sds.md` 2.1 | S2–S5 list the Sprint 2/3 features; S6 `/operator/menu` added. |
-| 8 | The SDS said "Planned GCP deployment"; the service is live since Lab 5. | `system-sds.md` 7.4 | Now states the live revision `food-order-00008-v6c` (= `main` `163fdb7`) and that Sprint 2/3 code is not deployed yet. |
+| 8 | The SDS said "Planned GCP deployment"; the service is live since Lab 5. | `system-sds.md` 7.4 | Now states the live revision `food-order-00009-jd9` (= `main` `39bda5e`) and that Sprint 2/3 code is not deployed yet. |
 | 9 | The SRS decision DEC-05 said "Sprint 1 allows only PLACED → ACCEPTED". | `srs.md` | Reworded; DEC-09 (advance carries `from`), DEC-10 (slot lock), DEC-11 (LIKE escaping) recorded. |
 | 10 | The feature inventory still listed F-06, F-07 as "In progress/Specified" and F-11 with no business rules. | `features.md` | Statuses updated; F-11 now lists BR-25..BR-27. |
 
@@ -142,5 +142,3 @@ Both chains are ninja's feature with vieng as reviewer; merge by vieng with a me
 | Close | Issue #157 closed, card Done | 26 Nov 13:39 |
 | Links | PR #158 linked to Issue #157 (`closedByPullRequestsReferences` shows #158). vieng noted that no `gh issue develop` branch link exists on #157, because the branch was created before the issue; this is a known gap. | |
 | Release | not released yet (as above) | |
-
-If vieng's Parts A, B or E already contain chains for other features, Part D can reuse those instead; the two above are ready as a fallback.
