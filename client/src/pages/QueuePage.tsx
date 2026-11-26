@@ -3,6 +3,7 @@ import { api, ApiError, NETWORK_MESSAGE } from "../api";
 import { formatBaht as baht } from "../lib/money";
 import { formatPlacedTime } from "../lib/time";
 import { PaymentBadge } from "../components/Payment";
+import { Dialog } from "../components/Dialog";
 import type { PaymentStatus } from "../lib/orders";
 
 type QueueOrder = {
@@ -20,6 +21,9 @@ export function QueuePage() {
   const [orders, setOrders] = useState<QueueOrder[] | null>(null);
   const [loadError, setLoadError] = useState(false);
   const [busyId, setBusyId] = useState<number | null>(null);
+  const [rejecting, setRejecting] = useState<QueueOrder | null>(null);
+  const [reason, setReason] = useState("");
+  const [reasonError, setReasonError] = useState<string | null>(null);
   const [message, setMessage] = useState<{ kind: "success" | "error"; text: string } | null>(null);
 
   const load = useCallback(async () => {
@@ -48,6 +52,38 @@ export function QueuePage() {
       else if (e?.status === 404) setMessage({ kind: "error", text: `Order #${id} no longer exists.` });
       else setMessage({ kind: "error", text: NETWORK_MESSAGE });
       if (e?.status === 409 || e?.status === 404) await load(); // what is on screen is out of date
+    } finally {
+      setBusyId(null);
+    }
+  }
+
+  function openReject(o: QueueOrder) {
+    setReason("");
+    setReasonError(null);
+    setRejecting(o);
+  }
+
+  // F-06 reject (BR-12). Client checks are only for convenience; the server checks again.
+  async function reject() {
+    if (!rejecting) return;
+    const id = rejecting.id;
+    const text = reason.trim();
+    if (text.length < 3) return setReasonError("Write at least 3 characters.");
+    if (text.length > 200) return setReasonError("Keep it to 200 characters or fewer.");
+    setBusyId(id);
+    setMessage(null);
+    try {
+      await api(`/api/operator/orders/${id}/reject`, { method: "POST", body: { reason: text } });
+      setMessage({ kind: "success", text: `Order #${id} rejected. The customer can see your reason.` });
+      setOrders((list) => list?.filter((o) => o.id !== id) ?? null);
+      setRejecting(null);
+    } catch (err) {
+      const e = err instanceof ApiError ? err : null;
+      setRejecting(null);
+      if (e?.status === 409) setMessage({ kind: "error", text: `Not rejected. ${e.message}` });
+      else if (e?.status === 404) setMessage({ kind: "error", text: `Order #${id} no longer exists.` });
+      else setMessage({ kind: "error", text: NETWORK_MESSAGE });
+      if (e?.status === 409 || e?.status === 404) await load();
     } finally {
       setBusyId(null);
     }
@@ -132,12 +168,42 @@ export function QueuePage() {
               <span className="q-time muted">{formatPlacedTime(o.createdAt)}</span>
               <span className="q-items muted">{items(o)}</span>
               <strong className="q-total">{baht(o.total)}</strong>
-              <button className="q-action btn small" disabled={busyId === o.id} onClick={() => accept(o.id)}>
-                {busyId === o.id ? "Accepting…" : "Accept order"}
-              </button>
+              <span className="q-action q-buttons">
+                <button className="btn small danger-outline" disabled={busyId === o.id} onClick={() => openReject(o)}>
+                  Reject
+                </button>
+                <button className="btn small" disabled={busyId === o.id} onClick={() => accept(o.id)}>
+                  {busyId === o.id ? "Accepting…" : "Accept order"}
+                </button>
+              </span>
             </li>
           ))}
         </ul>
+      )}
+      {rejecting && (
+        <Dialog title={`Reject order #${rejecting.id}?`} onClose={() => busyId === null && setRejecting(null)}>
+          <p className="muted">
+            {rejecting.customer.name} · {items(rejecting)} · {baht(rejecting.total)}
+          </p>
+          <label htmlFor="reject-reason">Reason (the customer will see this)</label>
+          <textarea id="reject-reason" value={reason} onChange={(e) => setReason(e.target.value)} aria-describedby="reject-hint" />
+          <p id="reject-hint" className="muted">
+            3–200 characters · {reason.length} / 200
+          </p>
+          {reasonError && (
+            <p className="msg error" role="alert">
+              {reasonError}
+            </p>
+          )}
+          <div className="dialog-actions">
+            <button className="btn ghost" autoFocus disabled={busyId !== null} onClick={() => setRejecting(null)}>
+              Back
+            </button>
+            <button className="btn danger" disabled={busyId !== null} onClick={reject}>
+              {busyId === rejecting.id ? "Rejecting…" : "Reject order"}
+            </button>
+          </div>
+        </Dialog>
       )}
     </section>
   );

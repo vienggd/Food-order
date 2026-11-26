@@ -68,11 +68,14 @@ test.describe("F-06 cancel and reject", () => {
     const other = (await makeOrder("bob@cafe.test", [["Latte", 1]], "PLACED")).id;
     await loginAs(page, "staff@cafe.test");
     await expect(page.getByTestId(`order-${orderId}`)).toBeVisible();
-    await db.order.updateMany({ where: { id: { in: [orderId, other] } }, data: { status: "CANCELLED", cancelledAt: new Date() } });
+    await db.order.update({ where: { id: orderId }, data: { status: "CANCELLED", cancelledAt: new Date() } });
 
     await page.getByTestId(`order-${orderId}`).getByRole("button", { name: "Accept order" }).click();
     await expect(page.getByRole("alert")).toContainText("Only PLACED orders can be accepted.");
 
+    // The list reloaded after the 409; now the second order is cancelled behind the page's back.
+    await expect(page.getByTestId(`order-${orderId}`)).toHaveCount(0);
+    await db.order.update({ where: { id: other }, data: { status: "CANCELLED", cancelledAt: new Date() } });
     await page.getByTestId(`order-${other}`).getByRole("button", { name: "Reject", exact: true }).click();
     const dialog = page.getByRole("dialog");
     await dialog.getByLabel(/Reason/).fill("Out of milk");
