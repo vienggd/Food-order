@@ -131,7 +131,7 @@ Split agreement (Option A): `vieng` verified `RT-F02` two-tab flows alongside `#
 | RT-F02 | their F-01 UI contract, Protected navigation (revoked session redirects to /login); AC-04, AC-40, AC-56 | AI (Playwright @2x on vieng request, not by hand); ninja check on #142 pending | 2026-11-27 00:20:45 UTC+7 | `v0.1.3-lab6` / `502d2a6` / `s47a6b53b-00006-7bv` (`index-CcXia3Aw.js`) | 1. Participant 3 signs in, open tab A and tab B.<br>2. Logout in tab B.<br>3. In tab A click My registrations; repeat clicking Logout.<br>4. Repeat with Organizer One (`/events` -> My events, Save draft, Publish). | **vieng side PASS:** Participant 3 Tab A `My registrations` and `Logout`, and Organizer One Tab A `Save draft`, `Publish`, and `My events` each hit `1 × 401` and redirected cleanly to `/login` with zero redirect loop, zero `"Logout failed"` banner, and zero saved changes (`UAT-CHECK-401-ONLY` not saved; `UAT-GD-RT01-0020` remained `DRAFT` after 401 Publish). Ninja to confirm `#142` separately. | PASS (`vieng` checks; `ninja` `#142` pending) | `B-RTF02-s01-p3-GD.png`, `B-RTF02-s02-p3-logout-GD.png`, `B-RTF02-s03-org-myevents-GD.png`, `B-RT152-s01-savedraft-GD.png`, `B-RT152-s02-publish-GD.png` |
 
 ### Re-test round by ninja's side (27 Nov 2026 02:15-02:46 UTC+7)
-Tester: AI (Claude, built-in browser) on ninja's request; ninja signed in each account by hand, the AI did not type any password; not run by hand. Version: `v0.1.3-lab6` / `502d2a6` / `s47a6b53b-00006-7bv`. A comment was posted on each partner Issue #141-#148. Evidence IDs are the file names in `screenshots-partner/` (full resolution 2560x1600; they are full-screen captures of the AI-driven browser window).
+Tester: AI (Claude, built-in browser) on ninja's request; ninja signed in each account by hand, the AI did not type any password; not run by hand. Version: `v0.1.3-lab6` / `502d2a6` / `s47a6b53b-00006-7bv`. A comment was posted on each partner Issue #141-#148. Evidence IDs are the file names in `screenshots-partner/` (cropped to the page only).
 
 | Finding | Result and actual |
 |---|---|
@@ -146,6 +146,17 @@ Tester: AI (Claude, built-in browser) on ninja's request; ninja signed in each a
 
 UAT-02 re-run on event UAT-DP-02R-0218: all 10 steps PASS (HQ-UAT02-s7-P4-sees-Full.png, HQ-UAT02-s8-P4-no-places-left.png, HQ-UAT02-s9-P4-my-registrations.png, HQ-UAT02-s10-O1-registrations.png). UAT-03 re-run: all 8 steps PASS; participant create denied with UAT-DP-03R-0222 and no draft saved (HQ-UAT03-s2-O2-denied.png, HQ-UAT03-s3-O2-own-events-only.png, HQ-UAT03-s4-O2-no-register-button.png, HQ-UAT03-s8-O1-list-unchanged.png).
 
+
+Evidence images are cropped to the page only (2554x1304, browser bar and Windows taskbar removed). Host for all: https://s47a6b53b-4d7hbszvwq-as.a.run.app, version as above. The time is the clock in the app's own taskbar where visible; the account is shown there too. Page per file (exact path only where it was recorded, otherwise the screen name):
+- HQ-141-long-text-wraps: event detail page of the long-text event, Organizer One / participant view (path not recorded).
+- HQ-142-a-tabA-signed-in: tab A signed in (Participant 3, path not recorded). HQ-142-b-tabA-back-to-sign-in: `/login` after logout in tab B.
+- HQ-143-a / HQ-143-b: event detail page `UAT-DP-RT146-0240` (2 of 3 places left at 02:42 in the app taskbar), Participant 3; path `/events/<id>` not recorded.
+- HQ-144-line-breaks-kept: event detail page with a 3-line description (path not recorded).
+- HQ-145-create-event-field-errors: Create event form `/organizer/events/new`, field errors with aria links.
+- HQ-146-a / HQ-146-b: My events `/organizer/events`, banner before and after Publish.
+- HQ-148-not-found-open-window: Not found page, window buttons named 'Restore/Open window: Not found'.
+- HQ-UAT02-s7, s8, s9: Participant 4 on event UAT-DP-02R-0218 (`/events/<id>`), then My registrations `/my/registrations`. HQ-UAT02-s10: Organizer One registrations page of that event.
+- HQ-UAT03-s2, s3, s4: Organizer Two on the Organizer One registrations address `/organizer/events/<id>/registrations`, My events `/organizer/events`, event detail. HQ-UAT03-s8: Organizer One registrations list.
 
 ## Final decision (after the partner fixes and we re-test)
 - Re-test version/date: `v0.1.3-lab6` / commit `502d2a6` / Cloud Run revision `s47a6b53b-00006-7bv` (bundle `index-CcXia3Aw.js`); `vieng` re-test run `2026-11-27 00:20–00:23 UTC+7`; `ninja` re-test (`#141–#148`, `UAT-02`, `UAT-03`) `2026-11-27 02:15–02:46 UTC+7`, all PASS (AI-run, not by hand; see section above)

@@ -72,7 +72,7 @@ Row `RT-F02` in `execution-partner.md`: under split Option A on `v0.1.3-lab6` (`
 - Folder: `docs/labs/lab-06/screenshots-partner/`.
 - Name: `B-<case>-s<step>-<tester initials XX>.png`, e.g. `B-UAT02-s05-XX.png`; extra cases `B-X3-s03-XX.png`; re-test `B-RTF02-s03-XX.png`.
 - Show the revision/URL in the shot where the page allows it. No password or token in any screenshot.
-- Re-test screenshots from ninja's side are named `HQ-<finding or case>-...png` (2560x1600, full-screen captures, so the browser frame and desktop taskbar are visible); the evidence ID is the file name.
+- Re-test screenshots from ninja's side are named `HQ-<finding or case>-...png` (2554x1304, cropped to the page only; page and time per file are listed in `execution-partner.md`); the evidence ID is the file name.
 - A rejected case also needs a "before" and "after" shot showing the protected state did not change.
 
 ## B8. Honest note on how the findings and runs were made
