@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
+import { OrderStatus } from "@prisma/client";
 import { prisma } from "../db.js";
 import { AppError } from "../errors.js";
 import { requireRole } from "../auth/middleware.js";
@@ -73,9 +74,18 @@ ordersRouter.post("/", async (req, res) => {
   res.status(201).json(toOrderJson(order));
 });
 
+// F-11: `status` is one status or a comma-separated list of the 7; missing means all own orders.
+const statusFilter = z.array(z.enum(OrderStatus)).min(1);
+
 ordersRouter.get("/", async (req, res) => {
+  let statuses: OrderStatus[] | undefined;
+  if (req.query.status !== undefined) {
+    const parsed = statusFilter.safeParse(typeof req.query.status === "string" ? req.query.status.split(",") : null);
+    if (!parsed.success) throw new AppError(400, "VALIDATION_ERROR", "status must be one or more order statuses, separated by commas.", { field: "status" });
+    statuses = parsed.data;
+  }
   const orders = await prisma.order.findMany({
-    where: { customerId: req.user!.id },
+    where: { customerId: req.user!.id, ...(statuses ? { status: { in: statuses } } : {}) },
     orderBy: [{ createdAt: "desc" }, { id: "desc" }],
     include: { lines: { select: { quantity: true } } },
   });

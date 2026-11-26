@@ -264,3 +264,4 @@ button[disabled] { cursor: not-allowed; }
 .pill.picked_up { background: #e9e2d8; color: #4a3b30; }
 .pill.rejected { background: #fde3e0; color: #7a1c12; }
 .pill.cancelled { background: #ede6de; color: #5b4e42; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }

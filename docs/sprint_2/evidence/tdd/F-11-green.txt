@@ -1,0 +1,4 @@
+server vitest: 138 passed (TEST-F11-01..06 pass)
+client vitest: 8 passed
+Playwright whole suite: 54 passed (TEST-F11-16 on phone and desktop)
+root npm run build: no errors

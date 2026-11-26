@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { api, ApiError, NETWORK_MESSAGE } from "../api";
 import { formatBaht } from "../lib/money";
 import type { Order, OrderStatus, OrderSummary } from "../lib/orders";
@@ -43,39 +43,81 @@ export function OrdersSplit() {
   );
 }
 
+// F-11 status chips; "" means All.
+const CHIPS: { value: string; label: string }[] = [
+  { value: "", label: "All" },
+  { value: "PLACED", label: "Placed" },
+  { value: "ACCEPTED", label: "Accepted" },
+  { value: "PREPARING", label: "Preparing" },
+  { value: "READY", label: "Ready" },
+  { value: "PICKED_UP", label: "Picked up" },
+  { value: "REJECTED", label: "Rejected" },
+  { value: "CANCELLED", label: "Cancelled" },
+];
+
 // S3 My orders (F-03): own orders, newest first. Refresh by hand (no polling in Sprint 1).
 export function OrdersPage({ selectedId }: { selectedId?: string }) {
   const [orders, setOrders] = useState<OrderSummary[] | "loading" | "error">("loading");
   const navigate = useNavigate();
+  const [params, setParams] = useSearchParams();
+  const status = CHIPS.some((c) => c.value === params.get("status")) ? params.get("status")! : ""; // F-11: kept in the URL
   const load = useCallback(() => {
     setOrders("loading");
-    api<OrderSummary[]>("/api/orders")
+    api<OrderSummary[]>(`/api/orders${status ? `?status=${status}` : ""}`)
       .then(setOrders)
       .catch(() => setOrders("error"));
-  }, []);
+  }, [status]);
   useEffect(load, [load]);
 
-  if (orders === "loading") return <Skeletons />;
+  const chips = (
+    <div className="chips" role="group" aria-label="Filter by status">
+      {CHIPS.map((c) => (
+        <button
+          key={c.value}
+          className={"btn small " + (c.value === status ? "" : "ghost")}
+          aria-pressed={c.value === status}
+          onClick={() => setParams(c.value ? { status: c.value } : {})}
+        >
+          {c.label}
+        </button>
+      ))}
+    </div>
+  );
+
+  if (orders === "loading") return <>{chips}<Skeletons /></>;
   if (orders === "error")
     return (
-      <div className="empty" role="alert">
-        <p className="empty-title">Couldn't load your orders.</p>
-        <button className="btn inline small" onClick={load}>
-          Reload orders
-        </button>
-      </div>
+      <>
+        {chips}
+        <div className="empty" role="alert">
+          <p className="empty-title">Couldn't load your orders.</p>
+          <button className="btn inline small" onClick={load}>
+            Reload orders
+          </button>
+        </div>
+      </>
     );
   if (orders.length === 0)
     return (
-      <div className="empty">
-        <p>No orders yet. Your orders will show up here.</p>
-        <Link className="btn inline small" to="/menu">
-          Browse the menu
-        </Link>
-      </div>
+      <>
+        {chips}
+        <div className="empty">
+          {status ? (
+            <p>No orders with this status.</p>
+          ) : (
+            <>
+              <p>No orders yet. Your orders will show up here.</p>
+              <Link className="btn inline small" to="/menu">
+                Browse the menu
+              </Link>
+            </>
+          )}
+        </div>
+      </>
     );
   return (
     <>
+      {chips}
       <button className="btn ghost small refresh" onClick={load}>
         Refresh list
       </button>
