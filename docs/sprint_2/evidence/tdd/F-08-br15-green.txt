@@ -1,0 +1,7 @@
+GREEN run, 26 Nov 2026, on sprint2-vieng after implementing BR-15 in server/src/operator/routes.ts and client/src/pages/QueuePage.tsx.
+
+1) Root build: npm run build -> exit 0 (prisma generate, tsc, tsc --noEmit, vite build)
+2) Server Vitest (real Postgres cafe_s2_test): 14 files passed, 154 tests passed (including TEST-8.14 409 UNPAID blocked and TEST-8.15 200 PAID -> PICKED_UP)
+3) Client Vitest: 4 files passed, 8 tests passed
+4) Full Playwright E2E (cafe_e2e, phone + desktop): 56 passed (including TEST-8.17 READY unpaid disables Mark picked up until paid & refreshed on both phone and desktop)
+5) Sprint 1 evidence screenshots diff vs origin/sprint2: empty (0 changes)

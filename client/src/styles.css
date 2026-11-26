@@ -265,3 +265,5 @@ button[disabled] { cursor: not-allowed; }
 .pill.rejected { background: #fde3e0; color: #7a1c12; }
 .pill.cancelled { background: #ede6de; color: #5b4e42; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+.q-step { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.q-wait { font-size: 12px; line-height: 1.3; }

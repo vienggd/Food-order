@@ -92,13 +92,20 @@ operatorRouter.post("/orders/:id/advance", async (req, res) => {
   if (!parsed.success) throw new AppError(400, "VALIDATION_ERROR", "from must be ACCEPTED, PREPARING or READY.", { field: "from" });
   const { from } = parsed.data;
   const next = nextStep(from)!;
+  // BR-15: READY -> PICKED_UP requires paymentStatus = PAID in the same atomic update so no race slips through.
   const { count } = await prisma.order.updateMany({
-    where: { id, status: from },
+    where: from === "READY" ? { id, status: from, paymentStatus: "PAID" } : { id, status: from },
     data: { status: next, [STEP_COLUMN[next as keyof typeof STEP_COLUMN]]: new Date() },
   });
   const order = await prisma.order.findUnique({ where: { id }, include: { lines: { orderBy: { id: "asc" } } } });
   if (!order) throw new AppError(404, "NOT_FOUND", "Order not found.");
   if (count === 0) {
+    if (from === "READY" && order.status === "READY" && order.paymentStatus !== "PAID") {
+      throw new AppError(409, "INVALID_STATE", `Order #${id} is not paid yet.`, {
+        status: order.status,
+        paymentStatus: order.paymentStatus,
+      });
+    }
     const moved = CHAIN.indexOf(order.status) > CHAIN.indexOf(from);
     const message = moved
       ? `Order #${id} is already ${order.status}. Another staff member moved it.`

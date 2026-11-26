@@ -220,20 +220,29 @@ export function QueuePage() {
               <span className="q-time muted">{formatPlacedTime(o.createdAt)}</span>
               <span className="q-items muted">{items(o)}</span>
               <strong className="q-total">{baht(o.total)}</strong>
-              <span className="q-action q-buttons">
+              <span className="q-action">
                 {o.status === "PLACED" ? (
-                  <>
+                  <span className="q-buttons">
                     <button className="btn small danger-outline" disabled={busyId === o.id} onClick={() => openReject(o)}>
                       Reject
                     </button>
                     <button className="btn small" disabled={busyId === o.id} onClick={() => accept(o.id)}>
                       {busyId === o.id ? "Accepting…" : "Accept order"}
                     </button>
-                  </>
+                  </span>
                 ) : o.status in NEXT ? (
-                  <button className="btn small" disabled={busyId === o.id} onClick={() => step(o as QueueOrder & { status: keyof typeof NEXT })}>
-                    {busyId === o.id ? NEXT[o.status as keyof typeof NEXT].busy : NEXT[o.status as keyof typeof NEXT].label}
-                  </button>
+                  <div className="q-step">
+                    <button
+                      className="btn small"
+                      disabled={busyId === o.id || (o.status === "READY" && o.paymentStatus !== "PAID")}
+                      onClick={() => step(o as QueueOrder & { status: keyof typeof NEXT })}
+                    >
+                      {busyId === o.id ? NEXT[o.status as keyof typeof NEXT].busy : NEXT[o.status as keyof typeof NEXT].label}
+                    </button>
+                    {o.status === "READY" && o.paymentStatus !== "PAID" && (
+                      <p className="muted q-wait">Waiting for payment. The customer pays in the app.</p>
+                    )}
+                  </div>
                 ) : null}
               </span>
             </li>
