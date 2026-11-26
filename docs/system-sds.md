@@ -265,10 +265,12 @@ Details, all error cases and tests are in the feature contracts (`docs/sprint_1/
 | `POST /api/operator/menu` | `{ name, price, isAvailable? }` | 201 Menu item | 400 (`details.field`), 401, 403 | F-05 (implemented) |
 | `PATCH /api/operator/menu/:id` | any of `{ name, price, isAvailable }` | 200 Menu item | 400, 401, 403, 404 | F-05 (implemented) |
 | `POST /api/orders/:id/pay` | — (amount = order total on the server) | 200 Order (`paymentStatus: PAID`) | 400, 401, 403, 404, 409 | F-08 (implemented) |
-| `POST /api/orders/:id/cancel` | — | 200 Order (CANCELLED) | 400, 401, 403, 404, 409 | F-06 (contract only) |
-| `POST /api/operator/orders/:id/reject` | `{ reason }` | 200 Order (REJECTED) | 400, 401, 403, 404, 409 | F-06 (contract only) |
+| `POST /api/orders/:id/cancel` | — | 200 Order (CANCELLED) | 400, 401, 403, 404, 409 | F-06 (server merged PR #120) |
+| `POST /api/operator/orders/:id/reject` | `{ reason }` | 200 Order (REJECTED) | 400, 401, 403, 404, 409 | F-06 (server merged PR #120) |
 | `POST /api/operator/orders/:id/advance` | `{ from }` | 200 Order (next step) | 400, 401, 403, 404, 409 | F-07 (contract only) |
+| `GET /api/slots` | — | 200 `{ slots: [{ time, status, remaining }] }` | 401, 403 | F-09 (contract only) |
 | `GET /api/operator/sales?from&to` | — | 200 `{ days, topItems }` | 400, 401, 403 | F-10 (contract only) |
+| `GET /api/orders?status=…`, `GET /api/operator/orders?q=…&status=…` | query filters (`status` comma-separated, `q` id or customer name) | 200 filtered Order summary[] / Queue order[] | 400 (`details.field`), 401, 403 | F-11 (contract only) |
 
 Order JSON (4.3) gained `paymentStatus`, `paidAt`, `refundedAt` in Sprint 2 (F-08); the order list items gained `paymentStatus`. `POST /api/auth/login` gets a 429 `RATE_LIMITED` answer in Sprint 3 (F-12, planned).
 
@@ -301,10 +303,11 @@ Later sprints add endpoints with the same conventions (planned paths in section 
 | Reject order | `POST /api/operator/orders/:id/reject` | ✘ 401 | ✘ 403 | ✔ | any PLACED order | 2 |
 | Advance one step (prepare / ready / picked up) | `POST /api/operator/orders/:id/advance` | ✘ 401 | ✘ 403 | ✔ | any order in the right status | 2 |
 | Pay (simulated) | `POST /api/orders/:id/pay` | ✘ 401 | ✔ own | ✘ 403 | own orders | 2 |
+| Pickup slots | `GET /api/slots` | ✘ 401 | ✔ | ✘ 403 | today's slot availability | 3 |
 | Sales summary | `GET /api/operator/sales` | ✘ 401 | ✘ 403 | ✔ | all orders (totals only) | 3 |
-| Search orders | `GET /api/orders?…` / `GET /api/operator/orders?…` | ✘ 401 | ✔ own | ✔ all | as above | 3 |
+| Search / filter orders | `GET /api/orders?status=…` / `GET /api/operator/orders?q=…&status=…` | ✘ 401 | ✔ own | ✔ all | as above | 3 |
 
-Sprint 2–3 paths are the ones in the feature contracts (`docs/sprint_2/sprints/`). Implemented so far: menu management (F-05) and pay (F-08). Cancel, reject, advance, sales and rate limit are contract only.
+Sprint 2–3 paths are the ones in the feature contracts (`docs/sprint_2/sprints/`). Implemented so far on `sprint2`: menu management (F-05), pay (F-08 part 1), and cancel/reject server API (F-06 server). Advance, F-06 UI, pickup slots, sales, search/filter and rate limit are not yet merged.
 
 ## 6. Authentication and sessions
 
@@ -374,3 +377,4 @@ Sprint 2–3 paths are the ones in the feature contracts (`docs/sprint_2/sprints
 | 6 Nov 2026 | 1.2 | 2.2 empty-state wording matches ui-spec; 7.1 says serving the built client comes in Lab 5 | Recheck #38: doc must match the code |
 | 6 Nov 2026 | 1.3 | 4.1 ids: upper bound 2147483647 (recheck #37: larger ids gave 500) | Bug fix |
 | 25 Nov 2026 | 2 | Sprint 2 schema (3.2, 3.3), Sprint 2–3 endpoints (4.4), permission matrix paths (5.2) | Deliverable 2 part D |
+| 26 Nov 2026 | 2.1 | Added `GET /api/slots`, F-11 filter query params, and F-06 server status in 4.4 and 5.2 | Sync living SDS with PRs #118 and #120 (S2-8b) |

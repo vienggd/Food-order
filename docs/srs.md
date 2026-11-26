@@ -91,6 +91,9 @@ Each rule is enforced by the server, whatever the client sends. Money is stored 
 | BR-19 | The top items are the 3 with the most quantity sold; ties are broken by name. (F-10, Sprint 3, planned) | — |
 | BR-20 | A successful login clears that email's failed-login count. (F-12, Sprint 3, planned) | — |
 | BR-21 | Failed logins are counted per email (lower-case), not per IP address. (F-12, Sprint 3, planned) | — |
+| BR-22 | Pickup slots are 15 minutes apart within opening hours (08:00–16:45, 36 slots), today only (Asia/Bangkok). (F-09, Sprint 3, planned) | 400 VALIDATION_ERROR (`details.field = pickupSlot`) |
+| BR-23 | Orders for a pickup slot close 15 minutes before the slot starts (`now < slotStart - 15 min`). (F-09, Sprint 3, planned) | 400 VALIDATION_ERROR (`details.field = pickupSlot`) |
+| BR-24 | Each pickup slot holds at most 10 active orders; cancelled and rejected orders free their place; ASAP orders do not count. (F-09, Sprint 3, planned) | 409 INVALID_STATE |
 
 ## 6. Non-functional requirements
 
@@ -147,3 +150,4 @@ Each rule is enforced by the server, whatever the client sends. Money is stored 
 |---|---|---|---|
 | 6 Nov 2026 | 1 | First version | Deliverable 1 part A |
 | 25 Nov 2026 | 2 | Added BR-08..BR-21 (Sprint 2 and Sprint 3 rules) from the feature contracts F-05, F-06, F-07, F-08, F-10, F-12 | Deliverable 2 part D: living SRS |
+| 26 Nov 2026 | 2.1 | Added BR-22..BR-24 (pickup slots, cut-off, slot capacity) from merged contract F-09 (PR #118) | Sync living SRS with PR #118 (S2-8b) |

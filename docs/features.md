@@ -1,6 +1,6 @@
 # Feature inventory — Campus Café Pre-order
 
-> **Living document.** Sprint 1 copy is frozen in `sprint_1/`. Status updated 25 Nov 2026 for Deliverable 2. Contracts: `sprint_2/sprints/F-05..F-12`.
+> **Living document.** Sprint 1 copy is frozen in `sprint_1/`. Status updated 26 Nov 2026 for Deliverable 2. Contracts: `sprint_2/sprints/F-05..F-12`.
 
 Deliverable 1, part B (1 of 2). Issue #7. Traceability: [`traceability.md`](traceability.md). Sprint plan: [`sprints/plan.md`](sprints/plan.md).
 Version 1 — 6 Nov 2026 (draft). Requirement IDs match the SRS (#6).
@@ -16,13 +16,13 @@ Roles: **CUSTOMER** (orders food), **OPERATOR** (café staff; one shop, sees all
 | F-03 | Place order, my orders, order detail | 1 | CUSTOMER | FR-06..FR-08, NFR-04 | BR-01, BR-02, BR-03, BR-04, BR-05 | Verified |
 | F-04 | Operator queue + accept order | 1 | OPERATOR | FR-09, FR-10, NFR-04 | BR-06, BR-07 | Verified |
 | F-05 | Menu management + sold-out toggle | 2 | OPERATOR | FR-11 | BR-08, BR-09, BR-10 | Implemented (merged in `sprint2`, not released) |
-| F-06 | Customer cancel / operator reject with reason | 2 | CUSTOMER, OPERATOR | FR-12, FR-13 | BR-11, BR-12 | Specified (contract in PR #102, not yet merged) |
-| F-07 | Fulfilment: PREPARING → READY → PICKED_UP | 2 | OPERATOR | FR-14 | BR-13 | Specified (contract in PR #102, not yet merged) |
-| F-08 | Simulated payment | 2 | CUSTOMER, OPERATOR | FR-15 | BR-14 (done), BR-15, BR-16 (waiting for F-07 and F-06) | In progress: pay route and badges implemented; refund and pickup check not yet |
-| F-09 | Pickup time slots + order cut-off | 3 | CUSTOMER, OPERATOR | FR-16 | to specify in Sprint 3 | Not started |
-| F-10 | Sales summary | 3 | OPERATOR | FR-17 | BR-17, BR-18, BR-19 | Specified (contract merged) |
-| F-11 | Order search / filter | 3 | CUSTOMER, OPERATOR | FR-18 | to specify in Sprint 3 | Not started |
-| F-12 | Hardening: login rate limit, error states, accessibility | 3 | all | NFR-08, NFR-09 | BR-20, BR-21 | Specified (contract merged; error states and accessibility part is ninja's) |
+| F-06 | Customer cancel / operator reject with reason | 2 | CUSTOMER, OPERATOR | FR-12, FR-13 | BR-11, BR-12 | In progress: contract merged (PR #102); server API + tests merged (PR #120); UI/E2E pending |
+| F-07 | Fulfilment: PREPARING → READY → PICKED_UP | 2 | OPERATOR | FR-14 | BR-13 | Specified (contract merged in PR #102; code pending) |
+| F-08 | Simulated payment | 2 | CUSTOMER, OPERATOR | FR-15 | BR-14 (merged), BR-16 (PR #136), BR-15 (waits for F-07) | In progress: pay route + badges merged (PR #115); BR-16 refund in PR #136; BR-15 waits for F-07 |
+| F-09 | Pickup time slots + order cut-off | 3 | CUSTOMER, OPERATOR | FR-16 | BR-22, BR-23, BR-24 | Specified (contract merged in PR #118) |
+| F-10 | Sales summary | 3 | OPERATOR | FR-17 | BR-17, BR-18, BR-19 | Specified (contract merged in PR #106) |
+| F-11 | Order search / filter | 3 | CUSTOMER, OPERATOR | FR-18 | — | Specified (contract merged in PR #118) |
+| F-12 | Hardening: login rate limit, error states, accessibility | 3 | all | NFR-08, NFR-09 | BR-20, BR-21 | Specified (contract merged in PR #106; error states and accessibility part is ninja's) |
 
 All Sprint 1 features also follow NFR-03, NFR-05, NFR-06 and NFR-07.
 
@@ -70,3 +70,4 @@ Status values: Not started → Planned (in a sprint plan) → Specified (contrac
 |---|---|---|
 | 6 Nov 2026 | First draft | Deliverable 1 part B |
 | 6 Nov 2026 | F-01..F-04 status Verified: all tests pass on `sprint-1` (see traceability.md) (#28) | AC-B3 |
+| 26 Nov 2026 | Updated F-06..F-12 statuses to reflect merged PRs #102, #106, #115, #118, #120 and open BR-16 PR #136 | Sync living feature inventory (S2-8b) |
