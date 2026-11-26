@@ -1,2 +1,2 @@
-      1 Error: No tests found.
-      1 SyntaxError: D:\Lab Software2026\Food-order\.claude\worktrees\jolly-antonelli-2702ec\e2e\cancel-reject.spec.ts: Unexpected token (9:0)
+     10     Error: locator.click: Test timeout of 30000ms exceeded.
+      1   10 failed
