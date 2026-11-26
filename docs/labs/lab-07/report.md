@@ -125,17 +125,17 @@ Cart (`client/src/lib/cart.ts`): `MAX_ITEMS = 15`; `add` is refused at 15; `setQ
 
 ## Answer Part C: Metrics
 
-Snapshot **27 Nov 2026 04:00 (+07)**, window 24–29 Nov, data from `gh`. Full definitions, scope and source lists: `docs/labs/lab-07/metrics.md`.
+Snapshot **27 Nov 2026 04:10 (+07)**, window 24–29 Nov, data from `gh`. Full definitions, scope and source lists: `docs/labs/lab-07/metrics.md`.
 
 | # | Metric | Snapshot value |
 |---|---|---|
-| M1 | Completed Issues | **37** (38 closed; #127 NOT_PLANNED) = 97 % |
+| M1 | Completed Issues | **46** (47 closed; #127 NOT_PLANNED) = 98 % |
 | M2 | Merged PRs | **44** = 17 into `sprint2`, 16 into `lab6`, 9 into `lab7`, 2 into `main` |
 | M3 | Tests on `lab7` | server **78** / client **7** / E2E **26**; 0 failed, 0 skipped |
-| M4 | UAT defect status | **9 of 9 accepted Lab 6 defects fixed and re-tested PASS** (#121–#126, #128, #129, #132); 3 enhancements deferred to Sprint 3 (#130, #131, #133); the 12 finding Issues are still open on GitHub |
+| M4 | UAT defect status | **9 of 9 accepted Lab 6 defects fixed, re-tested PASS and closed** (#121–#126, #128, #129, #132); 3 enhancements deferred to Sprint 3, still open (#130, #131, #133) |
 | M5 | CI and deploy runs | **4 success, 0 failure**: Deploy demo `45860319259` (`163fdb7`) and `45890211288` (`39bda5e`) on `main`, plus 2 CI runs on PRs into `main`; none for `lab7` yet |
 
-Interpretation: the 9 accepted Lab 6 defects are fixed and re-tested, and CI plus both `main` deploys were green; but CI has not run on `lab7` yet and C-1 is not in `main`, so C-1 rests on local runs (78 / 7 / 26) until the release PR. Action: release `lab7`, run the live checks, close or label the 12 finding Issues; owner vieng. Final values: PENDING (after the Lab 7 release).
+Interpretation: the 9 accepted Lab 6 defects are fixed, re-tested and closed, and CI plus both `main` deploys were green; but CI has not run on `lab7` yet and C-1 is not in `main`, so C-1 rests on local runs (78 / 7 / 26) until the release PR. Action: release `lab7` and run the live checks; keep #130, #131, #133 visible for Sprint 3; owner vieng. Final values: PENDING (after the Lab 7 release).
 
 ## Answer Part D: Readiness and retrospective
 
