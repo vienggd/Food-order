@@ -1,0 +1,10 @@
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  tests/order-search.test.ts > F-11 operator search (BR-26, BR-27) > TEST-F11-07 an order number matches that order exactly (12 does not match 120)
+ FAIL  tests/order-search.test.ts > F-11 operator search (BR-26, BR-27) > TEST-F11-08 a leading # is ignored
+ FAIL  tests/order-search.test.ts > F-11 operator search (BR-26, BR-27) > TEST-F11-09 part of a customer name matches, ignoring upper and lower case
+ FAIL  tests/order-search.test.ts > F-11 operator search (BR-26, BR-27) > TEST-F11-10 q and status combine with AND
+ FAIL  tests/order-search.test.ts > F-11 operator search (BR-26, BR-27) > TEST-F11-11 all 7 statuses are valid filters; junk is 400
+ FAIL  tests/order-search.test.ts > F-11 operator search (BR-26, BR-27) > TEST-F11-12 blank q and a too long q are 400; a percent sign is plain text
+ FAIL  tests/order-search.test.ts > F-11 operator search (BR-26, BR-27) > TEST-F11-13 a q of 60 characters with no match is 200 and empty
+ FAIL  tests/order-search.test.ts > F-11 operator search (BR-26, BR-27) > TEST-F11-14 at most 200 orders are returned, oldest first
+ Test Files  1 failed (1)

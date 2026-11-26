@@ -42,14 +42,21 @@ export function QueuePage() {
   const [reasonError, setReasonError] = useState<string | null>(null);
   const [message, setMessage] = useState<{ kind: "success" | "error"; text: string } | null>(null);
 
+  // F-11: when a search is active the list comes from the search, otherwise from the open-order board.
+  const [search, setSearch] = useState<{ q: string; status: string } | null>(null);
+  const [draftQ, setDraftQ] = useState("");
+  const [draftStatus, setDraftStatus] = useState("");
   const load = useCallback(async () => {
     setLoadError(false);
     try {
-      setOrders(await api<QueueOrder[]>("/api/operator/orders?status=PLACED,ACCEPTED,PREPARING,READY"));
+      const query = search
+        ? `?status=${search.status || "PLACED,ACCEPTED,PREPARING,READY,PICKED_UP,REJECTED,CANCELLED"}&q=${encodeURIComponent(search.q)}`
+        : "?status=PLACED,ACCEPTED,PREPARING,READY";
+      setOrders(await api<QueueOrder[]>(`/api/operator/orders${query}`));
     } catch {
       setLoadError(true);
     }
-  }, []);
+  }, [search]);
 
   useEffect(() => {
     load();
@@ -150,7 +157,7 @@ export function QueuePage() {
 
   const tab = TABS.find((t) => t.key === params.get("tab")) ?? TABS[0];
   const countOf = (statuses: readonly string[]) => orders.filter((o) => statuses.includes(o.status)).length;
-  const shown = orders.filter((o) => (tab.statuses as readonly string[]).includes(o.status));
+  const shown = search ? orders : orders.filter((o) => (tab.statuses as readonly string[]).includes(o.status));
   const now = Date.now();
   const oldestMin = shown.length ? Math.floor((now - Date.parse(shown[0].createdAt)) / 60000) : 0;
   const stats = [
@@ -164,11 +171,44 @@ export function QueuePage() {
     <section>
       <div className="queue-head">
         <h2 className="section-title">
-          {tab.title} <span className="count">{shown.length}</span>
+          {search ? "Search results" : tab.title} <span className="count">{shown.length}</span>
         </h2>
         {refresh}
       </div>
-      <div role="tablist" className="queue-tabs">
+      <form
+        className="queue-search"
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (draftQ.trim()) setSearch({ q: draftQ.trim(), status: draftStatus });
+        }}
+      >
+        <label htmlFor="queue-q">Order number or customer name</label>
+        <input id="queue-q" type="search" maxLength={60} value={draftQ} onChange={(e) => setDraftQ(e.target.value)} />
+        <label htmlFor="queue-status">Status</label>
+        <select id="queue-status" value={draftStatus} onChange={(e) => setDraftStatus(e.target.value)}>
+          <option value="">Any status</option>
+          {["PLACED", "ACCEPTED", "PREPARING", "READY", "PICKED_UP", "REJECTED", "CANCELLED"].map((st) => (
+            <option key={st} value={st}>
+              {st.charAt(0) + st.slice(1).toLowerCase().replace("_", " ")}
+            </option>
+          ))}
+        </select>
+        <button className="btn small" type="submit">
+          Search
+        </button>
+        <button
+          className="btn small ghost"
+          type="button"
+          onClick={() => {
+            setDraftQ("");
+            setDraftStatus("");
+            setSearch(null);
+          }}
+        >
+          Clear
+        </button>
+      </form>
+      <div role="tablist" className="queue-tabs" hidden={!!search}>
         {TABS.map((t) => (
           <button
             key={t.key}
@@ -196,8 +236,8 @@ export function QueuePage() {
       </div>
       {shown.length === 0 ? (
         <div className="empty">
-          <p className="empty-title">{tab.key === "new" ? "No new orders." : "Nothing here."}</p>
-          {tab.key === "new" && <p className="muted">New orders appear here when you refresh.</p>}
+          <p className="empty-title">{search ? "No orders match your search." : tab.key === "new" ? "No new orders." : "Nothing here."}</p>
+          {!search && tab.key === "new" && <p className="muted">New orders appear here when you refresh.</p>}
         </div>
       ) : (
         // Phone: one card per order. Desktop: the same items laid out as table rows (styles.css).

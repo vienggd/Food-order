@@ -267,3 +267,5 @@ button[disabled] { cursor: not-allowed; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
 .q-step { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
 .q-wait { font-size: 12px; line-height: 1.3; }
+.queue-search { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 10px 0; }
+.queue-search input, .queue-search select { height: 38px; border: 1.5px solid #d9b48e; border-radius: 12px; padding: 0 10px; font: inherit; }
