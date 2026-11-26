@@ -1,7 +1,7 @@
 # Lab 6 — Independent User Acceptance Testing (UAT)
 
 CPE 334 · Semester 1/2026 · Section 131 · group **Est** · Campus Café Pre-order (`Food-order`).
-**DRAFT SKELETON.** Items marked PENDING await tonight's manual human UAT run (`19:00–20:00`) and partner re-test after Saturday's fix release; they must be filled before final submission. Staging branch for all Lab 6 work: **`lab6`**.
+**DRAFT.** Staging branch for all Lab 6 work: **`lab6`**. Corrected fixes are deployed on `main` (`39bda5e` / `food-order-00009-jd9`) with `9/9` partner re-tests **PASS**; only **EN-009_P3**'s signed `Accepted` block on `EN-009_P3#129` (`__PARTNER_ACCEPTANCE__`) remains `PENDING` before final Lab 6 submission.
 
 ## Contents
 
@@ -9,7 +9,7 @@ CPE 334 · Semester 1/2026 · Section 131 · group **Est** · Campus Café Pre-o
 |---|---|---|---|---|
 | — | Both | Team, staging branch (`lab6`), version & contribution tables | `docs/labs/lab-06/report.md` (Issue [#101](https://github.com/vienggd/Food-order/issues/101)) | `v0.1.0-sprint1`, `b71cdb2` |
 | **A** | Product team | Test plan, UAT cases (`UAT-01..06`), and handoff pack | `docs/labs/lab-06/test-plan.md`, `uat-cases.md`, `handoff.md` (PR [#107](https://github.com/vienggd/Food-order/pull/107)) | Accounts `CUSTOMER-A`, `CUSTOMER-B`, `OPERATOR` (no passwords) |
-| **B** | UAT team | Testing partner **EN-009_P3** (`event-registration-system`) | [`part-b-uat-team.md`](part-b-uat-team.md), [`execution-partner.md`](execution-partner.md) (PRs [#105](https://github.com/vienggd/Food-order/pull/105), [#111](https://github.com/vienggd/Food-order/pull/111), [#140](https://github.com/vienggd/Food-order/pull/140), [#149](https://github.com/vienggd/Food-order/pull/149), [#153](https://github.com/vienggd/Food-order/pull/153), [#156](https://github.com/vienggd/Food-order/pull/156)) | Outgoing `#141–#148`, `#151–#155`; `B-<case>-s<step>-<XX>.png` (`PENDING`) |
+| **B** | UAT team | Testing partner **EN-009_P3** (`event-registration-system`) | [`part-b-uat-team.md`](part-b-uat-team.md), [`execution-partner.md`](execution-partner.md) (PRs [#105](https://github.com/vienggd/Food-order/pull/105), [#111](https://github.com/vienggd/Food-order/pull/111), [#140](https://github.com/vienggd/Food-order/pull/140), [#149](https://github.com/vienggd/Food-order/pull/149), [#153](https://github.com/vienggd/Food-order/pull/153), [#156](https://github.com/vienggd/Food-order/pull/156)) | Outgoing `#141–#148`, `#151–#155`; `B-*-GD.png` & `HQ-*.png` (`X1–X7` not run) |
 | **C** | Product team | Partner findings triage (`#121–#133`) & RED→GREEN fixes | [`triage.md`](triage.md), `docs/labs/lab-06/evidence/` (`red.txt`, `green.txt`, `regression.txt`), PR [#138](https://github.com/vienggd/Food-order/pull/138) | `TEST-L6-121..132`; Partner B `UAT-02/04/06` PASS |
 | **D** | Product team | Fix verification, re-test handoff & final acceptance | [`retest-handoff.md`](retest-handoff.md), Issue `#101` | `9/9` fixes + `UAT-01/03/04/05` PASS (`39bda5e` / `food-order-00009-jd9`); partner block PENDING |
 
@@ -28,7 +28,7 @@ CPE 334 · Semester 1/2026 · Section 131 · group **Est** · Campus Café Pre-o
 |---|---|---|---|
 | **Est (`Food-order`)** Sprint 1 baseline | tag `v0.1.0-sprint1` (`12c1052`) | `main` (ancestor) | Done |
 | **Est (`Food-order`)** tested build in Lab 6 | commit `b71cdb2` (PR `#84` merge; `https://food-order-d4jdyxqbca-as.a.run.app`) | `main` | Tested by EN-009_P3 (25 Nov 2026) |
-| **Est (`Food-order`)** Lab 6 triage & defect fixes | PR `#138` (RED `cd56600` / `d1bf95c` -> GREEN `c576273` / `2e291c8`, merge `8356adb`) | `lab6` | Merged into `lab6` (awaiting Sat deploy to `main`) |
+| **Est (`Food-order`)** Lab 6 triage & defect fixes | PR `#138` (RED `cd56600` / `d1bf95c` -> GREEN `c576273` / `2e291c8`, merge `8356adb`) | `lab6` | Merged into `lab6` & deployed to `main` (`PR #168`, `PR #181`) |
 | **Est (`Food-order`)** corrected `main` release | `39bda5e` (PR `#181`, merged `2026-11-27 03:19 UTC+7`; includes `#132` fix after `163fdb7`) | `main` | Merged into `main` |
 | **Est (`Food-order`)** deployed revision for re-test | `food-order-00009-jd9` (`index-DbdmxBc6.js`, `/api/ready` OK; previous `food-order-00008-v6c`) | Cloud Run | Deployed; **9/9 fixes + UAT-01/03/04/05 PASS** (`#132` PASS at `03:32 UTC+7`) |
 | **Est (`Food-order`)** partner acceptance decision | __PARTNER_ACCEPTANCE__ | `retest-handoff.md` | PENDING (`9/9` PASS verified; awaiting Nattakit's signed `Accepted` block on `songt888#129`) |
@@ -52,11 +52,11 @@ CPE 334 · Semester 1/2026 · Section 131 · group **Est** · Campus Café Pre-o
 <!-- INCLUDE: part-b-uat-team.md -->
 
 ### AI-assisted UAT & multi-ratio pre-check note
-Before tonight's 19:00 manual student session, vieng also executed an automated Playwright (`2×` DPR) pre-check of `UAT-01..06` plus a 6-viewport UX/UI sweep (`1440×900`, `1280×800`, `768×1024`, `375×812`, `320×568`, `812×375`). All six partner UAT cases passed on synthetic events UAT-GD-01-1757 (33ab4cbb-93e8-4019-bf8a-4e25ead6ff03), UAT-GD-02-1757 (03e93701-36dd-4b7a-a334-003aa68516e0), and UAT-GD-05-1757 (5204ff4b-f85c-4403-96f8-0027163a7212) without touching seeded demo events; the 6-ratio sweep recorded 0 page errors, 0 server 5xx responses, confirmed mobile tables scroll internally (overflow-x: auto, 0 px page overflow), re-verified filed issues #141, #146, #151, #154, and #155, and found no additional non-duplicate defects beyond #141–#148 and #151–#155. All official Part B execution logs in tables **B3–B4** and screenshot IDs **B7** remain reserved exclusively for tonight's manual student execution (`19:00–20:00`, UTC+7).
+Prior to the official Part B partner execution rows above, vieng executed an automated Playwright (`2×` DPR) pre-check of `UAT-01..06` plus a 6-viewport UX/UI sweep (`1440×900`, `1280×800`, `768×1024`, `375×812`, `320×568`, `812×375`). All six partner UAT cases passed on synthetic events `UAT-GD-01-1757` (`33ab4cbb-93e8-4019-bf8a-4e25ead6ff03`), `UAT-GD-02-1757` (`03e93701-36dd-4b7a-a334-003aa68516e0`), and `UAT-GD-05-1757` (`5204ff4b-f85c-4403-96f8-0027163a7212`) without touching seeded demo events; the 6-ratio sweep recorded 0 page errors, 0 server 5xx responses, confirmed mobile tables scroll internally (`overflow-x: auto`, `0 px` page overflow), re-verified filed issues `#141`, `#146`, `#151`, `#154`, and `#155`, and found no additional non-duplicate defects beyond `#141–#148` and `#151–#155`. All official Part B execution logs and screenshots are recorded in tables **B3–B7** above (AI-driven runs on the students' requests; see **B8**).
 
 ## Answer Part C: Triage of partner findings and defect fixes (`Food-order`)
 
-### Received findings (`12` open Issues + `1` closed duplicate)
+### Received findings (`13` Issues: `9` fixed/closed, `3` open in Backlog, `1` closed duplicate)
 Full contract rationale and step/date provenance are recorded in [`triage.md`](triage.md). Tested build: commit `b71cdb2`.
 
 | Finding | Issue | Reporter (25 Nov 2026) | Decision & severity | Fix summary (PR [#138](https://github.com/vienggd/Food-order/pull/138)) |
@@ -102,13 +102,13 @@ Full contract rationale and step/date provenance are recorded in [`triage.md`](t
 | Work item | Owner | Reviewer / verifier |
 |---|---|---|
 | Part A (`uat-cases.md`, `test-plan.md`, `handoff.md`) & Part C (`triage.md`, RED/GREEN fixes PR `#138`, `retest-handoff.md`) & Part D / Report (`#101`) | `vieng` | `ninja` (reviewed/merged PRs `#107`, `#138`) |
-| Part B (`execution-partner.md`, outgoing `#141–#148`, extra cases `X1–X8`, `part-b-uat-team.md`), manual `UAT-02/03/05` (`19:00`), PR reviews on `lab6` | `ninja` | `vieng` (reviewed/merged PRs `#105`, `#111`, `#140`, `#149`, `#153`, `#156`; added `#151–#155` & `#141/#142` comments) |
+| Part B (`execution-partner.md`, outgoing `#141–#148`, extra case `X8`, `part-b-uat-team.md`), Part B `UAT-02/03/05` & `v0.1.3-lab6` re-tests (AI-driven with ninja sign-in), PR reviews on `lab6` | `ninja` | `vieng` (reviewed/merged PRs `#105`, `#111`, `#140`, `#149`, `#153`, `#156`; added `#151–#155` & `#141/#142` comments) |
 
 ## AI use
 
-Both students used AI assistants (Claude worker sessions and Antigravity + Playwright Chromium) to draft `uat-cases.md`, `triage.md`, `part-b-uat-team.md`, `report.md`, reproducing RED→GREEN regression tests (`TEST-L6-121..132`), PDF scripts, and exploratory multi-viewport audits on the partner app. Every PR was reviewed and merged by the other student's side, and all official human UAT sessions (`19:00–20:00`) and triage/acceptance decisions belong to the students. No account passwords, tokens, or session secrets appear anywhere in the repo, Issues, or this report.
+Both students used AI assistants (Claude worker sessions and Antigravity + Playwright Chromium) to draft `uat-cases.md`, `triage.md`, `part-b-uat-team.md`, `report.md`, reproducing RED→GREEN regression tests (`TEST-L6-121..132`), PDF scripts, and browser UAT / multi-viewport audits on the partner app. Every PR was reviewed and merged by the other student's side, and all triage and `Accepted` sign-off decisions belong to the students. No account passwords, tokens, or session secrets appear anywhere in the repo, Issues, or this report.
 
 ## Limitations
 
-- This is a **pre-release draft skeleton** on branch `lab6`: manual student results from tonight's `19:00–20:00` slot, Saturday's `main` deploy/re-test commit & revision, and both teams' final acceptance decisions remain `PENDING` until executed and recorded.
+- This is a **pre-closure Lab 6 draft** on branch `lab6`: all 9 fixes are deployed on `main` (`39bda5e` / `food-order-00009-jd9`), `9/9` partner re-tests pass, and team Est posted `Accepted` on `songt888#126`; only **EN-009_P3**'s signed `Accepted` block (`EN-009_P3#129`) remains `PENDING` before closing Issue `#101` and exporting the final PDF.
 - Existing `CI` triggers (`main` and `lab-5`), so `lab6` verification rests on real local Postgres + Playwright runs recorded in `docs/labs/lab-06/evidence/`.
