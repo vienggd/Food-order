@@ -1,11 +1,11 @@
-# Lab 6: DRAFT outgoing Issues for EN-009_P3 (songt888/event-registration-system)
+# Lab 6: outgoing Issues (sent 26 Nov 2026 ~15:50) for EN-009_P3 (songt888/event-registration-system)
 
-DRAFT. Do not open on their repo until ninja approves. Provenance: exploratory findings by ninja, tested 25 Nov 2026 21:40-21:46 UTC+7 using an AI computer-use browser session, NOT by hand by the students. The served revision was NOT confirmed at that time (their handoff says `v0.1.2-lab5` / `04e8590` / `s47a6b53b-00005-5l7`). They go beyond UAT-01..06. DRAFT: no Issue has been opened on the partner repo; ninja must approve first.
+Sent after ninja approved; the posted text removed the scope notes and added a provenance footer. Provenance: exploratory findings by ninja, tested 25 Nov 2026 21:40-21:46 UTC+7 using an AI computer-use browser session, NOT by hand by the students. The served revision was NOT confirmed at that time (their handoff says `v0.1.2-lab5` / `04e8590` / `s47a6b53b-00005-5l7`). They go beyond UAT-01..06. Sent as Issues on the partner repo on 26 Nov 2026 ~15:50.
 Tested app: https://s47a6b53b-4d7hbszvwq-as.a.run.app. No password anywhere.
 
 ---
 
-## F-01: Very long title/location/description breaks the layout (Publish button pushed off screen)
+## F-01 ([#141](https://github.com/songt888/event-registration-system/issues/141)): Very long title/location/description breaks the layout (Publish button pushed off screen)
 
 **Reporter:** Est (ninja), UAT team. **Product team:** EN-009_P3. **Version:** `v0.1.2-lab5` / `04e8590` / `s47a6b53b-00005-5l7` (served revision not confirmed). **Account:** Organizer One. **Proposed severity:** major (proposed).
 
@@ -26,7 +26,7 @@ Tested app: https://s47a6b53b-4d7hbszvwq-as.a.run.app. No password anywhere.
 
 ---
 
-## F-02: After logout in another tab, the first tab keeps showing the account and menu
+## F-02 ([#142](https://github.com/songt888/event-registration-system/issues/142)): After logout in another tab, the first tab keeps showing the account and menu
 
 **Reporter:** Est (ninja), UAT team. **Product team:** EN-009_P3. **Version:** `v0.1.2-lab5` / `04e8590` / `s47a6b53b-00005-5l7` (served revision not confirmed). **Account:** Organizer One and Participant 3 (both roles). **Proposed severity:** major (proposed).
 
@@ -47,7 +47,7 @@ Tested app: https://s47a6b53b-4d7hbszvwq-as.a.run.app. No password anywhere.
 
 ---
 
-## F-03: Places-left count stays stale after the registration is refused as duplicate
+## F-03 ([#143](https://github.com/songt888/event-registration-system/issues/143)): Places-left count stays stale after the registration is refused as duplicate
 
 **Reporter:** Est (ninja), UAT team. **Product team:** EN-009_P3. **Version:** `v0.1.2-lab5` / `04e8590` / `s47a6b53b-00005-5l7` (served revision not confirmed). **Account:** Participant 3. **Proposed severity:** minor (proposed).
 
@@ -68,7 +68,7 @@ Tested app: https://s47a6b53b-4d7hbszvwq-as.a.run.app. No password anywhere.
 
 ---
 
-## F-04: Description line breaks are lost on the event page
+## F-04 ([#144](https://github.com/songt888/event-registration-system/issues/144)): Description line breaks are lost on the event page
 
 **Reporter:** Est (ninja), UAT team. **Product team:** EN-009_P3. **Version:** `v0.1.2-lab5` / `04e8590` / `s47a6b53b-00005-5l7` (served revision not confirmed). **Account:** Organizer One. **Proposed severity:** minor (proposed).
 
@@ -88,7 +88,7 @@ Tested app: https://s47a6b53b-4d7hbszvwq-as.a.run.app. No password anywhere.
 
 ---
 
-## F-05: Form errors are not exposed to assistive technology
+## F-05 ([#145](https://github.com/songt888/event-registration-system/issues/145)): Form errors are not exposed to assistive technology
 
 **Reporter:** Est (ninja), UAT team. **Product team:** EN-009_P3. **Version:** `v0.1.2-lab5` / `04e8590` / `s47a6b53b-00005-5l7` (served revision not confirmed). **Account:** none (signed out) and Organizer One. **Proposed severity:** minor (proposed).
 
@@ -109,7 +109,7 @@ Tested app: https://s47a6b53b-4d7hbszvwq-as.a.run.app. No password anywhere.
 
 ---
 
-## F-06: 'Draft saved' message stays after the event is published
+## F-06 ([#146](https://github.com/songt888/event-registration-system/issues/146)): 'Draft saved' message stays after the event is published
 
 **Reporter:** Est (ninja), UAT team. **Product team:** EN-009_P3. **Version:** `v0.1.2-lab5` / `04e8590` / `s47a6b53b-00005-5l7` (served revision not confirmed). **Account:** Organizer One. **Proposed severity:** minor (proposed).
 
@@ -129,7 +129,7 @@ Tested app: https://s47a6b53b-4d7hbszvwq-as.a.run.app. No password anywhere.
 
 ---
 
-## F-07: At 320 px the Restore button of the window decoration sticks out about 81 px
+## F-07 ([#147](https://github.com/songt888/event-registration-system/issues/147)): At 320 px the Restore button of the window decoration sticks out about 81 px
 
 **Reporter:** Est (ninja), UAT team. **Product team:** EN-009_P3. **Version:** `v0.1.2-lab5` / `04e8590` / `s47a6b53b-00005-5l7` (served revision not confirmed). **Account:** Participant 3. **Proposed severity:** minor (proposed).
 
@@ -149,7 +149,7 @@ Tested app: https://s47a6b53b-4d7hbszvwq-as.a.run.app. No password anywhere.
 
 ---
 
-## F-08: Minimize/Close buttons on the Not found page have no page name
+## F-08 ([#148](https://github.com/songt888/event-registration-system/issues/148)): Minimize/Close buttons on the Not found page have no page name
 
 **Reporter:** Est (ninja), UAT team. **Product team:** EN-009_P3. **Version:** `v0.1.2-lab5` / `04e8590` / `s47a6b53b-00005-5l7` (served revision not confirmed). **Account:** none (Not found page). **Proposed severity:** minor (proposed).
 
