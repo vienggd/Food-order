@@ -1,0 +1,4 @@
+      2     Error: element(s) not found
+      2     Error: expect(locator).toContainText(expected) failed
+      6     Error: locator.click: Test timeout of 30000ms exceeded.
+      1   8 failed
