@@ -222,7 +222,7 @@ export function OrderDetailPage() {
           <StatusPill status={order.status} />
         </div>
         <p className="muted">
-          Placed {formatPlacedTime(order.createdAt)} · Pickup: ASAP
+          Placed {formatPlacedTime(order.createdAt)} · Pickup: {order.pickupSlot ? formatPlacedTime(order.pickupSlot).split(" ").pop() : "ASAP"}
         </p>
         <table className="lines">
           <tbody>

@@ -84,9 +84,11 @@ model Order {
   paymentStatus PaymentStatus @default(UNPAID) @map("payment_status") // F-08
   paidAt        DateTime?     @map("paid_at") // F-08
   refundedAt    DateTime?     @map("refunded_at") // F-08
+  pickupSlot    DateTime?     @map("pickup_slot") // F-09: slot start, null = ASAP
   lines         OrderLine[]
 
   @@index([status, createdAt])
+  @@index([pickupSlot])
   @@index([customerId])
   @@map("orders")
 }
