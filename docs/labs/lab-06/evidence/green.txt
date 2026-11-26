@@ -1,0 +1,32 @@
+GREEN run, 26 Nov 2026, after fixes for UAT defects #121-#126, #128, #129 (follows RED commit cd56600).
+
+== Server API: cd server && npx vitest run tests/orders.test.ts tests/operator.test.ts ==
+ ✓ tests/orders.test.ts (37 tests) 16354ms
+   ✓ F-03 GET /api/orders and /api/orders/:id > TEST-L6-121 rejects non-decimal/coerced id 0x1 with 400 VALIDATION_ERROR  448ms
+   ✓ F-03 GET /api/orders and /api/orders/:id > TEST-L6-121 rejects non-decimal/coerced id 1e0 with 400 VALIDATION_ERROR  450ms
+   ✓ F-03 GET /api/orders and /api/orders/:id > TEST-L6-121 rejects non-decimal/coerced id 1.0 with 400 VALIDATION_ERROR  504ms
+   ✓ F-03 GET /api/orders and /api/orders/:id > TEST-L6-121 rejects non-decimal/coerced id +1 with 400 VALIDATION_ERROR  468ms
+   ✓ F-03 GET /api/orders and /api/orders/:id > TEST-L6-121 rejects non-decimal/coerced id 0b1 with 400 VALIDATION_ERROR  520ms
+   ✓ F-03 GET /api/orders and /api/orders/:id > TEST-L6-121 rejects non-decimal/coerced id 0o1 with 400 VALIDATION_ERROR  635ms
+   ✓ F-03 GET /api/orders and /api/orders/:id > TEST-L6-121 rejects non-decimal/coerced id %201 with 400 VALIDATION_ERROR  477ms
+ ✓ tests/operator.test.ts (17 tests) 8026ms
+   ✓ F-04 accept > TEST-L6-121 accept rejects non-decimal/coerced id 0x1..%201 with 400 VALIDATION_ERROR (all 7 passed)
+ Test Files  2 passed (2)
+      Tests  54 passed (54)
+
+== E2E: npx playwright test e2e/lab6-fixes.spec.ts ==
+  ok  1 [phone] › e2e\lab6-fixes.spec.ts:11:7 › TEST-L6-123 phone cart bar does not cover the last menu item (#123) (1.2s)
+  ok  6 [phone] › e2e\lab6-fixes.spec.ts:120:7 › TEST-L6-128 cart badge counts cart lines rather than total item quantities (#128) (895ms)
+  ok  7 [phone] › e2e\lab6-fixes.spec.ts:139:7 › TEST-L6-129 phone top bar displays Campus Café brand without horizontal overflow (#129) (747ms)
+  ok  9 [desktop] › e2e\lab6-fixes.spec.ts:32:7 › TEST-L6-122 access warning clears on logout and on next navigation (#122) (1.6s)
+  ok 10 [desktop] › e2e\lab6-fixes.spec.ts:56:7 › TEST-L6-124 Order placed banner disappears after reload and after status becomes ACCEPTED (#124) (1.3s)
+  ok 11 [desktop] › e2e\lab6-fixes.spec.ts:83:7 › TEST-L6-125 desktop split view keeps list status synced when Refresh status runs (#125) (987ms)
+  ok 12 [desktop] › e2e\lab6-fixes.spec.ts:101:7 › TEST-L6-126 login 400 shows server validation message instead of generic network error (#126) (890ms)
+  ok 13 [desktop] › e2e\lab6-fixes.spec.ts:120:7 › TEST-L6-128 cart badge counts cart lines rather than total item quantities (#128) (884ms)
+  6 skipped (viewport-specific tests skipped on the other project)
+  8 passed (24.2s)
+
+== Additional E2E GREEN (#132 / EX-05, 26 Nov 2026, follows RED d1bf95c): npx playwright test e2e/lab6-fixes.spec.ts e2e/queue.spec.ts ==
+  ok [desktop] › e2e\lab6-fixes.spec.ts:149:7 › TEST-L6-132 desktop operator queue uses a semantic table with column headers (#132)
+  ok [phone+desktop] › e2e\queue.spec.ts:14,26,35 › TEST-F04-11..13
+  15 passed (37.3s), 7 skipped (viewport-specific skips in lab6-fixes.spec.ts), 0 failed

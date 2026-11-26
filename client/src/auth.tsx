@@ -10,7 +10,8 @@ type Auth = {
   user: User | null;
   loading: boolean;
   notice: string | null; // one-off message shown on the next screen
-  setNotice: (n: string | null) => void;
+  noticeTarget: string | null;
+  setNotice: (n: string | null, targetPath?: string) => void;
   login: (email: string, password: string) => Promise<User>;
   logout: () => Promise<void>;
 };
@@ -20,7 +21,11 @@ const AuthContext = createContext<Auth | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [notice, setNotice] = useState<string | null>(null);
+  const [noticeState, setNoticeState] = useState<{ text: string; targetPath: string | null } | null>(null);
+
+  const setNotice = useCallback((n: string | null, targetPath?: string) => {
+    setNoticeState(n ? { text: n, targetPath: targetPath ?? null } : null);
+  }, []);
 
   useEffect(() => {
     api<User>("/api/auth/me")
@@ -29,24 +34,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .finally(() => setLoading(false));
     setUnauthorizedHandler(() => {
       setUser(null);
-      setNotice("Your session has ended. Please log in again.");
+      setNotice("Your session has ended. Please log in again.", "/login");
     });
-  }, []);
+  }, [setNotice]);
 
   const login = useCallback(async (email: string, password: string) => {
     const u = await api<User>("/api/auth/login", { method: "POST", body: { email, password } });
     setUser(u);
-    setNotice(null);
+    setNoticeState(null);
     return u;
   }, []);
 
   const logout = useCallback(async () => {
     await api("/api/auth/logout", { method: "POST" }).catch(() => {});
     setUser(null); // whatever the result, the client forgets the user
+    setNoticeState(null);
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading, notice, setNotice, login, logout }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        notice: noticeState?.text ?? null,
+        noticeTarget: noticeState?.targetPath ?? null,
+        setNotice,
+        login,
+        logout,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
   );
 }
 
