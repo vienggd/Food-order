@@ -1,6 +1,12 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 import { clearOrders, db, makeOrder } from "./db";
-import { loginAs, logout } from "./helpers";
+import { loginAs as signIn, logout } from "./helpers";
+
+// Wait until the login finished before the test moves on to another page.
+async function loginAs(page: Page, email: string) {
+  await signIn(page, email);
+  await expect(page).not.toHaveURL(//login/);
+}
 
 // F-06 UI. Test IDs follow docs/sprint_2/sprints/F-06-cancel-reject.md. Orders are inserted directly in the E2E database.
 test.describe("F-06 cancel and reject", () => {
