@@ -91,9 +91,12 @@ Each rule is enforced by the server, whatever the client sends. Money is stored 
 | BR-19 | The top items are the 3 with the most quantity sold; ties are broken by name. (F-10, Sprint 3, planned) | — |
 | BR-20 | A successful login clears that email's failed-login count. (F-12, Sprint 3, planned) | — |
 | BR-21 | Failed logins are counted per email (lower-case), not per IP address. (F-12, Sprint 3, planned) | — |
-| BR-22 | Pickup slots are 15 minutes apart within opening hours (08:00–16:45, 36 slots), today only (Asia/Bangkok). (F-09, Sprint 3, planned) | 400 VALIDATION_ERROR (`details.field = pickupSlot`) |
-| BR-23 | Orders for a pickup slot close 15 minutes before the slot starts (`now < slotStart - 15 min`). (F-09, Sprint 3, planned) | 400 VALIDATION_ERROR (`details.field = pickupSlot`) |
-| BR-24 | Each pickup slot holds at most 10 active orders; cancelled and rejected orders free their place; ASAP orders do not count. (F-09, Sprint 3, planned) | 409 INVALID_STATE |
+| BR-22 | Pickup slots are 15 minutes apart within opening hours (08:00–16:45, 36 slots), today only (Asia/Bangkok). (F-09, Sprint 3, implemented) | 400 VALIDATION_ERROR (`details.field = pickupSlot`) |
+| BR-23 | Orders for a pickup slot close 15 minutes before the slot starts (`now < slotStart - 15 min`). (F-09, Sprint 3, implemented) | 400 VALIDATION_ERROR (`details.field = pickupSlot`) |
+| BR-24 | Each pickup slot holds at most 10 active orders; cancelled and rejected orders free their place; ASAP orders do not count. (F-09, Sprint 3, implemented) | 409 INVALID_STATE |
+| BR-25 | A customer only ever gets their own orders, whether or not a filter is used. (F-11, Sprint 3, implemented) | — (other customers' orders never appear) |
+| BR-26 | Operator search `q` matches the order number exactly, or part of the customer name ignoring upper/lower case; a leading `#` is ignored; `q` is 1–60 characters. (F-11, Sprint 3, implemented) | 400 VALIDATION_ERROR (`details.field = q`) |
+| BR-27 | Search and status filters combine with AND; no match is an empty list, not an error; at most 200 orders are returned. (F-11, Sprint 3, implemented) | — |
 
 ## 6. Non-functional requirements
 
@@ -128,10 +131,13 @@ Each rule is enforced by the server, whatever the client sends. Money is stored 
 | DEC-02 | Same error for unknown email and wrong password. | Attackers cannot find which emails have accounts. |
 | DEC-03 | Money as integer satang. | No rounding errors with decimals. |
 | DEC-04 | Availability is a yes/no flag per item, not a stock count. | Matches how the café works (an item runs out); smallest version that works. |
-| DEC-05 | Order statuses and allowed moves are kept in one transition table with `canTransition()`. Sprint 1 allows only PLACED → ACCEPTED. | Later sprints add rows instead of new code paths; easy to unit-test. |
+| DEC-05 | Order statuses and allowed moves are kept in one transition table with `canTransition()`. Sprint 1 allowed only PLACED → ACCEPTED; Sprint 2 added the other rows. | Later sprints add rows instead of new code paths; easy to unit-test. |
 | DEC-06 | Accept uses a conditional update `where status = PLACED`. | Two operators cannot both accept (BR-07) without locks. |
 | DEC-07 | Another customer's order returns 404, not 403. | Does not reveal that the order exists. |
 | DEC-08 | Payment status is separate from order status. | Paying and preparing are independent; keeps the order lifecycle simple. |
+| DEC-09 | The advance request carries `from` (the status the operator saw) and the update is conditional on it. | A stale button press cannot move an order twice (BR-13). |
+| DEC-10 | Slot capacity is checked inside the order transaction under a per-slot `pg_advisory_xact_lock`. | Parallel orders cannot overfill a slot (BR-24). |
+| DEC-11 | Order search escapes `%`, `_` and `\` before the name match. | Prisma `contains` passes them to SQL LIKE; found by TEST-F11-12. |
 
 ## 9. Questions and resolution
 
@@ -151,3 +157,4 @@ Each rule is enforced by the server, whatever the client sends. Money is stored 
 | 6 Nov 2026 | 1 | First version | Deliverable 1 part A |
 | 25 Nov 2026 | 2 | Added BR-08..BR-21 (Sprint 2 and Sprint 3 rules) from the feature contracts F-05, F-06, F-07, F-08, F-10, F-12 | Deliverable 2 part D: living SRS |
 | 26 Nov 2026 | 2.1 | Added BR-22..BR-24 (pickup slots, cut-off, slot capacity) from merged contract F-09 (PR #118) | Sync living SRS with PR #118 (S2-8b) |
+| 27 Nov 2026 | 3 | Added BR-25..BR-27 (F-11; they were in the F-11 contract but missing here); BR-22..BR-24 marked implemented; DEC-05 wording; added DEC-09..DEC-11 (Issue #186) | Deliverable 2 part D audit against `sprint2` `d10fac1` |

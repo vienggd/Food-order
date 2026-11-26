@@ -87,10 +87,11 @@ Full screen-by-screen states are in [`ui/ui-spec.md`](ui/ui-spec.md); final desi
 | Screen | Route | Role | Features |
 |---|---|---|---|
 | S1 Login | `/login` | public | F-01 |
-| S2 Menu + cart | `/menu` (customer home) | CUSTOMER | F-02, F-03 |
-| S3 My orders | `/orders` | CUSTOMER | F-03 |
-| S4 Order detail | `/orders/:id` | CUSTOMER | F-03 |
-| S5 Order queue | `/operator/orders` (operator home) | OPERATOR | F-04 |
+| S2 Menu + cart | `/menu` (customer home) | CUSTOMER | F-02, F-03, F-09 (pickup slot picker) |
+| S3 My orders | `/orders` | CUSTOMER | F-03, F-08, F-11 (status chips) |
+| S4 Order detail | `/orders/:id` | CUSTOMER | F-03, F-06 (cancel), F-08 (pay) |
+| S5 Order queue | `/operator/orders` (operator home) | OPERATOR | F-04, F-06 (reject), F-07 (next step tabs), F-08, F-11 (search) |
+| S6 Menu items | `/operator/menu` | OPERATOR | F-05 |
 | Not found | any other path | any | — |
 
 `/` redirects: not logged in → `/login`, customer → `/menu`, operator → `/operator/orders`.
@@ -149,6 +150,7 @@ menu_items 1 ─ * order_lines     (menu_item_id; name and price are copied, BR-
 | | `reject_reason` | text, null | F-06: operator's reason, 3–200 characters (BR-12); migration `20261124171440_add_order_step_and_payment_fields` |
 | | `cancelled_at`, `rejected_at` | timestamp, null | F-06: time of cancel / reject |
 | | `preparing_at`, `ready_at`, `picked_up_at` | timestamp, null | F-07: time of each step (BR-13); `picked_up_at` also decides the sales day (F-10) |
+| | `pickup_slot` | timestamp, null | F-09: chosen pickup slot start (null = ASAP); migration `20261126072525_add_order_pickup_slot`; capacity (10 active orders per slot, BR-24) is checked in the order transaction under a per-slot `pg_advisory_xact_lock` |
 | | `payment_status` | enum `PaymentStatus` | F-08: `UNPAID` (default) \| `PAID` \| `REFUNDED` (BR-14, BR-16) |
 | | `paid_at`, `refunded_at` | timestamp, null | F-08: set when paid / refunded |
 | `order_lines` | `id` | int | PK, auto |
@@ -256,23 +258,22 @@ Details, all error cases and tests are in the feature contracts (`docs/sprint_1/
 | `GET /api/auth/me` | — | 200 User | 401 | F-01 |
 | `GET /api/health` | — | 200 `{ ok: true }` (public, for smoke tests) | — | #1 |
 | `GET /api/menu` | — | 200 Menu item[] by `id` | 401, 403 | F-02 |
-| `POST /api/orders` | `{ items: [{ menuItemId, quantity }] }` | 201 Order | 400, 401, 403 | F-03 |
-| `GET /api/orders` | — | 200 Order summary[] newest first | 401, 403 | F-03 |
+| `POST /api/orders` | `{ items: [{ menuItemId, quantity }], pickupSlot? }` | 201 Order | 400, 401, 403, 409 (slot full) | F-03, F-09 (implemented) |
+| `GET /api/orders?status=…` | optional `status` (comma-separated) | 200 Order summary[] newest first | 400, 401, 403 | F-03, F-11 (implemented) |
 | `GET /api/orders/:id` | — | 200 Order | 400, 401, 403, 404 | F-03 |
-| `GET /api/operator/orders?status=PLACED` | — | 200 Queue order[] oldest first | 400, 401, 403 | F-04 |
+| `GET /api/operator/orders?status=PLACED` | optional `status` (any of the 7, comma-separated), `q` (order number or customer name) | 200 Queue order[] oldest first, at most 200 | 400 (`details.field`), 401, 403 | F-04, F-07, F-11 (implemented) |
 | `POST /api/operator/orders/:id/accept` | — | 200 Order (ACCEPTED, `acceptedAt` set) | 400, 401, 403, 404, 409 | F-04 |
 | `GET /api/operator/menu` | — | 200 Menu item[] by `id`, sold-out included | 401, 403 | F-05 (implemented) |
 | `POST /api/operator/menu` | `{ name, price, isAvailable? }` | 201 Menu item | 400 (`details.field`), 401, 403 | F-05 (implemented) |
 | `PATCH /api/operator/menu/:id` | any of `{ name, price, isAvailable }` | 200 Menu item | 400, 401, 403, 404 | F-05 (implemented) |
 | `POST /api/orders/:id/pay` | — (amount = order total on the server) | 200 Order (`paymentStatus: PAID`) | 400, 401, 403, 404, 409 | F-08 (implemented) |
-| `POST /api/orders/:id/cancel` | — | 200 Order (CANCELLED) | 400, 401, 403, 404, 409 | F-06 (server merged PR #120) |
-| `POST /api/operator/orders/:id/reject` | `{ reason }` | 200 Order (REJECTED) | 400, 401, 403, 404, 409 | F-06 (server merged PR #120) |
-| `POST /api/operator/orders/:id/advance` | `{ from }` | 200 Order (next step) | 400, 401, 403, 404, 409 | F-07 (contract only) |
-| `GET /api/slots` | — | 200 `{ slots: [{ time, status, remaining }] }` | 401, 403 | F-09 (contract only) |
-| `GET /api/operator/sales?from&to` | — | 200 `{ days, topItems }` | 400, 401, 403 | F-10 (contract only) |
-| `GET /api/orders?status=…`, `GET /api/operator/orders?q=…&status=…` | query filters (`status` comma-separated, `q` id or customer name) | 200 filtered Order summary[] / Queue order[] | 400 (`details.field`), 401, 403 | F-11 (contract only) |
+| `POST /api/orders/:id/cancel` | — | 200 Order (CANCELLED) | 400, 401, 403, 404, 409 | F-06 (implemented) |
+| `POST /api/operator/orders/:id/reject` | `{ reason }` | 200 Order (REJECTED; a PAID order becomes REFUNDED, BR-16) | 400, 401, 403, 404, 409 | F-06 (implemented) |
+| `POST /api/operator/orders/:id/advance` | `{ from }` | 200 Order (next step) | 400, 401, 403, 404, 409 | F-07 (implemented; BR-15 checked in the same update) |
+| `GET /api/slots` | — | 200 `[ { start, state: open, closed or full, remaining } ]` (36 slots) | 401, 403 | F-09 (implemented) |
+| `GET /api/operator/sales?from&to` | — | 200 `{ days, topItems }` | 400, 401, 403 | F-10 (contract only, **not implemented**) |
 
-Order JSON (4.3) gained `paymentStatus`, `paidAt`, `refundedAt` in Sprint 2 (F-08); the order list items gained `paymentStatus`. `POST /api/auth/login` gets a 429 `RATE_LIMITED` answer in Sprint 3 (F-12, planned).
+Order JSON (4.3) gained `paymentStatus`, `paidAt`, `refundedAt` in Sprint 2 (F-08); the order list items gained `paymentStatus`. `pickupSlot` (F-09) is on the order JSON. `POST /api/auth/login` gets a 429 `RATE_LIMITED` answer in Sprint 3 (F-12, **not implemented yet**).
 
 Later sprints add endpoints with the same conventions (planned paths in section 5.2).
 
@@ -307,7 +308,7 @@ Later sprints add endpoints with the same conventions (planned paths in section 
 | Sales summary | `GET /api/operator/sales` | ✘ 401 | ✘ 403 | ✔ | all orders (totals only) | 3 |
 | Search / filter orders | `GET /api/orders?status=…` / `GET /api/operator/orders?q=…&status=…` | ✘ 401 | ✔ own | ✔ all | as above | 3 |
 
-Sprint 2–3 paths are the ones in the feature contracts (`docs/sprint_2/sprints/`). Implemented so far on `sprint2`: menu management (F-05), pay (F-08 part 1), and cancel/reject server API (F-06 server). Advance, F-06 UI, pickup slots, sales, search/filter and rate limit are not yet merged.
+Sprint 2–3 paths are the ones in the feature contracts (`docs/sprint_2/sprints/`). Implemented on `sprint2` at `d10fac1`: menu management (F-05), cancel and reject (F-06), advance (F-07), pay, refund and the paid-before-pickup rule (F-08), pickup slots (F-09) and search/filter (F-11). Not implemented: sales summary (F-10) and login rate limit (F-12).
 
 ## 6. Authentication and sessions
 
@@ -346,7 +347,9 @@ Sprint 2–3 paths are the ones in the feature contracts (`docs/sprint_2/sprints
 - Schema changes only through Prisma migrations in `server/prisma/migrations/`, committed to Git. `prisma migrate dev` locally, `prisma migrate deploy` in tests and production. Migrations are additive so a rollback of the app does not need a schema rollback.
 - Seed (`npm run db:seed`) is repeatable (upsert): same 3 users and 6 menu items every time.
 
-### 7.4 Planned GCP deployment (Lab 5, Sprint 2)
+### 7.4 GCP deployment (Lab 5; live on Cloud Run, current revision `food-order-00008-v6c` = `main` `163fdb7`, Lab 6 release)
+
+Setup and runbook: `docs/labs/lab-05/deployment.md`, `runbook.md`. The Sprint 2 and Sprint 3 code on `sprint2` is **not deployed yet**; it goes out with the release PR `sprint2` to `main`.
 
 ```
  GitHub (PR → required CI check; merge to main → deploy workflow)
@@ -360,7 +363,7 @@ Sprint 2–3 paths are the ones in the feature contracts (`docs/sprint_2/sprints
  Cloud Run job "migrate": prisma migrate deploy + seed, run before each release
 ```
 
-| Part | Plan |
+| Part | Design |
 |---|---|
 | Image | Multi-stage Dockerfile (from the Lab 5 kit): build client, build server, final image with `node` non-root user. |
 | Runtime | Cloud Run, region `asia-southeast1`. Stateless: sessions are in the database, so any instance can serve any request. |
@@ -378,3 +381,4 @@ Sprint 2–3 paths are the ones in the feature contracts (`docs/sprint_2/sprints
 | 6 Nov 2026 | 1.3 | 4.1 ids: upper bound 2147483647 (recheck #37: larger ids gave 500) | Bug fix |
 | 25 Nov 2026 | 2 | Sprint 2 schema (3.2, 3.3), Sprint 2–3 endpoints (4.4), permission matrix paths (5.2) | Deliverable 2 part D |
 | 26 Nov 2026 | 2.1 | Added `GET /api/slots`, F-11 filter query params, and F-06 server status in 4.4 and 5.2 | Sync living SDS with PRs #118 and #120 (S2-8b) |
+| 27 Nov 2026 | 3 | 2.1 screens S2..S6 list the Sprint 2/3 features; 3.2 `pickup_slot`; 4.4 endpoint statuses corrected (F-06, F-07, F-09, F-11 implemented; F-10, F-12 not), real `GET /api/slots` shape, `status` and `q` params, `pickupSlot` in the order request; 5.2 note; 7.4 deployment is live (Lab 5), not planned (Issue #186) | Deliverable 2 part D audit against `sprint2` `d10fac1` |
