@@ -1,7 +1,7 @@
 # Lab 7 — Maintenance change C-1: at most 15 items per order
 
 CPE 334 · Semester 1/2026 · Section 131 · group **Est** · Campus Café Pre-order (Food-order).
-**DRAFT.** Parts A–C are filled with the evidence that exists on 26 Nov. Items marked PENDING are not done yet (release to `main`, CI run on `main`, deployed revision, live checks, final metrics). They must be filled before submission.
+**DRAFT.** Parts A–C are filled with the evidence that exists on 27 Nov (snapshot 27 Nov 04:10 +07). Items marked PENDING are not done yet (release to `main`, CI run on `main`, deployed revision, live checks, final metrics). They must be filled before submission.
 
 ## Contents
 
@@ -9,8 +9,8 @@ CPE 334 · Semester 1/2026 · Section 131 · group **Est** · Campus Café Pre-o
 |---|---|---|---|
 | A | Change impact and contract | 25 | Issue [#96](https://github.com/vienggd/Food-order/issues/96), `docs/labs/lab-07/impact.md`, PR [#103](https://github.com/vienggd/Food-order/pull/103) |
 | B | Implementation and regression-safe delivery | 50 | PR [#112](https://github.com/vienggd/Food-order/pull/112), `evidence/red.txt`, `green.txt`, `regression.txt`; live checks PENDING |
-| C | Metrics | 15 | `docs/labs/lab-07/metrics.md` (snapshot 26 Nov 17:45; final values PENDING) |
-| D | Readiness and retrospective | 10 | `docs/labs/lab-07/readiness.md` (verdict NOT READY until release and live checks) |
+| C | Metrics | 15 | `docs/labs/lab-07/metrics.md` (snapshot 27 Nov 04:10; final values PENDING) |
+| D | Readiness and retrospective | 10 | summary table below; details in `docs/labs/lab-07/readiness.md` (verdict NOT READY until release and live checks) |
 
 ## Team
 
@@ -34,7 +34,7 @@ CPE 334 · Semester 1/2026 · Section 131 · group **Est** · Campus Café Pre-o
 | Fix commit | C-1 server check + cart | `7de5285` | done 25 Nov |
 | Release to `main` | PENDING | PENDING | PENDING (heads decide, after the TA answer) |
 | Deployed revision | PENDING | PENDING | PENDING |
-| Later-sprint changes | Sprint 2 and Lab 6 fixes arrive in `main` before this release; BR-01b is ported into the living docs in the release PR | | PENDING |
+| Later-sprint changes | Lab 6 fixes are already in `main` (`163fdb7`, `39bda5e`); Sprint 2 arrives in `main` before this release; BR-01b is ported into the living docs in the release PR | | PENDING |
 
 ## Answer Part A: Change impact and contract
 
@@ -118,7 +118,7 @@ Cart (`client/src/lib/cart.ts`): `MAX_ITEMS = 15`; `add` is refused at 15; `setQ
 **PR review.** PR [#112](https://github.com/vienggd/Food-order/pull/112) (opened 25 Nov 03:21:20 UTC, merged 03:28:06 with a merge commit). vieng, APPROVED 03:28:02: "What I checked: commit order (RED 1b9e604, contract follow-up 41031b7, fix, then cleanup commits); red.txt shows only L7-3, L7-4, L7-5 failing on b71cdb2 code; I ran npm test on the latest head 93b2738: server 78 pass, client 7 pass. Fix returns 400 VALIDATION_ERROR with the agreed message and details; cart caps at 15, warns, disables +. Sprint 1 screenshots restored."
 
 **Not done yet (PENDING).**
-- Release of `lab7` to `main`: PENDING (heads decide, after the TA answer; Sprint 2 and Lab 6 fixes merge first).
+- Release of `lab7` to `main`: PENDING (heads decide, after the TA answer; Lab 6 is already in `main`, Sprint 2 merges first).
 - CI run on the `main` release PR: PENDING (no CI runs on `lab7` PRs; workflows start on PRs into `main`).
 - Deployed revision: PENDING.
 - Live checks on the deployed URL (15 items accepted, 16 refused with 400, cart blocks the 16th, customer still gets 403 on the staff queue): PENDING.
@@ -139,7 +139,47 @@ Interpretation: the 9 accepted Lab 6 defects are fixed, re-tested and closed, an
 
 ## Answer Part D: Readiness and retrospective
 
-Checklist, rollback, defects, technical debt, verdict and retrospective: `docs/labs/lab-07/readiness.md` (vieng). Current verdict: NOT READY until the release, deploy and live checks are done.
+Full checklist, rollback, defects, technical debt, verdict and retrospective: `docs/labs/lab-07/readiness.md` (vieng). Summary as of **27 Nov 2026 04:10 (+07)**, before the release.
+
+**Release checklist (readiness.md section 1)**
+
+| # | Check | Status |
+|---|---|---|
+| 1 | Baseline green before the change (server 71, client 6) | done |
+| 2 | Contract merged before any test or code (PR #103) | done |
+| 3 | RED commit `1b9e604` before the fix `7de5285` | done |
+| 4 | GREEN after the fix (`evidence/green.txt`) | done |
+| 5 | Full regression: server 78, client 7, no test weakened | done |
+| 6 | E2E: 26 passed, 0 failed, 0 skipped | done |
+| 7 | CI on the `lab7` PRs | PENDING: CI does not run on `lab7`; it runs on the release PR into `main` |
+| 8 | Docs match (SRS, F-03 contract, SDS, traceability) | done |
+| 9 | Migration | none needed (no schema change) |
+| 10 | Old data: old orders still open normally | done |
+| 11 | No secrets in the change | done |
+| 12 | Every Lab 7 PR approved by the other side, merge commit | done |
+
+**Rollback.** Code only, no migration, no data change. Run the `deploy` workflow manually with the full commit SHA of the previous good image (the Lab 6 release `39bda5e`), then check `/api/health`, `/api/ready` and the smoke test.
+
+**Live checks after deploy (readiness.md section 4): all PENDING until the release is deployed**
+
+| # | Check | Status |
+|---|---|---|
+| L1 | `/api/health` and `/api/ready` ok | PENDING |
+| L2 | 15 items in total: 201 | PENDING |
+| L3 | 16 items: 400 with the C-1 message and details | PENDING |
+| L4 | Cart warns at 15 and disables every + | PENDING |
+| L5 | One line of 11: 400 | PENDING |
+| L6 | Old orders still list and open | PENDING |
+| L7 | Operator accepts the 15-item order | PENDING |
+| L8 | Access path: customer on the staff queue 403, anonymous 401, other customer's order 404 | PENDING |
+
+**Defects.** C-1: 0 defects found. Sprint 1 UAT findings: 9 of 9 accepted defects fixed, re-tested PASS and closed; 3 enhancements (#130, #131, #133) deferred to Sprint 3 (see Part C).
+
+**Technical debt (readiness.md section 6).** The 15 limit is written twice (server and client), medium; CI does not start on staging-branch PRs, medium; BR-01b must be ported into the living docs in the release PR, low; E2E screenshots overwrite the Sprint 1 PNGs, low.
+
+**Verdict: NOT READY** (pre-release). Still needed: the TA answer on deploying to the Lab 5 URL, the release `lab7` to `main` with CI green, the deploy, the live checks L1–L8, and the final metrics and PDF.
+
+**Retrospective (short).** Helped: reviewing the impact table and contract before any code caught the unreachable 20-line tests early. Hurt: a local E2E run overwrote the Sprint 1 screenshots (cleanup `8f6110f`), and CI does not start on staging branch PRs. Change for the final release: parameterize the screenshot folder and check `git status` for stray PNGs before every push.
 
 ## Contribution
 
