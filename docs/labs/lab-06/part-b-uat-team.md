@@ -3,7 +3,7 @@
 Written by ninja's side for inclusion in `report.md`. Live working sheet: [`execution-partner.md`](execution-partner.md). Cells marked PENDING are filled only by the students after the hand-run slot (Thu 26 Nov 2026, 19:00–20:00); nothing here is copied from Expected into Actual.
 
 ## B1. Teams and product
-- UAT team: Est (EN-033), section 131 — Dechayut Panyawutvorakul and Garunyapas Danpitakkul (vieng and ninja; names as written in the partner handoff).
+- UAT team: Est (EN-033), section 131 — Garunyapas Danpitakkul (vieng) and Dechayut Panyawutvorakul (ninja).
 - Product team: EN-009_P3 — Kirakit Kingkaew (A) and Nattakit Prasertsak (B), "Event Registration and Attendance System".
 - Repo: `songt888/event-registration-system`. App: https://s47a6b53b-4d7hbszvwq-as.a.run.app
 - Case pack received 25 Nov 2026: `docs/labs/lab-06/handoff.md` + `uat-cases.md` at commit `f5089dc`. Scope: their Sprint 1 only (F-01..F-06).
