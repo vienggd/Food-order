@@ -1,7 +1,7 @@
 # Lab 7 — Release readiness for change C-1 (vieng side)
 
 Change: an order has at most **15 items in total** (BR-01b). Per-line 1–10 stays. Issue #96. TA approved 25 Nov 2026 (screenshots in `evidence/ta-approval-1.png`, `-2.png`).
-Baseline: `main` `b71cdb2` (Sprint 1 version accepted in Lab 6).
+Baseline before the change: `main` `b71cdb2` (Lab 5 release). Version accepted in Lab 6 and current `main`: `39bda5e` / Cloud Run revision `food-order-00009-jd9` (earlier Lab 6 release `163fdb7` / `food-order-00008-v6c`).
 
 Status key: [x] done, [ ] not done yet. Fill in the "Result" column when the check is run.
 
@@ -27,7 +27,7 @@ Status key: [x] done, [ ] not done yet. Fill in the "Result" column when the che
 The change is code only (no migration, no data change), so rollback is safe and fast.
 
 1. **Trigger:** after deploy, any live check in section 4 fails, or valid orders (≤ 15 items) are rejected, or the smoke test fails.
-2. **Rollback:** run the `deploy` workflow manually (`workflow_dispatch`) with `image_tag` = full 40-char commit SHA of the previous good image (`b71cdb2…`, the Lab 5/6 image). This runs `deploy/release.sh` with `ROLLBACK=true`: verify image → update service. No migration, no seed.
+2. **Rollback:** run the `deploy` workflow manually (`workflow_dispatch`) with `image_tag` = full 40-char commit SHA of the previous good image (`39bda5e1922a3bf07c5bfc0daec3359a9d396eed`, the Lab 6 release, revision `food-order-00009-jd9`). This runs `deploy/release.sh` with `ROLLBACK=true`: verify image → update service. No migration, no seed.
 3. **Check after rollback:** `/api/health` ok, `/api/ready` db connected, smoke test passes, a 16-item order is accepted again (old behaviour).
 4. Data: nothing to undo. Orders placed with the new rule are valid under the old rule too (≤ 15 items).
 
@@ -67,7 +67,7 @@ Evidence for the PDF: for each live check keep the status code and response (cur
 ## 5. Defects by severity and status (maintained Sprint 1 scope)
 
 - **Lab 7 change C-1 defects:** 0 defects found during implementation, unit/API/E2E verification, or review on `lab7` (`3c276b2`).
-- **Sprint 1 UAT findings (triage & fixes in PR #138 on `lab6`):** 12 open partner UAT findings (`#121`–`#126` and `#128`–`#133`; `#127` was closed `NOT_PLANNED` on 25 Nov and split into `#128`–`#133`). Fixes are in PR `#138` on `lab6`, still pending merge, deploy, and partner re-test before `lab7` merges into `main`.
+- **Sprint 1 UAT findings (fixes in PR #138, in `main` since `163fdb7`; #132 fix in `39bda5e`):** 9 of 9 accepted defects (`#121`–`#126`, `#128`, `#129`, `#132`) fixed, re-tested PASS by the partner team and closed; 3 enhancements (`#130`, `#131`, `#133`) deferred to Sprint 3 and still open; `#127` was closed `NOT_PLANNED` on 25 Nov and split into `#128`–`#133`.
 
 ## 6. Technical debt
 
@@ -82,11 +82,11 @@ Deferred engineering work that creates future cost or risk (distinct from known 
 
 ## 7. Release readiness verdict (maintained Sprint 1 scope)
 
-**Verdict: NOT READY** (as of 26 Nov 2026, pre-release). This assesses only the maintained Sprint 1 scope (change C-1 + preserved Sprint 1 behavior), not completion of the full three-sprint product.
+**Verdict: NOT READY** (as of 27 Nov 2026, pre-release). This assesses only the maintained Sprint 1 scope (change C-1 + preserved Sprint 1 behavior), not completion of the full three-sprint product.
 
 Outstanding items required before `READY`:
 1. **TA answer on Question 3** (permission to deploy newer versions to the Lab 5 Cloud Run URL while Lab 5 is graded) — owner: **vieng**.
-2. **Lab 6 UAT triage, fixes, and partner re-test** for `#121`–`#126` and `#128`–`#133` (`#127` closed/split; must reach `main` before `lab7`) — owner: **vieng + partner team**.
+2. ~~Lab 6 UAT triage, fixes, and partner re-test~~ — **done**: 9 of 9 accepted defects fixed, re-tested and in `main` (`39bda5e`); 3 enhancements deferred to Sprint 3.
 3. **Release integration & live verification:** merge `lab7` → `main` with CI green, deploy to Cloud Run, complete live checks `L1`–`L8`, and finalize metrics + Lab 7 PDF — owner: **vieng + ninja**.
 
 ## 8. Retrospective
