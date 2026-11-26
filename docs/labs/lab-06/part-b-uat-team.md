@@ -49,14 +49,14 @@ All on the partner repo. Severity is by user impact; "proposed" means as written
 
 | Our ID | Partner Issue | Summary | Our severity | Partner triage | Partner fix Issue | Re-test (`v0.1.3-lab6`) |
 |---|---|---|---|---|---|---|
-| F-01 | #141 | Very long title/location/description breaks layout, Publish pushed off screen | major (proposed) | accepted defect, minor | #161 (L6-13) | PENDING (`ninja`) |
-| F-02 | #142 | After logout in another tab, first tab keeps account and menu | major | accepted defect, major | #156 (L6-09) | PENDING (`ninja`; `vieng` `RT-F02` PASS) |
-| F-03 | #143 | Places-left stays stale after duplicate refusal | minor | enhancement, minor | #157 (L6-10) | PENDING (`ninja`) |
-| F-04 | #144 | Description line breaks lost | minor | enhancement, minor | #163 (L6-14) | PENDING (`ninja`) |
-| F-05 | #145 | Form errors not tied to fields (aria) | minor | enhancement, minor | #159 (L6-12) | PENDING (`ninja`) |
-| F-06 | #146 | "Draft saved" stays after publish | minor | enhancement, minor | #158 (L6-11) | PENDING (`ninja`) |
-| F-07 | #147 | Restore button sticks out at 320 px (window decoration) | minor | enhancement, minor | #164 (L6-15) | PENDING (`ninja`) |
-| F-08 | #148 | Window buttons have no page name | minor | enhancement, minor | #165 (L6-16) | PENDING (`ninja`) |
+| F-01 | #141 | Very long title/location/description breaks layout, Publish pushed off screen | major (proposed) | accepted defect, minor | #161 (L6-13) | **PASS** (ninja side, AI-run, 27 Nov 02:15-02:46) |
+| F-02 | #142 | After logout in another tab, first tab keeps account and menu | major | accepted defect, major | #156 (L6-09) | **PASS** (ninja side, AI-run, 27 Nov 02:15-02:46) |
+| F-03 | #143 | Places-left stays stale after duplicate refusal | minor | enhancement, minor | #157 (L6-10) | **PASS** (ninja side, AI-run, 27 Nov 02:15-02:46) |
+| F-04 | #144 | Description line breaks lost | minor | enhancement, minor | #163 (L6-14) | **PASS** (ninja side, AI-run, 27 Nov 02:15-02:46) |
+| F-05 | #145 | Form errors not tied to fields (aria) | minor | enhancement, minor | #159 (L6-12) | **PASS** (ninja side, AI-run, 27 Nov 02:15-02:46) |
+| F-06 | #146 | "Draft saved" stays after publish | minor | enhancement, minor | #158 (L6-11) | **PASS** (ninja side, AI-run, 27 Nov 02:15-02:46) |
+| F-07 | #147 | Restore button sticks out at 320 px (window decoration) | minor | enhancement, minor | #164 (L6-15) | **PASS** (ninja side, AI-run, 27 Nov 02:15-02:46) |
+| F-08 | #148 | Window buttons have no page name | minor | enhancement, minor | #165 (L6-16) | **PASS** (ninja side, AI-run, 27 Nov 02:15-02:46) |
 | (vieng) | #151 | 320 px taskbar covers Save draft; Logout wraps at 768–812 px | major | enhancement, minor | #177 (L6-20) | **PASS** (`320`/`768`/`812`; known limit 641–735 px wrap) |
 | (vieng) | #152 | Create event / Publish stay on page on 401 | minor | duplicate of #142 | #156 / PR #167 | **PASS** (`Save draft` & `Publish` 401 -> `/login`) |
 | (vieng) | #153 | Unknown registrations URL shows Not found in 1 of 5 runs instead of 403 | minor | accepted defect, minor | #172 (L6-17) | **PASS** (`10/10` 403) |
@@ -66,17 +66,18 @@ All on the partner repo. Severity is by user impact; "proposed" means as written
 Our own view of their "enhancement" label: it does not close a finding; we judge each against their contract after the re-test. Their handoff says the window-decoration buttons are not in tested scope, so F-07 and F-08 may be out of scope.
 
 ## B6. Re-test of F-02 & #151–#155 on the fixed release (`v0.1.3-lab6`)
-Row `RT-F02` in `execution-partner.md`: under split Option A on `v0.1.3-lab6` (`502d2a6` / `s47a6b53b-00006-7bv`, bundle `index-CcXia3Aw.js`), `vieng` re-tested `#151–#155` plus `UAT-04` step 9, `RT-F02`, `UAT-01`, and `UAT-06` via AI-assisted Playwright `@2x` (`2026-11-27 00:20–00:23 UTC+7`) — all **PASS**. `ninja`'s re-test of `#141–#148`, `UAT-02`, and `UAT-03` is **PENDING**. Final Sprint 1 acceptance decision (`Accepted` / `Accepted with minor limitations` / `Not accepted`) stays **PENDING** until `ninja` finishes and both confirm together.
+Row `RT-F02` in `execution-partner.md`: under split Option A on `v0.1.3-lab6` (`502d2a6` / `s47a6b53b-00006-7bv`, bundle `index-CcXia3Aw.js`), `vieng` re-tested `#151–#155` plus `UAT-04` step 9, `RT-F02`, `UAT-01`, and `UAT-06` via AI-assisted Playwright `@2x` (`2026-11-27 00:20–00:23 UTC+7`) — all **PASS**. `ninja`'s side re-tested `#141–#148`, `UAT-02` and `UAT-03` on 27 Nov 2026 02:15–02:46 UTC+7 on the same revision: all **PASS** (AI-run by Claude built-in browser on ninja's request, ninja signed in each account by hand, AI typed no password, not run by hand). Details and evidence IDs: section 'Re-test round by ninja's side' in `execution-partner.md`. Observation on #147: the visible label is ellipsized, the accessible name is full. Final Sprint 1 acceptance decision (`Accepted` / `Accepted with minor limitations` / `Not accepted`) stays **PENDING** until both students confirm together. Suggestion from ninja's side: `Accepted with minor limitations` (`#151` 641–735 px wrap is the partner's documented limit; `#147` label ellipsis is an observation).
 
 ## B7. Evidence IDs
 - Folder: `docs/labs/lab-06/screenshots-partner/`.
 - Name: `B-<case>-s<step>-<tester initials XX>.png`, e.g. `B-UAT02-s05-XX.png`; extra cases `B-X3-s03-XX.png`; re-test `B-RTF02-s03-XX.png`.
 - Show the revision/URL in the shot where the page allows it. No password or token in any screenshot.
+- Re-test screenshots from ninja's side are named `HQ-<finding or case>-...png` (2560x1600, full-screen captures, so the browser frame and desktop taskbar are visible); the evidence ID is the file name.
 - A rejected case also needs a "before" and "after" shot showing the protected state did not change.
 
 ## B8. Honest note on how the findings and runs were made
 The 13 outgoing findings come from AI-driven exploratory checks (computer-use browser sessions, 25–26 Nov 2026), not from students clicking by hand; the served revision was not always confirmed at that time. Some were later reproduced by the partner by hand (for example F-02 on `s47a6b53b-00005-5l7`, 26 Nov 16:07). They go beyond the six agreed cases. For B3 (`UAT-06`, `UAT-01`, `UAT-04`), those runs on `2026-11-26 21:28–21:29 UTC+7` and `vieng`'s `v0.1.3-lab6` re-tests (`#151–#155`, `UAT-04` s9, `RT-F02`, `UAT-01`, `UAT-06` on `2026-11-27 00:20–00:23 UTC+7`, bundle `index-CcXia3Aw.js`) were executed by an AI assistant using Playwright Chromium (`2×` DPR) on `vieng`'s request — **not** by `vieng` clicking by hand — with full-quality PNGs saved in `docs/labs/lab-06/screenshots-partner/`. For `UAT-02`, `UAT-03`, `UAT-05`, and `X8` on `v0.1.2-lab5`, the runs on `2026-11-26 21:36–22:17 UTC+7` were driven by AI (Claude built-in browser) on `ninja`'s request with `ninja` signing in by hand. `ninja`'s `v0.1.3-lab6` re-tests (`#141–#148`, `UAT-02`, `UAT-03`) remain `PENDING`. Account passwords were shared privately and are not written anywhere in the repo.
 
 ## Limitations
-- `ninja`'s re-test of `#141–#148`, `UAT-02`, and `UAT-03` on `v0.1.3-lab6` and the combined Sprint 1 acceptance decision are PENDING until `ninja`'s run completes.
+- The combined Sprint 1 acceptance decision is PENDING until both students agree. All re-test runs are AI-run, not by hand.
 - Screenshot files from `ninja`'s `v0.1.2-lab5` head session (`UAT-02`/`03`/`05`/`X8`) are still to be added if needed.

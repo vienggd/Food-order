@@ -130,9 +130,26 @@ Split agreement (Option A): `vieng` verified `RT-F02` two-tab flows alongside `#
 |---|---|---|---|---|---|---|---|---|
 | RT-F02 | their F-01 UI contract, Protected navigation (revoked session redirects to /login); AC-04, AC-40, AC-56 | AI (Playwright @2x on vieng request, not by hand); ninja check on #142 pending | 2026-11-27 00:20:45 UTC+7 | `v0.1.3-lab6` / `502d2a6` / `s47a6b53b-00006-7bv` (`index-CcXia3Aw.js`) | 1. Participant 3 signs in, open tab A and tab B.<br>2. Logout in tab B.<br>3. In tab A click My registrations; repeat clicking Logout.<br>4. Repeat with Organizer One (`/events` -> My events, Save draft, Publish). | **vieng side PASS:** Participant 3 Tab A `My registrations` and `Logout`, and Organizer One Tab A `Save draft`, `Publish`, and `My events` each hit `1 × 401` and redirected cleanly to `/login` with zero redirect loop, zero `"Logout failed"` banner, and zero saved changes (`UAT-CHECK-401-ONLY` not saved; `UAT-GD-RT01-0020` remained `DRAFT` after 401 Publish). Ninja to confirm `#142` separately. | PASS (`vieng` checks; `ninja` `#142` pending) | `B-RTF02-s01-p3-GD.png`, `B-RTF02-s02-p3-logout-GD.png`, `B-RTF02-s03-org-myevents-GD.png`, `B-RT152-s01-savedraft-GD.png`, `B-RT152-s02-publish-GD.png` |
 
+### Re-test round by ninja's side (27 Nov 2026 02:15-02:46 UTC+7)
+Tester: AI (Claude, built-in browser) on ninja's request; ninja signed in each account by hand, the AI did not type any password; not run by hand. Version: `v0.1.3-lab6` / `502d2a6` / `s47a6b53b-00006-7bv`. A comment was posted on each partner Issue #141-#148. Evidence IDs are the file names in `screenshots-partner/` (full resolution 2560x1600; they are full-screen captures of the AI-driven browser window).
+
+| Finding | Result and actual |
+|---|---|
+| F-01 #141 | PASS: long text wraps; page width 1265 px in a 1280 px window (was about 22,800 px). HQ-141-long-text-wraps.png |
+| F-02 #142 | PASS: tab A goes to /login after logout in tab B, no loop, 0 API calls in 4 s. HQ-142-a-tabA-signed-in.png, HQ-142-b-tabA-back-to-sign-in.png |
+| F-03 #143 | PASS: tab A refused as duplicate and updates to 2 of 3 without reload. HQ-143-a-tabA-3of3-before.png, HQ-143-b-tabA-refused-and-2of3.png |
+| F-04 #144 | PASS: 3 lines kept (pre-line). HQ-144-line-breaks-kept.png |
+| F-05 #145 | PASS: sign-in and create-event fields have aria-invalid + aria-describedby pointing to the error text. HQ-145-create-event-field-errors.png |
+| F-06 #146 | PASS: Draft-saved banner gone after Publish and after reload. HQ-146-a-draft-saved-banner.png, HQ-146-b-no-banner-after-publish.png |
+| F-07 #147 | PASS: at 320 px the restore button is 0 px off screen. Observation: visible label is ellipsized, accessible name is full. No HQ file (small shot RT-147 not added) |
+| F-08 #148 | PASS: window buttons now named 'Restore/Open window: Not found'. HQ-148-not-found-open-window.png |
+
+UAT-02 re-run on event UAT-DP-02R-0218: all 10 steps PASS (HQ-UAT02-s7-P4-sees-Full.png, HQ-UAT02-s8-P4-no-places-left.png, HQ-UAT02-s9-P4-my-registrations.png, HQ-UAT02-s10-O1-registrations.png). UAT-03 re-run: all 8 steps PASS; participant create denied with UAT-DP-03R-0222 and no draft saved (HQ-UAT03-s2-O2-denied.png, HQ-UAT03-s3-O2-own-events-only.png, HQ-UAT03-s4-O2-no-register-button.png, HQ-UAT03-s8-O1-list-unchanged.png).
+
+
 ## Final decision (after the partner fixes and we re-test)
-- Re-test version/date: `v0.1.3-lab6` / commit `502d2a6` / Cloud Run revision `s47a6b53b-00006-7bv` (bundle `index-CcXia3Aw.js`); `vieng` re-test run `2026-11-27 00:20–00:23 UTC+7`; `ninja` re-test (`#141–#148`, `UAT-02`, `UAT-03`) **PENDING**
-- Decision: **PENDING** ninja's re-test of `#141–#148` + `UAT-02`/`UAT-03` (tentatively `Accepted with minor limitations` due to `#151` documented `641–735 px` participant taskbar wrap in `f-01-auth.md` v1.6, pending ninja confirmation)
-- Open critical/major defects: `0` on `vieng`'s re-tested items (`#151–#155`, `UAT-01`, `UAT-04` s9, `UAT-06` all PASS); `#141–#148` pending ninja confirmation
+- Re-test version/date: `v0.1.3-lab6` / commit `502d2a6` / Cloud Run revision `s47a6b53b-00006-7bv` (bundle `index-CcXia3Aw.js`); `vieng` re-test run `2026-11-27 00:20–00:23 UTC+7`; `ninja` re-test (`#141–#148`, `UAT-02`, `UAT-03`) `2026-11-27 02:15–02:46 UTC+7`, all PASS (AI-run, not by hand; see section above)
+- Decision: **PENDING** until both students agree. Suggested by ninja's side: `Accepted with minor limitations` (`#151` 641–735 px participant taskbar wrap is the partner's documented limit in `f-01-auth.md` v1.6; `#147` visible label ellipsis is an observation). Not decided yet.
+- Open critical/major defects: `0` on `vieng`'s re-tested items (`#151–#155`, `UAT-01`, `UAT-04` s9, `UAT-06` all PASS); `#141–#148` re-tested PASS by ninja's side (AI-run) on 27 Nov 2026
 - BLOCKED cases left: `0`
-- Names and date: Garunyapas Danpitakkul (`vieng`), Dechayut Panyawutvorakul (`ninja`) — `vieng` part recorded 27 Nov 2026; final sign-off pending ninja part
+- Names and date: Garunyapas Danpitakkul (`vieng`), Dechayut Panyawutvorakul (`ninja`) — `vieng` part recorded 27 Nov 2026; ninja re-test recorded 27 Nov 2026; final sign-off by both students still pending
