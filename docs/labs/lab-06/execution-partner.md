@@ -78,6 +78,36 @@ The six agreed cases UAT-01..06 are still to be run by hand by vieng + ninja in 
 
 Full text as drafted: `outgoing-issues-draft.md` (the sent text differs only by removed scope notes and a provenance footer).
 
+## More findings, reporter Est (vieng), and partner triage (26 Nov 2026)
+Five more Issues were opened on the partner repo by vieng's side. Reporter: Est (vieng). Tested version as in their handoff unless the Issue says otherwise.
+
+| Issue | Summary | Proposed severity (from the Issue) | Partner triage |
+|---|---|---|---|
+| [#151](https://github.com/songt888/event-registration-system/issues/151) | At 320 px the 3-row taskbar covers Save draft; at 768-812 px Logout wraps to a second row | major | not recorded yet |
+| [#152](https://github.com/songt888/event-registration-system/issues/152) | Create event / Publish stay on the page on 401 instead of redirecting to /login | minor | not recorded yet |
+| [#153](https://github.com/songt888/event-registration-system/issues/153) | Participant on an unknown registrations URL sees Not found in 1 of 5 runs instead of 403 | minor | not recorded yet |
+| [#154](https://github.com/songt888/event-registration-system/issues/154) | My events shows the Create event button to a participant above the 403 message | minor | not recorded yet |
+| [#155](https://github.com/songt888/event-registration-system/issues/155) | Login 400 clears the password; blank capacity says >= 1 instead of required | minor | not recorded yet |
+
+### Partner triage of Est's earlier findings (as seen on GitHub, to be confirmed)
+| Our finding | Partner decision | Their fix Issue |
+|---|---|---|
+| F-02 [#142](https://github.com/songt888/event-registration-system/issues/142) | Accepted defect, major (they agree); owner Kirakit; reproduced by hand 26 Nov 16:07 | [#156](https://github.com/songt888/event-registration-system/issues/156) (L6-09) |
+| F-03 [#143](https://github.com/songt888/event-registration-system/issues/143) | Enhancement, minor | [#157](https://github.com/songt888/event-registration-system/issues/157) (L6-10) |
+| F-05 [#145](https://github.com/songt888/event-registration-system/issues/145) | Enhancement, minor | [#159](https://github.com/songt888/event-registration-system/issues/159) (L6-12) |
+| F-06 [#146](https://github.com/songt888/event-registration-system/issues/146) | Enhancement, minor | [#158](https://github.com/songt888/event-registration-system/issues/158) (L6-11) |
+| F-01 [#141](https://github.com/songt888/event-registration-system/issues/141) | no triage comment yet | [#161](https://github.com/songt888/event-registration-system/issues/161) (L6-13) |
+| F-04 [#144](https://github.com/songt888/event-registration-system/issues/144), F-07 [#147](https://github.com/songt888/event-registration-system/issues/147), F-08 [#148](https://github.com/songt888/event-registration-system/issues/148) | no triage comment yet | none seen |
+
+Our own classification of their triage (for the PDF) waits until the humans have re-tested. An enhancement label does not by itself close a finding: we judge it against their contract.
+
+## Re-test of F-02 (#142) on the partner's new revision
+To be done by hand tonight on the partner's fixed release (they plan `v0.1.3-lab6`). Do not start before their new revision name is confirmed; record it.
+
+| Case ID | Req / contract | Tester + team | Date/time | Version tested (tag/commit + revision name) | Steps | Actual result | Result | Evidence ID |
+|---|---|---|---|---|---|---|---|---|
+| RT-F02 | their F-01 UI contract, Protected navigation (revoked session redirects to /login); AC-04, AC-40 | | | TODO: record revision name | 1. Participant 3 signs in, open tab A and tab B.<br>2. Logout in tab B.<br>3. In tab A click My registrations; then reload; then click Logout.<br>4. Repeat with Organizer One / My events. | | | |
+
 ## Final decision (after the partner fixes and we re-test)
 - Re-test version/date: TODO
 - Decision: Accepted / Accepted with limitations / Not Accepted — TODO
