@@ -175,12 +175,12 @@ describe("F-07 queue status list", () => {
     expect(res.body[0]).toMatchObject({ customer: { name: "Alice" }, lines: [{ name: "Latte", quantity: 2 }] });
   });
 
-  it("TEST-F07-13 status values: missing and PLACED give PLACED only; READY gives READY; closed statuses and junk are 400", async () => {
+  it("TEST-F07-13 status values: missing and PLACED give PLACED only; READY gives READY; junk is 400 (closed statuses are valid since F-11)", async () => {
     const ids = await seedAll();
     expect((await queue("")).body.map((o: { id: number }) => o.id)).toEqual([ids.PLACED]);
     expect((await queue("?status=PLACED")).body.map((o: { id: number }) => o.id)).toEqual([ids.PLACED]);
     expect((await queue("?status=READY")).body.map((o: { id: number }) => o.id)).toEqual([ids.READY]);
-    for (const s of ["PICKED_UP", "CANCELLED", "nonsense", "", "PLACED,,READY"]) {
+    for (const s of ["nonsense", "", "PLACED,,READY"]) {
       const res = await queue(`?status=${s}`);
       expect(res.status, s).toBe(400);
       expect(res.body.error.code).toBe("VALIDATION_ERROR");

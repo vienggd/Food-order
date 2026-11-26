@@ -69,7 +69,7 @@ describe("F-04 operator queue", () => {
   });
 
   it("TEST-F04-03 an unsupported status filter is a 400 (PICKED_UP is closed, ACCEPTED is open since F-07)", async () => {
-    for (const s of ["PICKED_UP", "nonsense"]) {
+    for (const s of ["nonsense", "placed"]) {
       const res = await request(app).get(`/api/operator/orders?status=${s}`).set("Cookie", staff);
       expect(res.status, s).toBe(400);
       expect(res.body.error.code).toBe("VALIDATION_ERROR");

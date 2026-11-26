@@ -5,26 +5,39 @@ import { AppError } from "../errors.js";
 import { requireRole } from "../auth/middleware.js";
 import { toOrderJson } from "../orders/json.js";
 import { nextStep, statusesThatCanMoveTo } from "../orders/transitions.js";
-import { dbId } from "../ids.js";
+import { dbId, MAX_DB_ID } from "../ids.js";
+import { OrderStatus } from "@prisma/client";
 
 export const operatorRouter = Router();
 operatorRouter.use(requireRole("OPERATOR"));
 
-// F-07: `status` is a comma-separated list of open statuses; missing means PLACED (Sprint 1 behaviour).
-const OPEN_STATUSES = ["PLACED", "ACCEPTED", "PREPARING", "READY"] as const;
+// F-07/F-11: `status` is a comma-separated list of the 7 statuses; missing means PLACED (Sprint 1 behaviour).
 const queueQuery = z.object({
   status: z
     .string()
     .default("PLACED")
     .transform((v) => v.split(","))
-    .pipe(z.array(z.enum(OPEN_STATUSES)).min(1)),
+    .pipe(z.array(z.enum(OrderStatus)).min(1)),
+  q: z.string().optional(),
 });
+const SEARCH_LIMIT = 200;
 
 operatorRouter.get("/orders", async (req, res) => {
-  const { status } = queueQuery.parse(req.query);
+  const { status, q } = queueQuery.parse(req.query);
+  // F-11 search (BR-26): an order number matches exactly, a customer name matches by part, ignoring case. Then AND with status.
+  let search = {};
+  if (q !== undefined) {
+    const raw = q.trim();
+    const text = (raw.startsWith("#") ? raw.slice(1) : raw).trim();
+    if (text.length < 1 || text.length > 60) throw new AppError(400, "VALIDATION_ERROR", "Search must be 1–60 characters.", { field: "q" });
+    const number = /^\d+$/.test(text) && Number(text) <= MAX_DB_ID ? Number(text) : null;
+    // Prisma passes `contains` to LIKE unescaped, so % _ and \ are escaped to be plain characters.
+    search = { OR: [{ customer: { name: { contains: text.replace(/[\\%_]/g, "\\$&"), mode: "insensitive" } } }, ...(number ? [{ id: number }] : [])] };
+  }
   const orders = await prisma.order.findMany({
-    where: { status: { in: status } },
+    where: { status: { in: status }, ...search },
     orderBy: [{ createdAt: "asc" }, { id: "asc" }],
+    take: SEARCH_LIMIT,
     include: { lines: { orderBy: { id: "asc" } }, customer: { select: { id: true, name: true } } },
   });
   res.json(orders.map((o) => ({ ...toOrderJson(o), customer: o.customer })));
