@@ -24,7 +24,7 @@ Split: vieng runs UAT-06, 01, 04; ninja runs UAT-02, 03, 05. Their order: 06, 01
 | UAT-06 | Sign-in errors, signed-out access | F-01; AC-02, AC-03, AC-24 | PENDING | PENDING | PENDING | PENDING | PENDING |
 | UAT-01 | Normal journey | F-01..F-04; AC-01, AC-06, AC-25, AC-10, AC-12, AC-24 | PENDING | PENDING | PENDING | PENDING | PENDING |
 | UAT-04 | State / persistence | F-01, F-05, F-06; AC-04, AC-17, AC-19, AC-24 | PENDING | PENDING | PENDING | PENDING | PENDING |
-| UAT-02 | Business rule / boundary | F-02, F-04; BR-02, BR-03; AC-07, AC-29, AC-13, AC-14 | PENDING | PENDING | PENDING | PENDING | PENDING |
+| UAT-02 | Business rule / boundary | F-02, F-04; BR-02, BR-03; AC-07, AC-29, AC-13, AC-14 | AI (Claude, built-in browser) on ninja's request; ninja signed in each account by hand, the AI did not type any password; not run by hand | 26 Nov 2026 21:36-21:49 UTC+7 | All 10 steps matched the expected text; full step-by-step actuals in `execution-partner.md`. revision as per handoff (`v0.1.2-lab5` / `04e8590` / `s47a6b53b-00005-5l7`), not confirmed (app does not show it); partner said a `v0.1.3-lab6` fix is coming. URL https://s47a6b53b-4d7hbszvwq-as.a.run.app, viewport 1280x800. | PASS (AI-run, not by hand) | B-UAT02-DP-01..10: screenshots in head session (low resolution), to be added |
 | UAT-03 | Forbidden role / ownership | F-02, F-04, F-06; BR-05; AC-08, AC-20, AC-21, AC-33, AC-34 | PENDING | PENDING | PENDING | PENDING | PENDING |
 | UAT-05 | Draft hidden from participants | F-02, F-03; AC-10, AC-31, AC-32 | PENDING | PENDING | PENDING | PENDING | PENDING |
 
