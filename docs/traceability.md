@@ -112,7 +112,7 @@ IDs agreed with the SRS author in chat on 6 Nov 2026.
 
 "Implemented" means the behaviour exists in the code on `sprint2` `d10fac1`. "Verification" says whether the planned test ran. Result is Pass only if every listed test ran and passed.
 
-### F-01 (`docs/sprint_1/sprints/sprint-1\F-01-auth.md`)
+### F-01 (`docs/sprint_1/sprints/sprint-1/F-01-auth.md`)
 
 | AC | Test IDs | Level | Implemented | Verification | Result |
 |---|---|---|---|---|---|
@@ -131,7 +131,7 @@ IDs agreed with the SRS author in chat on 6 Nov 2026.
 | AC-F01-13 | TEST-F01-13 | E2E | Yes | Ran | Pass |
 | AC-F01-14 | TEST-F01-14 | E2E | Yes | Ran | Pass |
 
-### F-02 (`docs/sprint_1/sprints/sprint-1\F-02-menu.md`)
+### F-02 (`docs/sprint_1/sprints/sprint-1/F-02-menu.md`)
 
 | AC | Test IDs | Level | Implemented | Verification | Result |
 |---|---|---|---|---|---|
@@ -143,7 +143,7 @@ IDs agreed with the SRS author in chat on 6 Nov 2026.
 | AC-F02-06 | TEST-F02-07, TEST-F02-08 | E2E,unit | Yes | Ran | Pass |
 | AC-F02-07 | TEST-F02-09 | E2E | Yes | Ran | Pass |
 
-### F-03 (`docs/sprint_1/sprints/sprint-1\F-03-orders.md`)
+### F-03 (`docs/sprint_1/sprints/sprint-1/F-03-orders.md`)
 
 | AC | Test IDs | Level | Implemented | Verification | Result |
 |---|---|---|---|---|---|
@@ -161,7 +161,7 @@ IDs agreed with the SRS author in chat on 6 Nov 2026.
 | AC-F03-12 | TEST-F03-18, TEST-F03-23 | unit | Yes | Ran | Pass |
 | AC-F03-13 | TEST-F03-24 | E2E | Yes | Ran | Pass |
 
-### F-04 (`docs/sprint_1/sprints/sprint-1\F-04-accept.md`)
+### F-04 (`docs/sprint_1/sprints/sprint-1/F-04-accept.md`)
 
 | AC | Test IDs | Level | Implemented | Verification | Result |
 |---|---|---|---|---|---|
@@ -179,7 +179,7 @@ IDs agreed with the SRS author in chat on 6 Nov 2026.
 | AC-F04-12 | TEST-F04-12 | E2E | Yes | Ran | Pass |
 | AC-F04-13 | TEST-F04-13 | E2E | Yes | Ran | Pass |
 
-### F-05 (`docs/sprint_2/sprints\F-05-menu-management.md`)
+### F-05 (`docs/sprint_2/sprints/F-05-menu-management.md`)
 
 | AC | Test IDs | Level | Implemented | Verification | Result |
 |---|---|---|---|---|---|
@@ -201,7 +201,7 @@ IDs agreed with the SRS author in chat on 6 Nov 2026.
 | AC-5.16 | TEST-5.16 | E2E | Yes | Ran | Pass |
 | AC-5.17 | TEST-5.17 | E2E | Yes | Ran | Pass |
 
-### F-06 (`docs/sprint_2/sprints\F-06-cancel-reject.md`)
+### F-06 (`docs/sprint_2/sprints/F-06-cancel-reject.md`)
 
 | AC | Test IDs | Level | Implemented | Verification | Result |
 |---|---|---|---|---|---|
@@ -227,7 +227,7 @@ IDs agreed with the SRS author in chat on 6 Nov 2026.
 | AC-F06-20 | TEST-F06-20 | E2E | Yes | Ran | Pass |
 | AC-F06-21 | TEST-F06-21 | E2E | Yes | Ran | Pass |
 
-### F-07 (`docs/sprint_2/sprints\F-07-fulfilment.md`)
+### F-07 (`docs/sprint_2/sprints/F-07-fulfilment.md`)
 
 | AC | Test IDs | Level | Implemented | Verification | Result |
 |---|---|---|---|---|---|
@@ -251,7 +251,7 @@ IDs agreed with the SRS author in chat on 6 Nov 2026.
 | AC-F07-18 | TEST-F07-18 | E2E | Yes | Ran | Pass |
 | AC-F07-19 | TEST-F07-19 | E2E | Yes | Ran | Pass |
 
-### F-08 (`docs/sprint_2/sprints\F-08-payment.md`)
+### F-08 (`docs/sprint_2/sprints/F-08-payment.md`)
 
 | AC | Test IDs | Level | Implemented | Verification | Result |
 |---|---|---|---|---|---|
@@ -274,7 +274,7 @@ IDs agreed with the SRS author in chat on 6 Nov 2026.
 | AC-8.17 | TEST-8.17 | E2E | Yes | Ran | Pass |
 | AC-8.18 | TEST-8.18 | E2E | Yes | Ran | Pass |
 
-### F-09 (`docs/sprint_2/sprints\F-09-pickup-slots.md`)
+### F-09 (`docs/sprint_2/sprints/F-09-pickup-slots.md`)
 
 | AC | Test IDs | Level | Implemented | Verification | Result |
 |---|---|---|---|---|---|
@@ -296,7 +296,7 @@ IDs agreed with the SRS author in chat on 6 Nov 2026.
 | AC-F09-16 | TEST-F09-16 | E2E | Partly | Not run (test not written) | Missing: TEST-F09-16 |
 | AC-F09-17 | TEST-F09-17 | E2E | Partly | Not run (test not written) | Missing: TEST-F09-17 |
 
-### F-10 (`docs/sprint_2/sprints\F-10-sales-summary.md`)
+### F-10 (`docs/sprint_2/sprints/F-10-sales-summary.md`)
 
 | AC | Test IDs | Level | Implemented | Verification | Result |
 |---|---|---|---|---|---|
@@ -310,7 +310,7 @@ IDs agreed with the SRS author in chat on 6 Nov 2026.
 | AC-10.8 | TEST-10.8 | API | No | Not run (test not written) | Missing: TEST-10.8 |
 | AC-10.9 | TEST-10.9 | E2E | No | Not run (test not written) | Missing: TEST-10.9 |
 
-### F-11 (`docs/sprint_2/sprints\F-11-search-filter.md`)
+### F-11 (`docs/sprint_2/sprints/F-11-search-filter.md`)
 
 | AC | Test IDs | Level | Implemented | Verification | Result |
 |---|---|---|---|---|---|
@@ -332,7 +332,7 @@ IDs agreed with the SRS author in chat on 6 Nov 2026.
 | AC-F11-16 | TEST-F11-16 | E2E | Yes | Ran | Pass |
 | AC-F11-17 | TEST-F11-17 | E2E | Yes | Ran | Pass |
 
-### F-12 (`docs/sprint_2/sprints\F-12-hardening.md`)
+### F-12 (`docs/sprint_2/sprints/F-12-hardening.md`)
 
 | AC | Test IDs | Level | Implemented | Verification | Result |
 |---|---|---|---|---|---|
