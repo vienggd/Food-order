@@ -11,7 +11,7 @@ CPE 334 · Semester 1/2026 · Section 131 · group **Est** · Campus Café Pre-o
 | **A** | Product team | Test plan, UAT cases (`UAT-01..06`), and handoff pack | `docs/labs/lab-06/test-plan.md`, `uat-cases.md`, `handoff.md` (PR [#107](https://github.com/vienggd/Food-order/pull/107)) | Accounts `CUSTOMER-A`, `CUSTOMER-B`, `OPERATOR` (no passwords) |
 | **B** | UAT team | Testing partner **EN-009_P3** (`event-registration-system`) | [`part-b-uat-team.md`](part-b-uat-team.md), [`execution-partner.md`](execution-partner.md) (PRs [#105](https://github.com/vienggd/Food-order/pull/105), [#111](https://github.com/vienggd/Food-order/pull/111), [#140](https://github.com/vienggd/Food-order/pull/140), [#149](https://github.com/vienggd/Food-order/pull/149), [#153](https://github.com/vienggd/Food-order/pull/153), [#156](https://github.com/vienggd/Food-order/pull/156)) | Outgoing `#141–#148`, `#151–#155`; `B-<case>-s<step>-<XX>.png` (`PENDING`) |
 | **C** | Product team | Partner findings triage (`#121–#133`) & RED→GREEN fixes | [`triage.md`](triage.md), `docs/labs/lab-06/evidence/` (`red.txt`, `green.txt`, `regression.txt`), PR [#138](https://github.com/vienggd/Food-order/pull/138) | `TEST-L6-121..132`; Partner B `UAT-02/04/06` PASS |
-| **D** | Product team | Fix verification, re-test handoff & final acceptance | [`retest-handoff.md`](retest-handoff.md), Issue `#101` | __PARTNER_RETEST_EVIDENCE__ |
+| **D** | Product team | Fix verification, re-test handoff & final acceptance | [`retest-handoff.md`](retest-handoff.md), Issue `#101` | `9/9` fixes + `UAT-01/03/04/05` PASS (`39bda5e` / `food-order-00009-jd9`); partner block PENDING |
 
 ## Team
 
@@ -29,11 +29,11 @@ CPE 334 · Semester 1/2026 · Section 131 · group **Est** · Campus Café Pre-o
 | **Est (`Food-order`)** Sprint 1 baseline | tag `v0.1.0-sprint1` (`12c1052`) | `main` (ancestor) | Done |
 | **Est (`Food-order`)** tested build in Lab 6 | commit `b71cdb2` (PR `#84` merge; `https://food-order-d4jdyxqbca-as.a.run.app`) | `main` | Tested by EN-009_P3 (25 Nov 2026) |
 | **Est (`Food-order`)** Lab 6 triage & defect fixes | PR `#138` (RED `cd56600` / `d1bf95c` -> GREEN `c576273` / `2e291c8`, merge `8356adb`) | `lab6` | Merged into `lab6` (awaiting Sat deploy to `main`) |
-| **Est (`Food-order`)** corrected `main` release | `163fdb7` (PR `#168`, merged `2026-11-26 23:36 UTC+7`) | `main` | Merged into `main` |
-| **Est (`Food-order`)** deployed revision for re-test | `food-order-00008-v6c` (`index-D6oQEALR.js`, `/api/ready` OK) | Cloud Run | Deployed; EN-009_P3 re-testing (`#121–#129` PASS, `#132` FAIL) |
-| **Est (`Food-order`)** partner acceptance decision | __PARTNER_ACCEPTANCE__ | `retest-handoff.md` | PENDING (`#132` table-header fix & Kirakit UAT-03/05 awaited) |
+| **Est (`Food-order`)** corrected `main` release | `39bda5e` (PR `#181`, merged `2026-11-27 03:19 UTC+7`; includes `#132` fix after `163fdb7`) | `main` | Merged into `main` |
+| **Est (`Food-order`)** deployed revision for re-test | `food-order-00009-jd9` (`index-DbdmxBc6.js`, `/api/ready` OK; previous `food-order-00008-v6c`) | Cloud Run | Deployed; **9/9 fixes + UAT-01/03/04/05 PASS** (`#132` PASS at `03:32 UTC+7`) |
+| **Est (`Food-order`)** partner acceptance decision | __PARTNER_ACCEPTANCE__ | `retest-handoff.md` | PENDING (`9/9` PASS verified; awaiting Nattakit's signed `Accepted` block on `songt888#129`) |
 | **EN-009_P3 (`event-registration-system`)** under test | tag `v0.1.2-lab5` (`04e8590`, Cloud Run `s47a6b53b-00005-5l7`) | Partner repo / Cloud Run | Initial UAT done (`UAT-01..06` PASS, 13 findings `#141–#148`, `#151–#155`) |
-| **EN-009_P3** fixed release for re-test (`RT-F02`, `#141–#161`) | `v0.1.3-lab6` / `502d2a6` / `s47a6b53b-00006-7bv` (`index-CcXia3Aw.js`) | Partner Cloud Run | `vieng` `#151–#155` & `UAT-01/04 s9/06` PASS; `ninja` `#141–#148` & `UAT-02/03` pending |
+| **EN-009_P3** fixed release for re-test (`RT-F02`, `#141–#161`) | `v0.1.3-lab6` / `502d2a6` / `s47a6b53b-00006-7bv` (`index-CcXia3Aw.js`) | Partner Cloud Run | **Accepted** by team Est on [`songt888#126`](https://github.com/songt888/event-registration-system/issues/126#issuecomment-7202511583) (`13/13` findings & `6/6` UAT cases PASS) |
 
 ## Answer Part A: Product team test plan, UAT cases, and handoff pack
 
@@ -92,9 +92,9 @@ Full contract rationale and step/date provenance are recorded in [`triage.md`](t
 
 | Re-test item | Recorded value |
 |---|---|
-| Corrected `main` commit | `163fdb7` (PR `#168`) |
-| Deployed Cloud Run revision | `food-order-00008-v6c` (`index-D6oQEALR.js`, `/api/ready` OK) |
-| Partner re-test execution (`#123`, other 8 fixes, `UAT-01/03/04/05`) | __PARTNER_RETEST_RESULTS__ |
+| Corrected `main` commit | `39bda5e` (PR `#181`; preceded by `163fdb7` / PR `#168`) |
+| Deployed Cloud Run revision | `food-order-00009-jd9` (`index-DbdmxBc6.js`, `/api/ready` OK; `#121–#129` verified on `food-order-00008-v6c`) |
+| Partner re-test execution (`#123`, other 8 fixes, `UAT-01/03/04/05`) | **9/9 fixes PASS & UAT-01/03/04/05 all PASS** (`#121–#129` PASS on `163fdb7` / `food-order-00008-v6c` by Nattakit & Kirakit `00:18–01:45 UTC+7`; `#132` fixed in PR `#174`/`#181` and verified **PASS** on `39bda5e` / `food-order-00009-jd9` by Kirakit `03:32 UTC+7`; Sprint 3 deferral of `#130/#131/#133` accepted). |
 | Independent acceptance decision by EN-009_P3 (`Accepted` / `Accepted with limitations` / `Not Accepted`) | __PARTNER_ACCEPTANCE__ |
 
 ## Contribution
