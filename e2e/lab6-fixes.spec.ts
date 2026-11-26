@@ -152,9 +152,24 @@ test.describe("Lab 6 UAT defect regressions", () => {
     await loginAs(page, "staff@cafe.test");
     const table = page.getByRole("table");
     await expect(table).toBeVisible();
-    for (const col of ["Order", "Customer", "Items", "Placed", "Total", "Action"]) {
-      await expect(table.getByRole("columnheader", { name: col })).toBeVisible();
+    const expectedCols = ["Order", "Status", "Customer", "Items", "Placed", "Total", "Action"];
+    const ths = table.locator("thead th");
+    await expect(ths).toHaveCount(expectedCols.length);
+    for (let i = 0; i < expectedCols.length; i++) {
+      await expect(ths.nth(i)).toHaveText(expectedCols[i]);
+      await expect(ths.nth(i)).toBeVisible();
     }
-    await expect(table.getByTestId(`order-${order.id}`)).toContainText("Alice");
+    const row = table.getByTestId(`order-${order.id}`);
+    const tds = row.locator("td");
+    await expect(tds).toHaveCount(expectedCols.length);
+    await expect(tds.nth(1)).toContainText("PLACED");
+    await expect(tds.nth(2)).toContainText("Alice");
+    for (let i = 0; i < expectedCols.length; i++) {
+      const thBox = await ths.nth(i).boundingBox();
+      const tdBox = await tds.nth(i).boundingBox();
+      expect(thBox).not.toBeNull();
+      expect(tdBox).not.toBeNull();
+      expect(Math.abs(thBox!.x - tdBox!.x)).toBeLessThanOrEqual(2);
+    }
   });
 });
