@@ -1,14 +1,14 @@
-Regression run, 26 Nov 2026, after Lab 6 fixes for #121-#126, #128, #129 on lab6-vieng.
+Regression run, 26 Nov 2026, after Lab 6 fixes for #121-#126, #128, #129, #132 (semantic table) on lab6-vieng.
 Baseline before Lab 6 fixes (e1057b7 / b71cdb2 code): server 8 files / 71 tests pass, client 3 files / 6 tests pass.
 
 == Build: npm run build ==
 - server: prisma generate && tsc -> exit 0
-- client: tsc --noEmit && vite build -> exit 0 (52 modules, 1.10s)
+- client: tsc --noEmit && vite build -> exit 0 (52 modules, 1.46s)
 
 == Unit / API tests: npm test ==
 - server: Test Files 8 passed (8), Tests 85 passed (85), 0 failed, 0 skipped
 - client: Test Files 3 passed (3), Tests 6 passed (6), 0 failed, 0 skipped
 
 == Full Playwright E2E: npx playwright test ==
-- 32 passed (49.2s), 6 skipped (viewport-specific skips in e2e/lab6-fixes.spec.ts), 0 failed
-- Covers all Sprint 1 journeys (auth, menu, orders, operator queue) on phone (375px) + desktop (1280px) plus all 8 Lab 6 defect regression tests.
+- 33 passed (59.7s), 7 skipped (viewport-specific skips in e2e/lab6-fixes.spec.ts), 0 failed
+- Covers all Sprint 1 journeys (auth, menu, orders, operator queue) on phone (375px) + desktop (1280px) plus all 9 Lab 6 defect regression tests (#121-#126, #128, #129, #132).

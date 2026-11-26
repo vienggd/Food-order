@@ -25,3 +25,8 @@ GREEN run, 26 Nov 2026, after fixes for UAT defects #121-#126, #128, #129 (follo
   ok 13 [desktop] › e2e\lab6-fixes.spec.ts:120:7 › TEST-L6-128 cart badge counts cart lines rather than total item quantities (#128) (884ms)
   6 skipped (viewport-specific tests skipped on the other project)
   8 passed (24.2s)
+
+== Additional E2E GREEN (#132 / EX-05, 26 Nov 2026, follows RED d1bf95c): npx playwright test e2e/lab6-fixes.spec.ts e2e/queue.spec.ts ==
+  ok [desktop] › e2e\lab6-fixes.spec.ts:149:7 › TEST-L6-132 desktop operator queue uses a semantic table with column headers (#132)
+  ok [phone+desktop] › e2e\queue.spec.ts:14,26,35 › TEST-F04-11..13
+  15 passed (37.3s), 7 skipped (viewport-specific skips in lab6-fixes.spec.ts), 0 failed
