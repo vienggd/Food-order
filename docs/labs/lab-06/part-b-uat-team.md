@@ -13,17 +13,17 @@ Written by ninja's side for inclusion in `report.md`. Live working sheet: [`exec
 |---|---|
 | Tag / commit | `v0.1.2-lab5` / `04e8590` |
 | Deployed revision (their handoff) | `s47a6b53b-00005-5l7` |
-| Revision actually served during hand run | PENDING (record at start of the slot) |
+| Revision actually served during hand run | `index-1Om9ndOl.js` / `index-Do0HBjsD.css` observed at run time matching `v0.1.2-lab5` (`04e8590`); Cloud Run header not exposed in HTML (`ninja` slot PENDING) |
 | Fixed release for re-test | PENDING (partner plans `v0.1.3-lab6`; revision name to be recorded) |
 
-## B3. The six agreed cases (run by hand, 26 Nov 19:00)
+## B3. The six agreed cases (run split: vieng UAT-06/01/04; ninja UAT-02/03/05)
 Split: vieng runs UAT-06, 01, 04; ninja runs UAT-02, 03, 05. Their order: 06, 01, 04, 02, 03, 05.
 
 | Case | Category | Contract refs | Tester + team | Date/time | Actual result | Result | Evidence |
 |---|---|---|---|---|---|---|---|
-| UAT-06 | Sign-in errors, signed-out access | F-01; AC-02, AC-03, AC-24 | PENDING | PENDING | PENDING | PENDING | PENDING |
-| UAT-01 | Normal journey | F-01..F-04; AC-01, AC-06, AC-25, AC-10, AC-12, AC-24 | PENDING | PENDING | PENDING | PENDING | PENDING |
-| UAT-04 | State / persistence | F-01, F-05, F-06; AC-04, AC-17, AC-19, AC-24 | PENDING | PENDING | PENDING | PENDING | PENDING |
+| UAT-06 | Sign-in errors, signed-out access | F-01; AC-02, AC-03, AC-24 | AI (Playwright on vieng request, not by hand) | 2026-11-26 21:28 UTC+7 | Signed-out `/` and `/my/registrations` opened `/login`. Wrong password and unknown email both showed identical `"Email or password is incorrect."` and cleared password; valid `Participant 3` landed on `/events`. | PASS | `B-UAT06-s01..s05-GD.png` |
+| UAT-01 | Normal journey | F-01..F-04; AC-01, AC-06, AC-25, AC-10, AC-12, AC-24 | AI (Playwright on vieng request, not by hand) | 2026-11-26 21:29 UTC+7 | Created & published `UAT-GD-01-2128` (`907631b5-9acd-4adf-b38f-5e6ad374ccca`, `3 of 3`); `Participant 3` registered (`2 of 3 places left`, `"You are registered for this event."`, `ACTIVE` in `My registrations`). Confirmed `#141` and `#146` side effects. | PASS | `B-UAT01-s01..s09-GD.png` |
+| UAT-04 | State / persistence | F-01, F-05, F-06; AC-04, AC-17, AC-19, AC-24 | AI (Playwright on vieng request, not by hand) | 2026-11-26 21:29 UTC+7 | Survived logout + fresh browser context (`ACTIVE`, `2 of 3 places left`); Back/direct URL stayed on `/login`; `Organizer One` roster showed `Participant 3` `ACTIVE` (`9:29:15 PM`); `Participant 4` list had `0` rows. Step 9 re-test waits for deploy. | PASS (s1–s8) | `B-UAT04-s01..s08-GD.png` |
 | UAT-02 | Business rule / boundary | F-02, F-04; BR-02, BR-03; AC-07, AC-29, AC-13, AC-14 | AI (Claude, built-in browser) on ninja's request; ninja signed in each account by hand, the AI did not type any password; not run by hand | 26 Nov 2026 21:36-21:49 UTC+7 | All 10 steps matched the expected text; full step-by-step actuals in `execution-partner.md`. revision as per handoff (`v0.1.2-lab5` / `04e8590` / `s47a6b53b-00005-5l7`), not confirmed (app does not show it); partner said a `v0.1.3-lab6` fix is coming. URL https://s47a6b53b-4d7hbszvwq-as.a.run.app, viewport 1280x800. | PASS (AI-run, not by hand) | B-UAT02-DP-01..10: screenshots in head session (low resolution), to be added |
 | UAT-03 | Forbidden role / ownership | F-02, F-04, F-06; BR-05; AC-08, AC-20, AC-21, AC-33, AC-34 | PENDING | PENDING | PENDING | PENDING | PENDING |
 | UAT-05 | Draft hidden from participants | F-02, F-03; AC-10, AC-31, AC-32 | PENDING | PENDING | PENDING | PENDING | PENDING |
@@ -74,8 +74,8 @@ Row RT-F02 in `execution-partner.md`: tab A/tab B logout check for Participant 3
 - Show the revision/URL in the shot where the page allows it. No password or token in any screenshot.
 - A rejected case also needs a "before" and "after" shot showing the protected state did not change.
 
-## B8. Honest note on how the findings were made
-The 13 outgoing findings come from AI-driven exploratory checks (computer-use browser sessions, 25–26 Nov 2026), not from students clicking by hand; the served revision was not always confirmed at that time. Some were later reproduced by the partner by hand (for example F-02 on `s47a6b53b-00005-5l7`, 26 Nov 16:07). They go beyond the six agreed cases. The six official cases and any X cases recorded as results are run by hand by the students in the 19:00 slot, and only those hand results count as execution evidence in B3 and B4. Account passwords were shared privately and are not written anywhere in the repo.
+## B8. Honest note on how the findings and runs were made
+The 13 outgoing findings come from AI-driven exploratory checks (computer-use browser sessions, 25–26 Nov 2026), not from students clicking by hand; the served revision was not always confirmed at that time. Some were later reproduced by the partner by hand (for example F-02 on `s47a6b53b-00005-5l7`, 26 Nov 16:07). They go beyond the six agreed cases. For B3 (`UAT-06`, `UAT-01`, `UAT-04`), those runs on `2026-11-26 21:28–21:29 UTC+7` were executed by an AI assistant using Playwright Chromium (`1440×900` @ `2×` DPR) on `vieng`'s request — **not** by `vieng` clicking by hand — with full-quality PNGs saved in `docs/labs/lab-06/screenshots-partner/` (`B-UAT*-GD.png`) and verified bundle `index-1Om9ndOl.js`. For `UAT-02`, the run on `2026-11-26 21:36–21:49 UTC+7` was driven by AI (Claude built-in browser) on `ninja`'s request with `ninja` signing in by hand. `UAT-03`, `UAT-05`, and `X1–X8` / `RT-F02` remain `PENDING`. Account passwords were shared privately and are not written anywhere in the repo.
 
 ## Limitations
 - Partner triage and fix status change over time; this file shows what was seen on GitHub on 26 Nov 2026.
