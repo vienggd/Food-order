@@ -159,8 +159,9 @@ Evidence images are cropped to the page only (2554x1304, browser bar and Windows
 - HQ-UAT03-s2, s3, s4: Organizer Two on the Organizer One registrations address `/organizer/events/<id>/registrations`, My events `/organizer/events`, event detail. HQ-UAT03-s8: Organizer One registrations list.
 
 ## Final decision (after the partner fixes and we re-test)
-- Re-test version/date: `v0.1.3-lab6` / commit `502d2a6` / Cloud Run revision `s47a6b53b-00006-7bv` (bundle `index-CcXia3Aw.js`); `vieng` re-test run `2026-11-27 00:20–00:23 UTC+7`; `ninja` re-test (`#141–#148`, `UAT-02`, `UAT-03`) `2026-11-27 02:15–02:46 UTC+7`, all PASS (AI-run, not by hand; see section above)
-- Decision: **PENDING** until both students agree. Suggested by ninja's side: `Accepted with minor limitations` (`#151` 641–735 px participant taskbar wrap is the partner's documented limit in `f-01-auth.md` v1.6; `#147` visible label ellipsis is an observation). Not decided yet.
-- Open critical/major defects: `0` on `vieng`'s re-tested items (`#151–#155`, `UAT-01`, `UAT-04` s9, `UAT-06` all PASS); `#141–#148` re-tested PASS by ninja's side (AI-run) on 27 Nov 2026
+- Re-test version/date: `v0.1.3-lab6` / commit `502d2a6` / Cloud Run revision `s47a6b53b-00006-7bv` (bundle `index-CcXia3Aw.js`); `vieng` re-test `2026-11-27 00:20–00:23 UTC+7` (`#151–#155`, `UAT-04` s9, `RT-F02`, `UAT-01`, `UAT-06`), `ninja` re-test `2026-11-27 02:15–02:46 UTC+7` (`#141–#148`, `UAT-02`, `UAT-03`) — all **PASS** (AI-run on the students' requests; see sections above).
+- Decision: **Accepted** (agreed jointly by both students and posted on [`songt888/event-registration-system#126`](https://github.com/songt888/event-registration-system/issues/126#issuecomment-7202511583))
+- Non-blocking observations (no open defects): `#151` documented `641–735 px` participant taskbar wrap (`f-01-auth.md` v1.6, `"at 768 px and wider"`; all reported widths `320 / 768 / 812 px` pass with `0 px` overlap); `#147` visible `Restore` button label ellipsizes at `320 px` while fitting inside the viewport with its full accessible name.
+- Open critical/major defects: `0` · Open minor defects: `0`
 - BLOCKED cases left: `0`
-- Names and date: Garunyapas Danpitakkul (`vieng`), Dechayut Panyawutvorakul (`ninja`) — `vieng` part recorded 27 Nov 2026; ninja re-test recorded 27 Nov 2026; final sign-off by both students still pending
+- Names and date: Garunyapas Danpitakkul (`vieng`), Dechayut Panyawutvorakul (`ninja`) — **2026-11-27**
