@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { api, ApiError, NETWORK_MESSAGE } from "../api";
 import { formatBaht } from "../lib/money";
@@ -25,14 +25,15 @@ function Skeletons() {
 // Phone: the list, or the detail when an order is open.
 export function OrdersSplit() {
   const { id } = useParams();
+  const [synced, setSynced] = useState<{ id: number; status: OrderStatus } | null>(null);
   return (
     <div className={"orders-split" + (id ? " has-detail" : "")}>
       <section className="split-list">
-        <OrdersPage selectedId={id} />
+        <OrdersPage selectedId={id} synced={synced} />
       </section>
       <section className="split-detail">
         {id ? (
-          <OrderDetailPage key={id} />
+          <OrderDetailPage key={id} onLoaded={(o) => setSynced({ id: o.id, status: o.status })} />
         ) : (
           <div className="empty">
             <p className="muted">Select an order to see its details.</p>
@@ -56,7 +57,13 @@ const CHIPS: { value: string; label: string }[] = [
 ];
 
 // S3 My orders (F-03): own orders, newest first. Refresh by hand (no polling in Sprint 1).
-export function OrdersPage({ selectedId }: { selectedId?: string }) {
+export function OrdersPage({
+  selectedId,
+  synced,
+}: {
+  selectedId?: string;
+  synced?: { id: number; status: OrderStatus } | null;
+}) {
   const [orders, setOrders] = useState<OrderSummary[] | "loading" | "error">("loading");
   const navigate = useNavigate();
   const [params, setParams] = useSearchParams();
@@ -140,7 +147,7 @@ export function OrdersPage({ selectedId }: { selectedId?: string }) {
                 {formatPlacedTime(o.createdAt)} · {o.itemCount} {o.itemCount === 1 ? "item" : "items"}
               </span>
               <span>
-                <StatusPill status={o.status} /> <PaymentBadge status={o.paymentStatus} />
+                <StatusPill status={synced && synced.id === o.id ? synced.status : o.status} /> <PaymentBadge status={o.paymentStatus} />
               </span>
               <strong>{formatBaht(o.total)}</strong>
             </button>
@@ -207,17 +214,29 @@ function CancelArea({ order, onChanged, onNote }: { order: Order; onChanged: (o:
 }
 
 // S4 Order detail (F-03): lines and total come from the order itself (BR-05), never from the menu.
-export function OrderDetailPage() {
+export function OrderDetailPage({ onLoaded }: { onLoaded?: (order: Order) => void }) {
   const { id } = useParams();
   const location = useLocation();
-  const justPlaced = (location.state as { placed?: boolean } | null)?.placed;
+  const navigate = useNavigate();
+  const [justPlaced] = useState(() => Boolean((location.state as { placed?: boolean } | null)?.placed));
   const [order, setOrder] = useState<Order | "loading" | "notfound" | "error">("loading");
-  const [note, setNote] = useState<{ kind: "success" | "error"; text: string } | null>(null);
+  const [note, setNote] = useState<{ kind: "success" | "error"; text: string } | null>(null);
+  const onLoadedRef = useRef(onLoaded);
+  onLoadedRef.current = onLoaded;
+
+  useEffect(() => {
+    if ((location.state as { placed?: boolean } | null)?.placed) {
+      navigate(location.pathname, { replace: true, state: null });
+    }
+  }, [location.pathname, location.state, navigate]);
 
   const load = useCallback(() => {
     setOrder("loading");
     api<Order>(`/api/orders/${id}`)
-      .then(setOrder)
+      .then((o) => {
+        setOrder(o);
+        onLoadedRef.current?.(o);
+      })
       .catch((e) => setOrder(e instanceof ApiError && (e.status === 404 || e.status === 400) ? "notfound" : "error"));
   }, [id]);
   useEffect(load, [load]);
@@ -248,12 +267,12 @@ export function OrderDetailPage() {
   return (
     <div className="order-detail">
       {back}
-      {note && (
-        <div className={"msg " + note.kind} role={note.kind === "error" ? "alert" : "status"}>
-          {note.text}
-        </div>
-      )}
-      {justPlaced && (
+      {note && (
+        <div className={"msg " + note.kind} role={note.kind === "error" ? "alert" : "status"}>
+          {note.text}
+        </div>
+      )}
+      {justPlaced && order.status === "PLACED" && (
         <div className="msg success" role="status">
           Order #{order.id} placed!
         </div>
