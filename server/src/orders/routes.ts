@@ -102,14 +102,22 @@ ordersRouter.get("/:id", async (req, res) => {
   res.json(toOrderJson(order));
 });
 
-// F-06 customer cancel (BR-11). One conditional update decides any race with accept.
+// F-06 customer cancel (BR-11) + F-08 automatic refund if PAID (BR-16). One conditional update decides races.
 ordersRouter.post("/:id/cancel", async (req, res) => {
   const id = dbId.parse(req.params.id);
   const customerId = req.user!.id;
-  const { count } = await prisma.order.updateMany({
-    where: { id, customerId, status: { in: statusesThatCanMoveTo("CANCELLED") } },
-    data: { status: "CANCELLED", cancelledAt: new Date() },
-  });
+  const allowed = statusesThatCanMoveTo("CANCELLED");
+  const count = await prisma.$executeRaw`
+    UPDATE "orders"
+    SET "status" = 'CANCELLED'::"OrderStatus",
+        "cancelled_at" = NOW(),
+        "updated_at" = NOW(),
+        "payment_status" = CASE WHEN "payment_status" = 'PAID'::"PaymentStatus" THEN 'REFUNDED'::"PaymentStatus" ELSE "payment_status" END,
+        "refunded_at" = CASE WHEN "payment_status" = 'PAID'::"PaymentStatus" THEN NOW() ELSE "refunded_at" END
+    WHERE "id" = ${id}
+      AND "customer_id" = ${customerId}
+      AND "status"::text = ANY(${allowed})
+  `;
   // Only own orders are read: someone else's order looks exactly like a missing one.
   const order = await prisma.order.findFirst({ where: { id, customerId }, include: { lines: { orderBy: { id: "asc" } } } });
   if (!order) throw new AppError(404, "NOT_FOUND", "Order not found.");
