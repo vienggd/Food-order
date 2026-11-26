@@ -32,4 +32,22 @@ test.describe("F-08 payment", () => {
     await expect(card).toContainText("no real money moves and no card details are asked");
     await expect(card.locator("input")).toHaveCount(0);
   });
+
+  test("TEST-8.17 READY unpaid order disables Mark picked up until paid and refreshed", async ({ page }) => {
+    await db.order.update({ where: { id: orderId }, data: { status: "READY", acceptedAt: new Date(), preparingAt: new Date(), readyAt: new Date() } });
+    await loginAs(page, "staff@cafe.test");
+    await expect(page).toHaveURL(/\/operator\/orders/);
+    await page.goto("/operator/orders?tab=ready");
+    const card = page.getByTestId(`order-${orderId}`);
+    await expect(card).toContainText("Waiting for payment. The customer pays in the app.");
+    const btn = card.getByRole("button", { name: "Mark picked up" });
+    await expect(btn).toBeDisabled();
+
+    await db.order.update({ where: { id: orderId }, data: { paymentStatus: "PAID", paidAt: new Date() } });
+    await page.getByRole("button", { name: "Refresh queue" }).click();
+    await expect(btn).toBeEnabled();
+    await btn.click();
+    await expect(page.getByText(`Order #${orderId} picked up.`)).toBeVisible();
+    await expect(page.getByTestId(`order-${orderId}`)).toHaveCount(0);
+  });
 });

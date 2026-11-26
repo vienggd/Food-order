@@ -1,0 +1,16 @@
+RED run, 26 Nov 2026, on sprint2-vieng synced with origin/sprint2 (32c9d56, before BR-15 implementation).
+
+1) Server (Vitest): cd server && npx vitest run tests/payments.test.ts --reporter=verbose
+   ✓ F-08 pay own order > TEST-8.1 .. TEST-8.10 + payment fields (11 tests)
+   ✓ F-08 BR-16 refund on cancel and reject (5 tests)
+   × F-08 BR-15 PICKED_UP requires PAID > TEST-8.14 blocks READY -> PICKED_UP while UNPAID with 409 and leaves READY unchanged 931ms
+     → expected 200 to be 409 // Object.is equality (server/tests/payments.test.ts:232)
+   ✓ F-08 BR-15 PICKED_UP requires PAID > TEST-8.15 allows READY -> PICKED_UP when PAID and sets pickedUpAt 1670ms
+   Tests: 1 failed | 17 passed (18)
+
+2) E2E (Playwright): npx playwright test e2e/payment.spec.ts -g "TEST-8.17" --reporter=list
+   × [phone]   TEST-8.17 READY unpaid order disables Mark picked up until paid and refreshed (6.6s)
+     → Locator getByTestId('order-1'): Expected substring "Waiting for payment. The customer pays in the app.", Received "#1READYAlice Unpaid17:28Latte ×2฿130.00Mark picked up"
+   × [desktop] TEST-8.17 READY unpaid order disables Mark picked up until paid and refreshed (6.4s)
+     → Locator getByTestId('order-1'): Expected substring "Waiting for payment. The customer pays in the app.", Received "#1READYAlice Unpaid17:28Latte ×2฿130.00Mark picked up"
+   2 failed (phone, desktop)
