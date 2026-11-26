@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { clearOrders, db } from "./db";
+import { clearOrders, db, makeOrder } from "./db";
 import { loginAs, logout } from "./helpers";
 
 test.describe("Lab 6 UAT defect regressions", () => {
@@ -144,5 +144,17 @@ test.describe("Lab 6 UAT defect regressions", () => {
     await expect(page.locator("header.top")).toContainText("Campus Café");
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     expect(overflow).toBeLessThanOrEqual(0);
+  });
+
+  test("TEST-L6-132 desktop operator queue uses a semantic table with column headers (#132)", async ({ page }, info) => {
+    test.skip(info.project.name !== "desktop", "desktop table layout only");
+    const order = await makeOrder("alice@cafe.test", [["Latte", 1]], "PLACED");
+    await loginAs(page, "staff@cafe.test");
+    const table = page.getByRole("table");
+    await expect(table).toBeVisible();
+    for (const col of ["Order", "Customer", "Items", "Placed", "Total", "Action"]) {
+      await expect(table.getByRole("columnheader", { name: col })).toBeVisible();
+    }
+    await expect(table.getByTestId(`order-${order.id}`)).toContainText("Alice");
   });
 });

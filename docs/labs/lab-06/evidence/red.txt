@@ -50,3 +50,11 @@ RED run, 26 Nov 2026, on lab6 baseline commit e1057b7 (b71cdb2 app code before L
   x  13 [desktop] › e2e\lab6-fixes.spec.ts:120:7 › TEST-L6-128 cart badge counts cart lines rather than total item quantities (#128)
       Expected: "1", Received: "2"
   8 failed (0 passed, 6 skipped project-specific tests)
+
+== Additional E2E RED (#132 / EX-05, 26 Nov 2026): npx playwright test e2e/lab6-fixes.spec.ts -g TEST-L6-132 ==
+  1) [desktop] › e2e\lab6-fixes.spec.ts:149:7 › Lab 6 UAT defect regressions › TEST-L6-132 desktop operator queue uses a semantic table with column headers (#132)
+    Error: expect(locator).toBeVisible() failed
+    Locator: getByRole('table')
+    Expected: visible
+    Error: element(s) not found
+  1 failed (1 skipped project-specific test)
