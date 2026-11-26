@@ -69,7 +69,7 @@ test.describe("F-07 fulfilment", () => {
     await logout(page);
     await loginAs(page, "bob@cafe.test");
     await page.goto(`/orders/${accepted}`);
-    await expect(page.locator(".pill")).toContainText("PREPARING");
+    await expect(page.locator(".order-detail .pill")).toContainText("PREPARING");
     await expect(page.getByText("Your order is being prepared.")).toBeVisible();
   });
 });

@@ -257,3 +257,10 @@ button[disabled] { cursor: not-allowed; }
 .final-card { margin: 12px 0; padding: 12px; border-radius: 14px; background: #ede6de; color: #5b4e42; }
 .final-card.rejected { background: #fde3e0; color: #7a1c12; }
 @media (min-width: 720px) { .dialog-backdrop { align-items: center; } .dialog { border-radius: 20px; } }
+.queue-tabs { display: flex; gap: 8px; margin: 10px 0; flex-wrap: wrap; }
+.tab-count { margin-left: 4px; font-weight: 800; }
+.pill.preparing { background: #e0b07a; color: #2b1b14; }
+.pill.ready { background: #2f4a3a; color: #fff; }
+.pill.picked_up { background: #e9e2d8; color: #4a3b30; }
+.pill.rejected { background: #fde3e0; color: #7a1c12; }
+.pill.cancelled { background: #ede6de; color: #5b4e42; }

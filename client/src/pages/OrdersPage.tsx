@@ -112,6 +112,9 @@ export function OrdersPage({ selectedId }: { selectedId?: string }) {
 const HINT: Partial<Record<OrderStatus, string>> = {
   PLACED: "Waiting for the café to accept your order.",
   ACCEPTED: "Accepted — being prepared soon.",
+  PREPARING: "Your order is being prepared.",
+  READY: "Ready! Show your order number at the counter.",
+  PICKED_UP: "Picked up. Enjoy!",
 };
 
 // F-06: Cancel area, only while PLACED (BR-11). The server checks again and answers 409 if the order moved on.
