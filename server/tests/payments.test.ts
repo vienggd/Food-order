@@ -221,3 +221,32 @@ describe("F-08 BR-16 refund on cancel and reject", () => {
     }
   });
 });
+
+describe("F-08 BR-15 PICKED_UP requires PAID", () => {
+  const advance = (id: number, from = "READY", cookie = staff) =>
+    request(app).post(`/api/operator/orders/${id}/advance`).set("Cookie", cookie).send({ from });
+
+  it("TEST-8.14 blocks READY -> PICKED_UP while UNPAID with 409 and leaves READY unchanged", async () => {
+    const o = await makeOrder("alice@cafe.test", "READY", "UNPAID");
+    const res = await advance(o.id);
+    expect(res.status).toBe(409);
+    expect(res.body.error).toMatchObject({
+      code: "INVALID_STATE",
+      message: `Order #${o.id} is not paid yet.`,
+      details: { status: "READY", paymentStatus: "UNPAID" },
+    });
+    const r = await row(o.id);
+    expect([r.status, r.paymentStatus, r.pickedUpAt]).toEqual(["READY", "UNPAID", null]);
+  });
+
+  it("TEST-8.15 allows READY -> PICKED_UP when PAID and sets pickedUpAt", async () => {
+    const o = await makeOrder("alice@cafe.test", "READY", "PAID");
+    const res = await advance(o.id);
+    expect(res.status).toBe(200);
+    expect(res.body).toMatchObject({ id: o.id, status: "PICKED_UP", paymentStatus: "PAID" });
+    expect(typeof res.body.pickedUpAt).toBe("string");
+    const r = await row(o.id);
+    expect(r.status).toBe("PICKED_UP");
+    expect(r.pickedUpAt).not.toBeNull();
+  });
+});
