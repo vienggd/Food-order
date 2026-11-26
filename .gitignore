@@ -35,3 +35,6 @@ Thumbs.db
 
 # Raw JSON from npm run evidence
 docs/sprint_1/evidence/.raw/
+
+# Course handouts folder (kept locally, not published)
+docs/to do/

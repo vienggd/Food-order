@@ -170,6 +170,7 @@ button[disabled] { cursor: not-allowed; }
 .lines .num { text-align: right; }
 .timeline { font-size: 13px; color: var(--muted); padding-left: 18px; }
 @media (max-width: 899px) {
+  .menu-main { padding-bottom: 72px; }
   .order-row { grid-template-columns: auto 1fr auto; }
   .order-row strong { grid-column: 3; }
 }
@@ -193,8 +194,12 @@ button[disabled] { cursor: not-allowed; }
 .side-sub { margin: 2px 0 0; font-size: 12px; color: var(--caramel); }
 .side-links .count { margin-left: 8px; }
 .queue-headrow, .order-headrow { display: none; }
+table.queue { display: block; width: 100%; border-collapse: collapse; }
+table.queue thead { display: none; }
+table.queue tbody { display: grid; gap: 12px; }
 /* Queue card on the phone: #id + pill / customer · time / items / total + button. */
 .order-card { display: grid; grid-template-columns: auto 1fr auto; grid-template-areas: "no no pill" "who time time" "items items items" "total total action"; align-items: center; gap: 6px 8px; }
+.order-card td { padding: 0; }
 .q-no { grid-area: no; } .q-pill { grid-area: pill; } .q-who { grid-area: who; font-weight: 600; }
 .q-time { grid-area: time; } .q-time::before { content: "· "; }
 .q-items { grid-area: items; } .q-total { grid-area: total; margin-top: 6px; } .q-action { grid-area: action; margin-top: 6px; }
@@ -216,10 +221,15 @@ button[disabled] { cursor: not-allowed; }
   .login-form .input { border: 1px solid #dccfbd; box-shadow: none; height: 48px; border-radius: 12px; }
   .credit { text-align: center; }
 
-  /* Queue and My orders: rows of one white table card. */
-  .queue, .order-list { grid-template-columns: 1fr; gap: 0; background: #fff; border-radius: 16px; box-shadow: var(--card-shadow); overflow: hidden; }
-  .queue-headrow, .order-card { display: grid; grid-template-columns: 70px 120px 1fr 80px 100px 140px; grid-template-areas: "no who items time total action"; align-items: center; gap: 12px; padding: 12px 18px; border-radius: 0; box-shadow: none; border-bottom: 1px solid #efe6d8; }
-  .queue-headrow, .order-headrow { font-size: 12px; font-weight: 700; color: var(--muted); background: var(--cashmere); }
+  /* Queue (semantic table) and My orders: rows of one white table card. */
+  .order-list { grid-template-columns: 1fr; gap: 0; background: #fff; border-radius: 16px; box-shadow: var(--card-shadow); overflow: hidden; }
+  table.queue { display: table; width: 100%; margin: 12px 0 0; border-collapse: collapse; background: #fff; border-radius: 16px; box-shadow: var(--card-shadow); overflow: hidden; }
+  table.queue thead { display: table-header-group; }
+  table.queue tbody { display: table-row-group; }
+  table.queue .queue-headrow, table.queue .order-card { display: table-row; border-radius: 0; box-shadow: none; }
+  table.queue .queue-headrow th { display: table-cell; text-align: left; padding: 12px 18px; font-size: 12px; font-weight: 700; color: var(--muted); background: var(--cashmere); border-bottom: 1px solid #efe6d8; }
+  table.queue .order-card td { display: table-cell; padding: 12px 18px; vertical-align: middle; border-bottom: 1px solid #efe6d8; }
+  .order-headrow { font-size: 12px; font-weight: 700; color: var(--muted); background: var(--cashmere); }
   .q-pill { display: none; }
   .q-time::before { content: none; }
   .q-total, .q-action { margin-top: 0; }

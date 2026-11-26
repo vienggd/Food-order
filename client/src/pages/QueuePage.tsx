@@ -109,30 +109,40 @@ export function QueuePage() {
           <p className="muted">New orders appear here when you refresh.</p>
         </div>
       ) : (
-        // Phone: one card per order. Desktop: the same items laid out as table rows (styles.css).
-        <ul className="queue">
-          <li className="queue-headrow" aria-hidden="true">
-            <span>Order</span>
-            <span>Customer</span>
-            <span>Items</span>
-            <span>Placed</span>
-            <span>Total</span>
-            <span>Action</span>
-          </li>
-          {orders.map((o) => (
-            <li className="card order-card" key={o.id} data-testid={`order-${o.id}`}>
-              <span className="q-no order-no">#{o.id}</span>
-              <span className="q-pill pill placed">PLACED</span>
-              <span className="q-who">{o.customer.name}</span>
-              <span className="q-time muted">{formatPlacedTime(o.createdAt)}</span>
-              <span className="q-items muted">{items(o)}</span>
-              <strong className="q-total">{baht(o.total)}</strong>
-              <button className="q-action btn small" disabled={busyId === o.id} onClick={() => accept(o.id)}>
-                {busyId === o.id ? "Accepting…" : "Accept order"}
-              </button>
-            </li>
-          ))}
-        </ul>
+        // Phone: one card per order (CSS grid). Desktop: semantic table (styles.css).
+        <table className="queue">
+          <thead>
+            <tr className="queue-headrow">
+              <th scope="col">Order</th>
+              <th scope="col">Customer</th>
+              <th scope="col">Items</th>
+              <th scope="col">Placed</th>
+              <th scope="col">Total</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {orders.map((o) => (
+              <tr className="card order-card" key={o.id} data-testid={`order-${o.id}`}>
+                <td className="q-no order-no">#{o.id}</td>
+                <td className="q-pill">
+                  <span className="pill placed">PLACED</span>
+                </td>
+                <td className="q-who">{o.customer.name}</td>
+                <td className="q-items muted">{items(o)}</td>
+                <td className="q-time muted">{formatPlacedTime(o.createdAt)}</td>
+                <td className="q-total">
+                  <strong>{baht(o.total)}</strong>
+                </td>
+                <td className="q-action">
+                  <button className="btn small" disabled={busyId === o.id} onClick={() => accept(o.id)}>
+                    {busyId === o.id ? "Accepting…" : "Accept order"}
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
     </section>
   );
