@@ -7,7 +7,7 @@ describe("F-04 order status transitions", () => {
     const all = Object.values(OrderStatus);
     const allowed: string[] = [];
     for (const from of all) for (const to of all) if (canTransition(from, to)) allowed.push(`${from}->${to}`);
-    expect(allowed.sort()).toEqual(["PLACED->ACCEPTED", "PLACED->CANCELLED", "PLACED->REJECTED"]); // F-06 added REJECTED and CANCELLED
+    expect(allowed.sort()).toEqual(["ACCEPTED->PREPARING", "PLACED->ACCEPTED", "PLACED->CANCELLED", "PLACED->REJECTED", "PREPARING->READY", "READY->PICKED_UP"]); // F-06 and F-07 added targets
     expect(canTransition("ACCEPTED", "ACCEPTED")).toBe(false);
     expect(canTransition("PLACED", "READY")).toBe(false);
     expect(canTransition("CANCELLED", "ACCEPTED")).toBe(false);

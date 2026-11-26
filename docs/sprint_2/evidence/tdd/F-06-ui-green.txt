@@ -1,0 +1,2 @@
+Playwright (phone + desktop), whole suite after the F-06 UI: 44 passed
+F-06 UI tests: TEST-F06-17..21 pass on both projects (10 of 10)
