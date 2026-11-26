@@ -32,19 +32,19 @@ Triage date: 26 Nov 2026 (findings received 25 Nov 2026).
 
 | Issue | Defect | RED test (on `b71cdb2`) | GREEN commit | PR | Re-test version | Partner decision |
 |---|---|---|---|---|---|---|
-| #121 | Reject non-decimal/coerced order ids (`0x2`, `2e0`, etc.) with 400 | `TEST-L6-121` (`orders.test.ts`, `operator.test.ts`; RED `cd56600`) | `c576273` | #138 | TBD | Pending re-test |
-| #122 | Clear route-guard access notice on logout and subsequent navigation | `TEST-L6-122` (`e2e/lab6-fixes.spec.ts`; RED `cd56600`) | `c576273` | #138 | TBD | Pending re-test |
-| #123 | Clear `.cart-bar` overlap over last menu item on phone (`max-width: 899px`) | `TEST-L6-123` (`e2e/lab6-fixes.spec.ts`; RED `cd56600`) | `c576273` | #138 | TBD | Pending re-test |
-| #124 | Do not persist `"Order #N placed!"` across reload or non-PLACED statuses | `TEST-L6-124` (`e2e/lab6-fixes.spec.ts`; RED `cd56600`) | `c576273` | #138 | TBD | Pending re-test |
-| #125 | Keep desktop My orders list status synced when detail view refreshes | `TEST-L6-125` (`e2e/lab6-fixes.spec.ts`; RED `cd56600`) | `c576273` | #138 | TBD | Pending re-test |
-| #126 | Show server 400 `error.message` on login instead of generic network error | `TEST-L6-126` (`e2e/lab6-fixes.spec.ts`; RED `cd56600`) | `c576273` | #138 | TBD | Pending re-test |
-| #128 | Count cart lines (not total quantity) in Cart tab and desktop Menu badge | `TEST-L6-128` (`e2e/lab6-fixes.spec.ts`; RED `cd56600`) | `c576273` | #138 | TBD | Pending re-test |
-| #129 | Show `Campus Café` brand in phone top bar (`<header className="top">`) | `TEST-L6-129` (`e2e/lab6-fixes.spec.ts`; RED `cd56600`) | `c576273` | #138 | TBD | Pending re-test |
-| #132 | Render desktop operator order queue as a semantic `<table>` with `<th>` column headers | `TEST-L6-132` (`e2e/lab6-fixes.spec.ts`; RED `d1bf95c`) | Fixed in PR #138 | #138 | TBD | Pending re-test |
+| #121 | Reject non-decimal/coerced order ids (`0x2`, `2e0`, etc.) with 400 | `TEST-L6-121` (`orders.test.ts`, `operator.test.ts`; RED `cd56600`) | `c576273` | #138 | `163fdb7` / `food-order-00008-v6c` | **PASS** (Nattakit, 27 Nov 00:18 UTC+7; closed) |
+| #122 | Clear route-guard access notice on logout and subsequent navigation | `TEST-L6-122` (`e2e/lab6-fixes.spec.ts`; RED `cd56600`) | `c576273` | #138 | `163fdb7` / `food-order-00008-v6c` | **PASS** (Nattakit, 27 Nov 00:18 UTC+7; closed) |
+| #123 | Clear `.cart-bar` overlap over last menu item on phone (`max-width: 899px`) | `TEST-L6-123` (`e2e/lab6-fixes.spec.ts`; RED `cd56600`) | `c576273` | #138 | `163fdb7` / `food-order-00008-v6c` | **PASS** (Nattakit, 27 Nov 00:18 UTC+7; closed) |
+| #124 | Do not persist `"Order #N placed!"` across reload or non-PLACED statuses | `TEST-L6-124` (`e2e/lab6-fixes.spec.ts`; RED `cd56600`) | `c576273` | #138 | `163fdb7` / `food-order-00008-v6c` | **PASS** (Nattakit, 27 Nov 00:19 UTC+7; closed) |
+| #125 | Keep desktop My orders list status synced when detail view refreshes | `TEST-L6-125` (`e2e/lab6-fixes.spec.ts`; RED `cd56600`) | `c576273` | #138 | `163fdb7` / `food-order-00008-v6c` | **PASS** (Nattakit, 27 Nov 00:18 UTC+7; closed) |
+| #126 | Show server 400 `error.message` on login instead of generic network error | `TEST-L6-126` (`e2e/lab6-fixes.spec.ts`; RED `cd56600`) | `c576273` | #138 | `163fdb7` / `food-order-00008-v6c` | **PASS** (Nattakit, 27 Nov 00:18 UTC+7; closed) |
+| #128 | Count cart lines (not total quantity) in Cart tab and desktop Menu badge | `TEST-L6-128` (`e2e/lab6-fixes.spec.ts`; RED `cd56600`) | `c576273` | #138 | `163fdb7` / `food-order-00008-v6c` | **PASS** (Nattakit, 27 Nov 00:18 UTC+7; closed) |
+| #129 | Show `Campus Café` brand in phone top bar (`<header className="top">`) | `TEST-L6-129` (`e2e/lab6-fixes.spec.ts`; RED `cd56600`) | `c576273` | #138 | `163fdb7` / `food-order-00008-v6c` | **PASS** (Nattakit, 27 Nov 00:18 UTC+7; closed) |
+| #132 | Render desktop operator order queue as a semantic `<table>` with `<th>` column headers | `TEST-L6-132` (`e2e/lab6-fixes.spec.ts`; RED `d1bf95c`) | `2e291c8` + `b5bddb9` (`#174`) | #138, #174 | `39bda5e` / `food-order-00009-jd9` | **PASS** (Kirakit, 27 Nov 03:32 UTC+7; closed) |
 
-## Partner UAT execution received (25 Nov 2026)
+## Partner UAT execution received (25–27 Nov 2026)
 
-Summary from EN-009_P3's outgoing findings report (`UAT-findings-Est-EN033_(1).pdf`, reporter Nattakit Prasertsak [B] with Kirakit Kingkaew [A], tested on `b71cdb2` at `https://food-order-d4jdyxqbca-as.a.run.app`, 2026-11-25 21:07–21:30 UTC+7):
+Summary from EN-009_P3's initial outgoing findings report (`UAT-findings-Est-EN033_(1).pdf`, reporter Nattakit Prasertsak [B] with Kirakit Kingkaew [A], tested on `b71cdb2` at `https://food-order-d4jdyxqbca-as.a.run.app`, 2026-11-25 21:07–21:30 UTC+7):
 
 | Case | Tester | Time (UTC+7) | Actual result (recorded by Partner B) | Result |
 |---|---|---|---|---|
@@ -57,5 +57,5 @@ Summary from EN-009_P3's outgoing findings report (`UAT-findings-Est-EN033_(1).p
   - Live bundle matched `b71cdb2`: `/assets/index-DiHrQZz2.js`, `/assets/index-BPUDR1A9.css`, `"Release 2 · now on Google Cloud"`.
   - Synthetic orders created by Partner B on live app: `#5`, `#6`, `#8`, `#9` (CUSTOMER-A; no other customer orders altered).
   - Partner AI disclosure: Claude Code `agent-browser` (headless Chromium) used alongside manual runs by B.
-- **Pending from EN-009_P3:** Partner A (Kirakit Kingkaew)'s formal execution log rows for `UAT-01`, `UAT-03`, and `UAT-05` are still awaited (Kirakit's exploratory findings are already triaged above in `#122` and `#127` → `#128–#133`).
-- **Next:** After PR `#138` merges and the fixed version is deployed to `main`, send [`retest-handoff.md`](retest-handoff.md) to EN-009_P3 for independent re-test and Sprint 1 acceptance sign-off.
+- **Follow-up received from EN-009_P3 (25–27 Nov 2026):** Kirakit Kingkaew (A) posted initial `UAT-01`, `UAT-03`, and `UAT-05` rows (`b71cdb2`, all **PASS**), then Nattakit & Kirakit re-tested all `9/9` fixes + `UAT-01/03/04/05` **PASS** across `163fdb7` (`food-order-00008-v6c`) and `39bda5e` (`food-order-00009-jd9`, `#132` at `03:32 UTC+7`) and accepted Sprint 3 deferral of `#130/#131/#133`.
+- **Next:** Paste Nattakit's signed `Accepted` block from `EN-009_P3#129` into [`retest-handoff.md`](retest-handoff.md) & [`report.md`](report.md), re-export the final Lab 6 PDF, and close Issue `#101`.
