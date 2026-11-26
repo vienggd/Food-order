@@ -114,6 +114,7 @@ export function QueuePage() {
           <thead>
             <tr className="queue-headrow">
               <th scope="col">Order</th>
+              <th scope="col">Status</th>
               <th scope="col">Customer</th>
               <th scope="col">Items</th>
               <th scope="col">Placed</th>
