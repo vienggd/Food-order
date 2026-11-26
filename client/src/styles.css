@@ -230,7 +230,6 @@ table.queue tbody { display: grid; gap: 12px; }
   table.queue .queue-headrow th { display: table-cell; text-align: left; padding: 12px 18px; font-size: 12px; font-weight: 700; color: var(--muted); background: var(--cashmere); border-bottom: 1px solid #efe6d8; }
   table.queue .order-card td { display: table-cell; padding: 12px 18px; vertical-align: middle; border-bottom: 1px solid #efe6d8; }
   .order-headrow { font-size: 12px; font-weight: 700; color: var(--muted); background: var(--cashmere); }
-  .q-pill { display: none; }
   .q-time::before { content: none; }
   .q-total, .q-action { margin-top: 0; }
   .order-headrow, .order-row { display: grid; grid-template-columns: 70px 1fr 100px 90px; gap: 12px; align-items: center; padding: 12px 18px; }
