@@ -29,11 +29,11 @@ CPE 334 · Semester 1/2026 · Section 131 · group **Est** · Campus Café Pre-o
 | **Est (`Food-order`)** Sprint 1 baseline | tag `v0.1.0-sprint1` (`12c1052`) | `main` (ancestor) | Done |
 | **Est (`Food-order`)** tested build in Lab 6 | commit `b71cdb2` (PR `#84` merge; `https://food-order-d4jdyxqbca-as.a.run.app`) | `main` | Tested by EN-009_P3 (25 Nov 2026) |
 | **Est (`Food-order`)** Lab 6 triage & defect fixes | PR `#138` (RED `cd56600` / `d1bf95c` -> GREEN `c576273` / `2e291c8`, merge `8356adb`) | `lab6` | Merged into `lab6` (awaiting Sat deploy to `main`) |
-| **Est (`Food-order`)** corrected `main` release | __CORRECTED_MAIN_COMMIT__ | `main` | PENDING |
-| **Est (`Food-order`)** deployed revision for re-test | __DEPLOYED_REVISION__ | Cloud Run | PENDING |
-| **Est (`Food-order`)** partner acceptance decision | __PARTNER_ACCEPTANCE__ | `retest-handoff.md` | PENDING |
-| **EN-009_P3 (`event-registration-system`)** under test | tag `v0.1.2-lab5` (`04e8590`, Cloud Run `s47a6b53b-00005-5l7`) | Partner repo / Cloud Run | Under test (`UAT-01..06` + exploratory) |
-| **EN-009_P3** fixed release for re-test (`RT-F02`, `#141–#161`) | __PARTNER_FIXED_REVISION__ | Partner Cloud Run | PENDING (planned `v0.1.3-lab6`) |
+| **Est (`Food-order`)** corrected `main` release | `163fdb7` (PR `#168`, merged `2026-11-26 23:36 UTC+7`) | `main` | Merged into `main` |
+| **Est (`Food-order`)** deployed revision for re-test | `food-order-00008-v6c` (`index-D6oQEALR.js`, `/api/ready` OK) | Cloud Run | Deployed; EN-009_P3 re-testing (`#121–#129` PASS, `#132` FAIL) |
+| **Est (`Food-order`)** partner acceptance decision | __PARTNER_ACCEPTANCE__ | `retest-handoff.md` | PENDING (`#132` table-header fix & Kirakit UAT-03/05 awaited) |
+| **EN-009_P3 (`event-registration-system`)** under test | tag `v0.1.2-lab5` (`04e8590`, Cloud Run `s47a6b53b-00005-5l7`) | Partner repo / Cloud Run | Initial UAT done (`UAT-01..06` PASS, 13 findings `#141–#148`, `#151–#155`) |
+| **EN-009_P3** fixed release for re-test (`RT-F02`, `#141–#161`) | `v0.1.3-lab6` / `502d2a6` / `s47a6b53b-00006-7bv` (`index-CcXia3Aw.js`) | Partner Cloud Run | `vieng` `#151–#155` & `UAT-01/04 s9/06` PASS; `ninja` `#141–#148` & `UAT-02/03` pending |
 
 ## Answer Part A: Product team test plan, UAT cases, and handoff pack
 
@@ -75,7 +75,7 @@ Full contract rationale and step/date provenance are recorded in [`triage.md`](t
 
 ### Partner execution rows received so far (`b71cdb2`, 25 Nov 2026)
 - **Nattakit Prasertsak (B) — `21:07–21:30` UTC+7:** `UAT-02` **PASS** (stepper stops at `10`, Croissant sold out), `UAT-04` **PASS** (persistence + double-accept `409` on Window 2), `UAT-06` **PASS** (`400 VALIDATION_ERROR` on tampered `unitPrice`/`total`). Cookie flags (`HttpOnly; Secure; SameSite=Lax; Max-Age=28800`) and live bundle (`index-DiHrQZz2.js`, `index-BPUDR1A9.css`) verified.
-- **Kirakit Kingkaew (A) (`UAT-01, UAT-03, UAT-05`):** __PARTNER_A_ROWS__
+- **Kirakit Kingkaew (A) (`UAT-01, UAT-03, UAT-05`):** `2026-11-25 22:23–22:33 UTC+7`, manual in Claude built-in browser (checked by B; `UAT-03` steps 3–4 & `UAT-05` signed-out `/orders` carried from earlier Codex Computer Use run): `UAT-01` **PASS** (order `#11`, Latte ×2 + Americano ×1 = `฿185.00`, accepted to `ACCEPTED`), `UAT-03` **PASS** (wrong-role redirects on `/operator/orders` and `/menu`, `CUSTOMER-B` sees `"Order not found."` on `#11`, `#11` unchanged), `UAT-05` **PASS** (wrong password `"Incorrect email or password."` clears password & keeps email; Log out + Back/reload stays `/login`). Recorded in EN-009_P3's [`uat-execution.md`](https://github.com/songt888/event-registration-system/blob/main/docs/labs/lab-06/uat-execution.md).
 
 ### Fix & regression evidence (`lab6` branch, PR [#138](https://github.com/vienggd/Food-order/pull/138))
 - **RED before fixes:** Commits `cd56600` (`14` server tests + `8` E2E failed on `TEST-L6-121..129`) and `d1bf95c` (`TEST-L6-132` failed on missing `<table>`); full log in `docs/labs/lab-06/evidence/red.txt`.
@@ -92,8 +92,8 @@ Full contract rationale and step/date provenance are recorded in [`triage.md`](t
 
 | Re-test item | Recorded value |
 |---|---|
-| Corrected `main` commit | __CORRECTED_MAIN_COMMIT__ |
-| Deployed Cloud Run revision | __DEPLOYED_REVISION__ |
+| Corrected `main` commit | `163fdb7` (PR `#168`) |
+| Deployed Cloud Run revision | `food-order-00008-v6c` (`index-D6oQEALR.js`, `/api/ready` OK) |
 | Partner re-test execution (`#123`, other 8 fixes, `UAT-01/03/04/05`) | __PARTNER_RETEST_RESULTS__ |
 | Independent acceptance decision by EN-009_P3 (`Accepted` / `Accepted with limitations` / `Not Accepted`) | __PARTNER_ACCEPTANCE__ |
 
