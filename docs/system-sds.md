@@ -347,7 +347,7 @@ Sprint 2–3 paths are the ones in the feature contracts (`docs/sprint_2/sprints
 - Schema changes only through Prisma migrations in `server/prisma/migrations/`, committed to Git. `prisma migrate dev` locally, `prisma migrate deploy` in tests and production. Migrations are additive so a rollback of the app does not need a schema rollback.
 - Seed (`npm run db:seed`) is repeatable (upsert): same 3 users and 6 menu items every time.
 
-### 7.4 GCP deployment (Lab 5; live on Cloud Run, current revision `food-order-00008-v6c` = `main` `163fdb7`, Lab 6 release)
+### 7.4 GCP deployment (Lab 5; live on Cloud Run, current revision `food-order-00009-jd9` = `main` `39bda5e`, Lab 6 release with `#132` fix)
 
 Setup and runbook: `docs/labs/lab-05/deployment.md`, `runbook.md`. The Sprint 2 and Sprint 3 code on `sprint2` is **not deployed yet**; it goes out with the release PR `sprint2` to `main`.
 
