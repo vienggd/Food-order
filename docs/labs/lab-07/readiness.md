@@ -67,7 +67,7 @@ Evidence for the PDF: for each live check keep the status code and response (cur
 ## 5. Defects by severity and status (maintained Sprint 1 scope)
 
 - **Lab 7 change C-1 defects:** 0 defects found during implementation, unit/API/E2E verification, or review on `lab7` (`3c276b2`).
-- **Sprint 1 UAT findings (pending triage on `lab6`):** 7 partner UAT findings (`#121`–`#127`) were reported on 25 Nov 2026 against the Lab 5/Sprint 1 baseline (`b71cdb2`). They are not yet triaged or fixed; every accepted critical/major defect must be resolved, deployed, and re-tested on `lab6` before `lab7` merges into `main`.
+- **Sprint 1 UAT findings (triage & fixes in PR #138 on `lab6`):** 12 open partner UAT findings (`#121`–`#126` and `#128`–`#133`; `#127` was closed `NOT_PLANNED` on 25 Nov and split into `#128`–`#133`). Fixes are in PR `#138` on `lab6`, still pending merge, deploy, and partner re-test before `lab7` merges into `main`.
 
 ## 6. Technical debt
 
@@ -76,7 +76,7 @@ Deferred engineering work that creates future cost or risk (distinct from known 
 | Item | Impact | Priority | Disposition / action |
 |---|---|---|---|
 | Duplicated `15`-item cap constant in `server/src/orders/routes.ts` and `client/src/lib/cart.ts` | A future limit change must update two files or client and server could drift | Medium | Guarded by `TEST-L7-1..5`; extract a shared constant/config if order limits expand in Sprint 3 (owner: vieng / ninja) |
-| `ci-docker.yml` triggers on `main` PRs only, not on staging branches (`lab7`, `sprint2`, `lab6`) | Staging PRs rely on local test runs until the `main` release PR | Medium | Keep mandatory local `npm test` + `npm run test:e2e` on every PR; CI runs on the `main` release PR (owner: vieng) |
+| `ci-docker.yml` triggers on `main` and `lab-5` PRs (and `workflow_call`), not on `lab7`, `sprint2`, or `lab6` | Staging PRs rely on local test runs until the `main` release PR | Medium | Keep mandatory local `npm test` + `npm run test:e2e` on every PR; CI runs on the `main` release PR (owner: vieng) |
 | Lab 7 contract changes live in `docs/sprint_1/*` on `lab7`, while living docs live in `docs/*` on `sprint2` | Merging `lab7` into `main` must carry BR-01b into living SRS, SDS, and traceability | Low | Port BR-01b into `docs/srs.md`, `docs/system-sds.md`, and `docs/traceability.md` in the `lab7` → `main` release PR (owner: ninja + vieng) |
 | `e2e/helpers.ts` (`shot()`) writes all E2E screenshots into `docs/sprint_1/evidence/screenshots/` | Running Lab 7 E2E overwrites Sprint 1 PNGs unless restored manually | Low | Restore Sprint 1 PNGs after runs; parameterize the screenshot output directory before the final release (owner: vieng) |
 
@@ -86,7 +86,7 @@ Deferred engineering work that creates future cost or risk (distinct from known 
 
 Outstanding items required before `READY`:
 1. **TA answer on Question 3** (permission to deploy newer versions to the Lab 5 Cloud Run URL while Lab 5 is graded) — owner: **vieng**.
-2. **Lab 6 UAT triage, fixes, and partner re-test** for `#121`–`#127` (must reach `main` before `lab7`) — owner: **vieng + partner team**.
+2. **Lab 6 UAT triage, fixes, and partner re-test** for `#121`–`#126` and `#128`–`#133` (`#127` closed/split; must reach `main` before `lab7`) — owner: **vieng + partner team**.
 3. **Release integration & live verification:** merge `lab7` → `main` with CI green, deploy to Cloud Run, complete live checks `L1`–`L8`, and finalize metrics + Lab 7 PDF — owner: **vieng + ninja**.
 
 ## 8. Retrospective
