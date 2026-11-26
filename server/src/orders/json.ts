@@ -11,6 +11,7 @@ export function toOrderJson(order: Order & { lines: OrderLine[] }) {
     cancelledAt: order.cancelledAt?.toISOString() ?? null,
     rejectedAt: order.rejectedAt?.toISOString() ?? null,
     rejectReason: order.rejectReason,
+    pickupSlot: order.pickupSlot?.toISOString() ?? null,
     paymentStatus: order.paymentStatus,
     paidAt: order.paidAt?.toISOString() ?? null,
     refundedAt: order.refundedAt?.toISOString() ?? null,

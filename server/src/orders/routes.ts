@@ -6,6 +6,7 @@ import { requireRole } from "../auth/middleware.js";
 import { toOrderJson } from "./json.js";
 import { statusesThatCanMoveTo } from "./transitions.js";
 import { dbId, MAX_DB_ID } from "../ids.js";
+import { CAPACITY, parsePickupSlot } from "./slots.js";
 
 export const ordersRouter = Router();
 ordersRouter.use(requireRole("CUSTOMER"));
@@ -26,7 +27,10 @@ const placeBody = z.strictObject({
 type BadItem = { menuItemId: number; reason: "DUPLICATE" | "NOT_FOUND" | "SOLD_OUT" };
 
 ordersRouter.post("/", async (req, res) => {
-  const { items } = placeBody.parse(req.body);
+  // F-09: pickupSlot is read here, outside the place-order schema block above (Lab 7 edits that block).
+  const { pickupSlot: rawSlot, ...rest } = (req.body ?? {}) as Record<string, unknown>;
+  const { items } = placeBody.parse(rest);
+  const slot = rawSlot === undefined || rawSlot === null ? null : parsePickupSlot(rawSlot);
 
   const seen = new Set<number>();
   const duplicates: BadItem[] = [];
@@ -58,6 +62,13 @@ ordersRouter.post("/", async (req, res) => {
       throw new AppError(400, "VALIDATION_ERROR", `Order not placed. ${what} no longer available.`, { items: bad });
     }
 
+    // F-09: a per-slot lock makes "count, then insert" safe: 20 parallel orders for the last place give one success.
+    if (slot) {
+      await tx.$executeRaw`SELECT pg_advisory_xact_lock(${Math.floor(slot.getTime() / 60000)}::bigint)`;
+      const taken = await tx.order.count({ where: { pickupSlot: slot, status: { notIn: ["CANCELLED", "REJECTED"] } } });
+      if (taken >= CAPACITY) throw new AppError(409, "INVALID_STATE", "This pickup slot is full. Pick another slot.", { pickupSlot: slot.toISOString() });
+    }
+
     // Prices and names come from the database and are copied onto the lines (BR-04, BR-05).
     const lines = items.map(({ menuItemId, quantity }) => {
       const m = byId.get(menuItemId)!;
@@ -65,7 +76,7 @@ ordersRouter.post("/", async (req, res) => {
     });
     const total = lines.reduce((sum, l) => sum + l.unitPrice * l.quantity, 0);
     return tx.order.create({
-      data: { customerId: req.user!.id, total, lines: { create: lines } },
+      data: { customerId: req.user!.id, total, pickupSlot: slot, lines: { create: lines } },
       include: { lines: { orderBy: { id: "asc" } } },
     });
   });
