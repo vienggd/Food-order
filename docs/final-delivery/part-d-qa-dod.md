@@ -1,8 +1,8 @@
 # Final Delivery Part D — Quality assurance, UAT closure, and Definition of Done (draft)
 
-Campus Café Pre-order — Team **Est** (`vienggd/Food-order`), Section **131**. Author: **vieng** (`vienggd`), Issue **#196**. Rubric: `final_project_delivery.pdf` §3.4 (20 pts).
+Campus Café Pre-order — Team **Est** (`vienggd/Food-order`), Section **131**. Author: **vieng** (`vienggd`), Issue **#196**. Rubric: `project_final_delivery_v1.pdf` (local copy `docs/final_project_delivery.pdf`) §3.4 (20 pts).
 
-> **Important rule (`final_project_delivery.pdf` §3.4 & §4):** Final Delivery test and UAT results **must be executed on the final tagged release commit `v1.0.0` on `main`**. Prior Sprint 1, Lab 6, Lab 7, and Deliverable 2 runs are recorded below for traceability only; all final-commit result cells remain **PENDING `v1.0.0`** until `v1.0.0` is tagged and tested end-to-end.
+> **Important rule (`project_final_delivery_v1.pdf` §3.4 & §4):** Final Delivery test and UAT results **must be executed on the final tagged release commit `v1.0.0` on `main`**. Prior Sprint 1, Lab 6, Lab 7, and Deliverable 2 runs are recorded below for traceability only; all final-commit result cells remain **PENDING `v1.0.0`** until `v1.0.0` is tagged and tested end-to-end.
 
 ## D.1 Final release automated verification summary (`v1.0.0`)
 
@@ -20,17 +20,17 @@ Campus Café Pre-order — Team **Est** (`vienggd/Food-order`), Section **131**.
 
 Cross-team UAT ran with **EN-009_P3** (`Kirakit Kingkaew`, `Nattakit Prasertsak`) against our Lab 5/Lab 6 release:
 
-- **Est testing EN-009_P3 (`songt888/event-registration-system`):** `UAT-01..06` and re-tests (`#141–#148`, `#151–#155`, `UAT-04` step 9 post-deploy persistence) **all PASS (`13/13` findings verified on `v0.1.3-lab6` / `502d2a6` / `s47a6b53b-00006-7bv`)**. Team Est posted official **`Accepted`** in [`songt888/event-registration-system#126`](https://github.com/songt888/event-registration-system/issues/126#issuecomment-7202511583).
+- **Est testing EN-009_P3 (`songt888/event-registration-system`):** `UAT-01..06` and re-tests (`#141–#148`, `#151–#155`, `UAT-04` step 9 post-deploy persistence) **all PASS (`13/13` findings verified on partner repo `songt888` tag `v0.1.3-lab6` / commit `502d2a6` / Cloud Run revision `s47a6b53b-00006-7bv`)**. Team Est posted official **`Accepted`** in [`songt888/event-registration-system#126`](https://github.com/songt888/event-registration-system/issues/126#issuecomment-7202511583).
 - **EN-009_P3 testing Food-order (`Food-order` `#121–#133`):** All **9 accepted Lab 6 defects (`#121, #122, #123, #124, #125, #126, #128, #129, #132`)** were fixed, deployed to `main` (`163fdb7` -> `39bda5e`, live Cloud Run revision `food-order-00009-jd9`), **re-tested PASS** by Kirakit (ending with `#132` PASS on `39bda5e` at `2026-11-27 03:32 UTC+7`), and **closed to Board 4 `Done`**.
-- **3 partner enhancement requests (`#130, #131, #133`)** were formally accepted by EN-009_P3 as Sprint 3 backlog deferrals and sit in Board 4 **`Backlog`**:
-  - `#130` — Customer password reset / change UI & account recovery (note: Sprint 3 / final scope decision).
-  - `#131` — Navigation ergonomics / Breadcrumb & back-navigation enhancement.
-  - `#133` — Queue auto-refresh / notification polish on operator queue.
+- **3 partner enhancement requests (`#130, #131, #133`)** were formally accepted by EN-009_P3 as Sprint 3 `F-12` (`NFR-09`) backlog deferrals and sit in Board 4 **`Backlog`**:
+  - `#130` — UAT finding: opening Cart on phone does not move keyboard focus into the cart (`exploratory, UAT-01`).
+  - `#131` — UAT finding: Sign in field errors are not linked to their fields or announced (`exploratory, UAT-05`).
+  - `#133` — UAT finding: Sign in email error stays after the email is corrected (`exploratory, UAT-05`).
 - **Final Lab 6 sign-off artifact:** Awaits Nattakit's signed `Accepted` block on `EN-009_P3#129` to close `#101`.
 
 ## D.3 Final UAT re-test plan on `v1.0.0`
 
-Per `final_project_delivery.pdf` §3.4, Est will re-execute the Lab 6 UAT pack (`docs/labs/lab-06/uat-cases.md`, `UAT-01..06`) **plus new Sprint 2/3 & Lab 7 cases** directly on `https://food-order-d4jdyxqbca-as.a.run.app` (`v1.0.0`):
+Per `project_final_delivery_v1.pdf` §3.4, Est will re-execute the Lab 6 UAT pack (`docs/labs/lab-06/uat-cases.md`, `UAT-01..06`) **plus new Sprint 2/3 & Lab 7 cases** directly on `https://food-order-d4jdyxqbca-as.a.run.app` (`v1.0.0`):
 
 | Case ID | Scope | Executor (planned) | Result (`v1.0.0`) |
 |---|---|---|---|

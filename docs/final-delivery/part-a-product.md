@@ -1,6 +1,6 @@
 # Final Delivery Part A — Product overview, setup, and live demonstrations (draft)
 
-Campus Café Pre-order — Team **Est** (`vienggd/Food-order`), Section **131**. Author: **vieng** (`vienggd`), Issue **#196**. Rubric: `final_project_delivery.pdf` §3.1 (35 pts).
+Campus Café Pre-order — Team **Est** (`vienggd/Food-order`), Section **131**. Author: **vieng** (`vienggd`), Issue **#196**. Rubric: `project_final_delivery_v1.pdf` (local copy `docs/final_project_delivery.pdf`) §3.1 (35 pts).
 
 > **Draft boundary notice:** All final-release `v1.0.0` verification, Cloud Run revision checks after Sprint 3 deploy, and unbuilt `F-10` / `F-12` UI demonstrations are explicitly marked **PENDING `v1.0.0`**. Implemented Sprint 1 (`main` `39bda5e`) and Sprint 2 + implemented Sprint 3 (`F-09` server/picker, `F-11` search/filter on `sprint2`) are backed by real observed test runs and unedited Chromium `@2x` screenshots.
 

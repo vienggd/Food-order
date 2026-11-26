@@ -1,14 +1,14 @@
 # Final Delivery Part E — Final demonstration video plan and script (draft)
 
-Campus Café Pre-order — Team **Est** (`vienggd/Food-order`), Section **131**. Author: **vieng** (`vienggd`), Issue **#196**. Rubric: `final_project_delivery.pdf` §3.5 (10 pts).
+Campus Café Pre-order — Team **Est** (`vienggd/Food-order`), Section **131**. Author: **vieng** (`vienggd`), Issue **#196**. Rubric: `project_final_delivery_v1.pdf` (local copy `docs/final_project_delivery.pdf`) §3.5 (10 pts).
 
-## E.1 Delivery details (`final_project_delivery.pdf` §3.5 compliance)
+## E.1 Delivery details (`project_final_delivery_v1.pdf` §3.5 compliance)
 
 | Field | Value / Requirement |
 |---|---|
 | Video status | **PENDING RECORDING** (recorded after `v1.0.0` release on `main` and Sprint 3 `F-10` / `F-12` completion) |
 | YouTube URL (Unlisted or Public) | **`[PENDING — insert viewable YouTube link before final submission]`** |
-| Hard maximum duration | **`<= 4:00`** (resolved against `final_project_delivery.pdf` §3.5 explicit limit of **4 minutes maximum**, `docs/PLAN.md` updated via `PR #191`). Planned script target: **`3:50`** (10 s safety margin). |
+| Hard maximum duration | **`<= 4:00`** (resolved against `project_final_delivery_v1.pdf` §3.5 explicit limit of **4 minutes maximum**, `docs/PLAN.md` updated via `PR #191`). Planned script target: **`3:50`** (10 s safety margin). |
 | Presenters on camera | **Both `vieng` (Garunyapas Danpitakkul) and `ninja` (Dechayut Panyawutvorakul) in person on the same shared screen / camera** (explicitly NOT a recorded Zoom/video call, per handout §3.5). |
 | Environment shown | Live public Cloud Run app (`https://food-order-d4jdyxqbca-as.a.run.app`, running `v1.0.0`) + GitHub PR/Actions proof + terminal/Cloud Run revision check. |
 
