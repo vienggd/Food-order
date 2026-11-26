@@ -130,6 +130,16 @@ describe("F-04 accept", () => {
     expect(res.body.error.code).toBe("VALIDATION_ERROR");
   });
 
+  it.each(["0x1", "1e0", "1.0", "+1", "0b1", "0o1", "%201"])(
+    "TEST-L6-121 accept rejects non-decimal/coerced id %s with 400 VALIDATION_ERROR",
+    async (id) => {
+      await makeOrder("alice@cafe.test", "PLACED");
+      const res = await accept(id);
+      expect(res.status).toBe(400);
+      expect(res.body.error.code).toBe("VALIDATION_ERROR");
+    },
+  );
+
   it("TEST-F04-09 customers get 403 and anonymous users 401 on both endpoints; order unchanged", async () => {
     const o = await makeOrder("alice@cafe.test", "PLACED");
     expect((await queue(alice)).status).toBe(403);

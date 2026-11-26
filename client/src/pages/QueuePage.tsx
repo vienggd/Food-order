@@ -240,54 +240,62 @@ export function QueuePage() {
           {!search && tab.key === "new" && <p className="muted">New orders appear here when you refresh.</p>}
         </div>
       ) : (
-        // Phone: one card per order. Desktop: the same items laid out as table rows (styles.css).
-        <ul className="queue">
-          <li className="queue-headrow" aria-hidden="true">
-            <span>Order</span>
-            <span>Customer</span>
-            <span>Items</span>
-            <span>Placed</span>
-            <span>Total</span>
-            <span>Action</span>
-          </li>
-          {shown.map((o) => (
-            <li className="card order-card" key={o.id} data-testid={`order-${o.id}`}>
-              <span className="q-no order-no">#{o.id}</span>
-              <span className={`q-pill pill ${o.status.toLowerCase()}`}>{o.status}</span>
-              <span className="q-who">
-                {o.customer.name} <PaymentBadge status={o.paymentStatus} />
-              </span>
-              <span className="q-time muted">{formatPlacedTime(o.createdAt)}</span>
-              <span className="q-items muted">{items(o)}</span>
-              <strong className="q-total">{baht(o.total)}</strong>
-              <span className="q-action">
-                {o.status === "PLACED" ? (
-                  <span className="q-buttons">
-                    <button className="btn small danger-outline" disabled={busyId === o.id} onClick={() => openReject(o)}>
-                      Reject
-                    </button>
-                    <button className="btn small" disabled={busyId === o.id} onClick={() => accept(o.id)}>
-                      {busyId === o.id ? "Accepting…" : "Accept order"}
-                    </button>
-                  </span>
-                ) : o.status in NEXT ? (
-                  <div className="q-step">
-                    <button
-                      className="btn small"
-                      disabled={busyId === o.id || (o.status === "READY" && o.paymentStatus !== "PAID")}
-                      onClick={() => step(o as QueueOrder & { status: keyof typeof NEXT })}
-                    >
-                      {busyId === o.id ? NEXT[o.status as keyof typeof NEXT].busy : NEXT[o.status as keyof typeof NEXT].label}
-                    </button>
-                    {o.status === "READY" && o.paymentStatus !== "PAID" && (
-                      <p className="muted q-wait">Waiting for payment. The customer pays in the app.</p>
-                    )}
-                  </div>
-                ) : null}
-              </span>
-            </li>
-          ))}
-        </ul>
+        // Phone: one card per order (CSS grid). Desktop: semantic table (styles.css).
+        <table className="queue">
+          <thead>
+            <tr className="queue-headrow">
+              <th scope="col">Order</th>
+              <th scope="col">Customer</th>
+              <th scope="col">Items</th>
+              <th scope="col">Placed</th>
+              <th scope="col">Total</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {shown.map((o) => (
+              <tr className="card order-card" key={o.id} data-testid={`order-${o.id}`}>
+                <td className="q-no order-no">#{o.id}</td>
+                <td className="q-pill">
+                  <span className={`pill ${o.status.toLowerCase()}`}>{o.status}</span>
+                </td>
+                <td className="q-who">
+                  {o.customer.name} <PaymentBadge status={o.paymentStatus} />
+                </td>
+                <td className="q-items muted">{items(o)}</td>
+                <td className="q-time muted">{formatPlacedTime(o.createdAt)}</td>
+                <td className="q-total">
+                  <strong>{baht(o.total)}</strong>
+                </td>
+                <td className="q-action">
+                  {o.status === "PLACED" ? (
+                    <span className="q-buttons">
+                      <button className="btn small danger-outline" disabled={busyId === o.id} onClick={() => openReject(o)}>
+                        Reject
+                      </button>
+                      <button className="btn small" disabled={busyId === o.id} onClick={() => accept(o.id)}>
+                        {busyId === o.id ? "Accepting…" : "Accept order"}
+                      </button>
+                    </span>
+                  ) : o.status in NEXT ? (
+                    <div className="q-step">
+                      <button
+                        className="btn small"
+                        disabled={busyId === o.id || (o.status === "READY" && o.paymentStatus !== "PAID")}
+                        onClick={() => step(o as QueueOrder & { status: keyof typeof NEXT })}
+                      >
+                        {busyId === o.id ? NEXT[o.status as keyof typeof NEXT].busy : NEXT[o.status as keyof typeof NEXT].label}
+                      </button>
+                      {o.status === "READY" && o.paymentStatus !== "PAID" && (
+                        <p className="muted q-wait">Waiting for payment. The customer pays in the app.</p>
+                      )}
+                    </div>
+                  ) : null}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
       {rejecting && (
         <Dialog title={`Reject order #${rejecting.id}?`} onClose={() => busyId === null && setRejecting(null)}>

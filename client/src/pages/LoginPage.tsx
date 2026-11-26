@@ -32,7 +32,13 @@ export function LoginPage() {
       navigate(homeFor(u.role), { replace: true });
     } catch (err) {
       setPassword("");
-      setError(err instanceof ApiError && err.status === 401 ? "Incorrect email or password." : NETWORK_MESSAGE);
+      setError(
+        err instanceof ApiError && err.status === 401
+          ? "Incorrect email or password."
+          : err instanceof ApiError && err.status === 400
+            ? err.message
+            : NETWORK_MESSAGE,
+      );
       setBusy(false);
     }
   }
