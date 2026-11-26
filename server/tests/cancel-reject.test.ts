@@ -208,7 +208,7 @@ describe("F-06 status transitions", () => {
     const all = Object.values(OrderStatus);
     const allowed: string[] = [];
     for (const from of all) for (const to of all) if (canTransition(from, to)) allowed.push(`${from}->${to}`);
-    expect(allowed.sort()).toEqual(["PLACED->ACCEPTED", "PLACED->CANCELLED", "PLACED->REJECTED"]);
+    expect(allowed.filter((t) => t.startsWith("PLACED")).sort()).toEqual(["PLACED->ACCEPTED", "PLACED->CANCELLED", "PLACED->REJECTED"]); // PLACED targets only; the F-07 chain is in fulfilment.test.ts
     expect(canTransition("ACCEPTED", "CANCELLED")).toBe(false);
     expect(canTransition("REJECTED", "ACCEPTED")).toBe(false);
   });

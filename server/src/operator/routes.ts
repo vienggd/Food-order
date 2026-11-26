@@ -4,19 +4,26 @@ import { prisma } from "../db.js";
 import { AppError } from "../errors.js";
 import { requireRole } from "../auth/middleware.js";
 import { toOrderJson } from "../orders/json.js";
-import { statusesThatCanMoveTo } from "../orders/transitions.js";
+import { nextStep, statusesThatCanMoveTo } from "../orders/transitions.js";
 import { dbId } from "../ids.js";
 
 export const operatorRouter = Router();
 operatorRouter.use(requireRole("OPERATOR"));
 
-// Sprint 1 supports only the PLACED queue; missing status means PLACED.
-const queueQuery = z.object({ status: z.literal("PLACED").default("PLACED") });
+// F-07: `status` is a comma-separated list of open statuses; missing means PLACED (Sprint 1 behaviour).
+const OPEN_STATUSES = ["PLACED", "ACCEPTED", "PREPARING", "READY"] as const;
+const queueQuery = z.object({
+  status: z
+    .string()
+    .default("PLACED")
+    .transform((v) => v.split(","))
+    .pipe(z.array(z.enum(OPEN_STATUSES)).min(1)),
+});
 
 operatorRouter.get("/orders", async (req, res) => {
   const { status } = queueQuery.parse(req.query);
   const orders = await prisma.order.findMany({
-    where: { status },
+    where: { status: { in: status } },
     orderBy: [{ createdAt: "asc" }, { id: "asc" }],
     include: { lines: { orderBy: { id: "asc" } }, customer: { select: { id: true, name: true } } },
   });
@@ -69,6 +76,33 @@ operatorRouter.post("/orders/:id/reject", async (req, res) => {
         : order.status === "REJECTED"
           ? `Order #${id} was already rejected.`
           : `Order #${id} was already accepted by another staff member.`;
+    throw new AppError(409, "INVALID_STATE", message, { status: order.status });
+  }
+  res.json(toOrderJson(order));
+});
+
+// F-07 advance (BR-13): one step at a time. `from` is the status the operator saw, so a stale press cannot move an order twice.
+const STEP_COLUMN = { PREPARING: "preparingAt", READY: "readyAt", PICKED_UP: "pickedUpAt" } as const;
+const CHAIN = ["ACCEPTED", "PREPARING", "READY", "PICKED_UP"];
+const advanceBody = z.strictObject({ from: z.enum(["ACCEPTED", "PREPARING", "READY"]) });
+
+operatorRouter.post("/orders/:id/advance", async (req, res) => {
+  const id = dbId.parse(req.params.id);
+  const parsed = advanceBody.safeParse(req.body);
+  if (!parsed.success) throw new AppError(400, "VALIDATION_ERROR", "from must be ACCEPTED, PREPARING or READY.", { field: "from" });
+  const { from } = parsed.data;
+  const next = nextStep(from)!;
+  const { count } = await prisma.order.updateMany({
+    where: { id, status: from },
+    data: { status: next, [STEP_COLUMN[next as keyof typeof STEP_COLUMN]]: new Date() },
+  });
+  const order = await prisma.order.findUnique({ where: { id }, include: { lines: { orderBy: { id: "asc" } } } });
+  if (!order) throw new AppError(404, "NOT_FOUND", "Order not found.");
+  if (count === 0) {
+    const moved = CHAIN.indexOf(order.status) > CHAIN.indexOf(from);
+    const message = moved
+      ? `Order #${id} is already ${order.status}. Another staff member moved it.`
+      : `Order #${id} is ${order.status}, so it can't be moved to the next step.`;
     throw new AppError(409, "INVALID_STATE", message, { status: order.status });
   }
   res.json(toOrderJson(order));

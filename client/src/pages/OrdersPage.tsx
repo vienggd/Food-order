@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import { api, ApiError } from "../api";
+import { api, ApiError, NETWORK_MESSAGE } from "../api";
 import { formatBaht } from "../lib/money";
 import type { Order, OrderStatus, OrderSummary } from "../lib/orders";
 import { formatPlacedTime } from "../lib/time";
 import { PaymentBadge, PaymentCard } from "../components/Payment";
+import { Dialog } from "../components/Dialog";
 
 function StatusPill({ status }: { status: OrderStatus }) {
   return <span className={`pill ${status.toLowerCase()}`}>{status}</span>;
@@ -111,7 +112,57 @@ export function OrdersPage({ selectedId }: { selectedId?: string }) {
 const HINT: Partial<Record<OrderStatus, string>> = {
   PLACED: "Waiting for the café to accept your order.",
   ACCEPTED: "Accepted — being prepared soon.",
+  PREPARING: "Your order is being prepared.",
+  READY: "Ready! Show your order number at the counter.",
+  PICKED_UP: "Picked up. Enjoy!",
 };
+
+// F-06: Cancel area, only while PLACED (BR-11). The server checks again and answers 409 if the order moved on.
+function CancelArea({ order, onChanged, onNote }: { order: Order; onChanged: (o: Order) => void; onNote: (n: { kind: "success" | "error"; text: string }) => void }) {
+  const [open, setOpen] = useState(false);
+  const [busy, setBusy] = useState(false);
+  if (order.status !== "PLACED") return null;
+
+  async function confirm() {
+    setBusy(true);
+    try {
+      const updated = await api<Order>(`/api/orders/${order.id}/cancel`, { method: "POST" });
+      setOpen(false);
+      onChanged(updated);
+      onNote({ kind: "success", text: `Order #${order.id} cancelled.` });
+    } catch (err) {
+      setOpen(false);
+      onNote({ kind: "error", text: err instanceof ApiError ? `Not cancelled. ${err.message}` : NETWORK_MESSAGE });
+      if (err instanceof ApiError && err.status === 409) onChanged(await api<Order>(`/api/orders/${order.id}`).catch(() => order));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <>
+      <button className="btn danger-outline" onClick={() => setOpen(true)}>
+        Cancel order
+      </button>
+      {open && (
+        <Dialog title={`Cancel order #${order.id}?`} onClose={() => !busy && setOpen(false)}>
+          <p className="muted">
+            You can't undo this.
+            {order.paymentStatus === "PAID" && " Your payment will be refunded (simulated)."}
+          </p>
+          <div className="dialog-actions">
+            <button className="btn ghost" autoFocus disabled={busy} onClick={() => setOpen(false)}>
+              Keep order
+            </button>
+            <button className="btn danger" disabled={busy} onClick={confirm}>
+              {busy ? "Cancelling…" : "Cancel order"}
+            </button>
+          </div>
+        </Dialog>
+      )}
+    </>
+  );
+}
 
 // S4 Order detail (F-03): lines and total come from the order itself (BR-05), never from the menu.
 export function OrderDetailPage() {
@@ -119,6 +170,7 @@ export function OrderDetailPage() {
   const location = useLocation();
   const justPlaced = (location.state as { placed?: boolean } | null)?.placed;
   const [order, setOrder] = useState<Order | "loading" | "notfound" | "error">("loading");
+  const [note, setNote] = useState<{ kind: "success" | "error"; text: string } | null>(null);
 
   const load = useCallback(() => {
     setOrder("loading");
@@ -154,6 +206,11 @@ export function OrderDetailPage() {
   return (
     <div className="order-detail">
       {back}
+      {note && (
+        <div className={"msg " + note.kind} role={note.kind === "error" ? "alert" : "status"}>
+          {note.text}
+        </div>
+      )}
       {justPlaced && (
         <div className="msg success" role="status">
           Order #{order.id} placed!
@@ -185,7 +242,21 @@ export function OrderDetailPage() {
           <strong>{formatBaht(order.total)}</strong>
         </div>
         <p className="muted">{HINT[order.status]}</p>
+        {order.status === "CANCELLED" && (
+          <div className="final-card">
+            <strong>You cancelled this order</strong>
+            {order.cancelledAt && <p>{formatPlacedTime(order.cancelledAt)}</p>}
+          </div>
+        )}
+        {order.status === "REJECTED" && (
+          <div className="final-card rejected">
+            <strong>The café rejected this order</strong>
+            <p>Reason: "{order.rejectReason}"</p>
+            {order.rejectedAt && <p>{formatPlacedTime(order.rejectedAt)}</p>}
+          </div>
+        )}
         <PaymentCard order={order} onPaid={setOrder} />
+        <CancelArea order={order} onChanged={setOrder} onNote={setNote} />
         <ol className="timeline">
           <li>Placed {formatPlacedTime(order.createdAt)}</li>
           <li>{order.acceptedAt ? `Accepted ${formatPlacedTime(order.acceptedAt)}` : "Waiting for the café"}</li>
