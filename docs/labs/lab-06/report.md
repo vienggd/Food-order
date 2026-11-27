@@ -5,13 +5,14 @@ Staging branch for all Lab 6 work: **`lab6`**. Corrected fixes are deployed on `
 
 ## Contents
 
-| Part | Role | Title | Key files & PRs | Evidence IDs |
-|---|---|---|---|---|
-| — | Both | Team, staging branch (`lab6`), version & contribution tables | `docs/labs/lab-06/report.md` (Issue [#101](https://github.com/vienggd/Food-order/issues/101)) | `v0.1.0-sprint1`, `b71cdb2` |
-| **A** | Product team | Test plan, UAT cases (`UAT-01..06`), and handoff pack | `docs/labs/lab-06/test-plan.md`, `uat-cases.md`, `handoff.md` (PR [#107](https://github.com/vienggd/Food-order/pull/107)) | Accounts `CUSTOMER-A`, `CUSTOMER-B`, `OPERATOR` (no passwords) |
-| **B** | UAT team | Testing partner **EN-009_P3** (`event-registration-system`) | [`part-b-uat-team.md`](part-b-uat-team.md), [`execution-partner.md`](execution-partner.md) (PRs [#105](https://github.com/vienggd/Food-order/pull/105), [#111](https://github.com/vienggd/Food-order/pull/111), [#140](https://github.com/vienggd/Food-order/pull/140), [#149](https://github.com/vienggd/Food-order/pull/149), [#153](https://github.com/vienggd/Food-order/pull/153), [#156](https://github.com/vienggd/Food-order/pull/156)) | Outgoing `#141–#148`, `#151–#155`; `B-*-GD.png` & `HQ-*.png` (`X1–X7` not run) |
-| **C** | Product team | Partner findings triage (`#121–#133`) & RED→GREEN fixes | [`triage.md`](triage.md), `docs/labs/lab-06/evidence/` (`red.txt`, `green.txt`, `regression.txt`), PR [#138](https://github.com/vienggd/Food-order/pull/138) | `TEST-L6-121..132`; Partner B `UAT-02/04/06` PASS |
-| **D** | Product team | Fix verification, re-test handoff & final acceptance | [`retest-handoff.md`](retest-handoff.md), Issue `#101` | `9/9` fixes + `UAT-01/03/04/05` PASS (`39bda5e` / `food-order-00009-jd9`); **Accepted** (`songt888#129`) |
+| Part | Role | Title | Key files & PRs | Evidence IDs | Pages |
+|---|---|---|---|---|---|
+| — | Both | Team, staging branch (`lab6`), version & contribution tables | `docs/labs/lab-06/report.md` (Issue [#101](https://github.com/vienggd/Food-order/issues/101)) | `v0.1.0-sprint1`, `b71cdb2` | 1–3, 21–23 |
+| **A** | Product team | Test plan, UAT cases (`UAT-01..06`), and handoff pack | `docs/labs/lab-06/test-plan.md`, `uat-cases.md`, `handoff.md` (PR [#107](https://github.com/vienggd/Food-order/pull/107)) | Accounts `CUSTOMER-A`, `CUSTOMER-B`, `OPERATOR` (no passwords) | 4; App. A1–A3 pp. 24–28 |
+| **B** | UAT team | Testing partner **EN-009_P3** (`event-registration-system`) | [`part-b-uat-team.md`](part-b-uat-team.md), [`execution-partner.md`](execution-partner.md) (PRs [#105](https://github.com/vienggd/Food-order/pull/105), [#111](https://github.com/vienggd/Food-order/pull/111), [#140](https://github.com/vienggd/Food-order/pull/140), [#149](https://github.com/vienggd/Food-order/pull/149), [#153](https://github.com/vienggd/Food-order/pull/153), [#156](https://github.com/vienggd/Food-order/pull/156)) | Outgoing `#141–#148`, `#151–#155`; `B-*-GD.png` & `HQ-*.png` (`X1–X7` not run) | 5–8; App. B1–B3 pp. 29–42 |
+| **C** | Product team | Partner findings triage (`#121–#133`) & RED→GREEN fixes | [`triage.md`](triage.md), `docs/labs/lab-06/evidence/` (`red.txt`, `green.txt`, `regression.txt`), PR [#138](https://github.com/vienggd/Food-order/pull/138) | `TEST-L6-121..132`; Partner B `UAT-02/04/06` PASS | 9–10; App. C1–C4 pp. 43–49 |
+| **D** | Product team | Fix verification, re-test handoff & final acceptance | [`retest-handoff.md`](retest-handoff.md), Issue `#101` | `9/9` fixes + `UAT-01/03/04/05` PASS (`39bda5e` / `food-order-00009-jd9`); **Accepted** (`songt888#129`) | 11; App. D1 pp. 49–51 |
+| **E** | Both | Communication between the two teams (Discord group chat) | `docs/labs/lab-06/communication/chat-01..16.png` | Release handoffs, re-test requests, decisions | 12–20 |
 
 ## Team
 
@@ -97,6 +98,42 @@ Full contract rationale and step/date provenance are recorded in [`triage.md`](t
 | Partner re-test execution (`#123`, other 8 fixes, `UAT-01/03/04/05`) | **9/9 fixes PASS & UAT-01/03/04/05 all PASS** (`#121–#129` PASS on `163fdb7` / `food-order-00008-v6c` by Nattakit & Kirakit `00:18–01:45 UTC+7`; `#132` fixed in PR `#174`/`#181` and verified **PASS** on `39bda5e` / `food-order-00009-jd9` by Kirakit `03:32 UTC+7`; Sprint 3 deferral of `#130/#131/#133` accepted). |
 | Independent acceptance decision by EN-009_P3 (`Accepted` / `Accepted with limitations` / `Not Accepted`) | **Accepted** — signed by Kirakit Kingkaew (A) & Nattakit Prasertsak (B), 2026-11-27 ([`songt888/event-registration-system#129`](https://github.com/songt888/event-registration-system/issues/129)): 9/9 defects PASS (incl. `#123` major, `#132` by A `03:32` `#191` & B `03:34` `#192`, full 9-defect regression `#192`), `UAT-01/03/04/05` PASS (`#186/#187`), 0 open defects, `#130/#131/#133` deferred enhancements (no condition). |
 
+## Team communication between Est and EN-009_P3
+
+Both teams coordinated Lab 6 in one Discord group chat (4 members: vieng and ninja for Est; song and kakakaka for EN-009_P3). The group was used to hand over each release (version, commit, Cloud Run revision, URL, release notes), ask for re-tests of named Issues, report re-test results, and send the signed acceptance decisions. One partner message (25 Nov, chat 13) contained the shared test-account password; it is blacked out in the screenshot below, and EN-009_P3 was asked to change it. Unrelated older messages (a 29 Oct call, a 23 Nov chat) are cropped out. The screenshots below are cropped to the message area only, in the order they were taken.
+
+![Chat 1 of 16 — Discord group "Est × EN-009_P3" (members: vieng, ninja/DBNN, song, kakakaka), 25–27 Nov 2026](communication/chat-01.png)
+
+![Chat 2 of 16 — Discord group "Est × EN-009_P3" (members: vieng, ninja/DBNN, song, kakakaka), 25–27 Nov 2026](communication/chat-02.png)
+
+![Chat 3 of 16 — Discord group "Est × EN-009_P3" (members: vieng, ninja/DBNN, song, kakakaka), 25–27 Nov 2026](communication/chat-03.png)
+
+![Chat 4 of 16 — Discord group "Est × EN-009_P3" (members: vieng, ninja/DBNN, song, kakakaka), 25–27 Nov 2026](communication/chat-04.png)
+
+![Chat 5 of 16 — Discord group "Est × EN-009_P3" (members: vieng, ninja/DBNN, song, kakakaka), 25–27 Nov 2026](communication/chat-05.png)
+
+![Chat 6 of 16 — Discord group "Est × EN-009_P3" (members: vieng, ninja/DBNN, song, kakakaka), 25–27 Nov 2026](communication/chat-06.png)
+
+![Chat 7 of 16 — Discord group "Est × EN-009_P3" (members: vieng, ninja/DBNN, song, kakakaka), 25–27 Nov 2026](communication/chat-07.png)
+
+![Chat 8 of 16 — Discord group "Est × EN-009_P3" (members: vieng, ninja/DBNN, song, kakakaka), 25–27 Nov 2026](communication/chat-08.png)
+
+![Chat 9 of 16 — Discord group "Est × EN-009_P3" (members: vieng, ninja/DBNN, song, kakakaka), 25–27 Nov 2026](communication/chat-09.png)
+
+![Chat 10 of 16 — Discord group "Est × EN-009_P3" (members: vieng, ninja/DBNN, song, kakakaka), 25–27 Nov 2026](communication/chat-10.png)
+
+![Chat 11 of 16 — Discord group "Est × EN-009_P3" (members: vieng, ninja/DBNN, song, kakakaka), 25–27 Nov 2026](communication/chat-11.png)
+
+![Chat 12 of 16 — Discord group "Est × EN-009_P3" (members: vieng, ninja/DBNN, song, kakakaka), 25–27 Nov 2026](communication/chat-12.png)
+
+![Chat 13 of 16 — Discord group "Est × EN-009_P3" (members: vieng, ninja/DBNN, song, kakakaka), 25–27 Nov 2026](communication/chat-13.png)
+
+![Chat 14 of 16 — Discord group "Est × EN-009_P3" (members: vieng, ninja/DBNN, song, kakakaka), 25–27 Nov 2026](communication/chat-14.png)
+
+![Chat 15 of 16 — Discord group "Est × EN-009_P3" (members: vieng, ninja/DBNN, song, kakakaka), 25–27 Nov 2026](communication/chat-15.png)
+
+![Chat 16 of 16 — Discord group "Est × EN-009_P3" (members: vieng, ninja/DBNN, song, kakakaka), 25–27 Nov 2026](communication/chat-16.png)
+
 ## Contribution
 
 | Work item | Owner | Reviewer / verifier |
@@ -112,3 +149,206 @@ Both students used AI assistants (Claude worker sessions and Antigravity + Playw
 
 - All 9 accepted fixes are deployed on `main` (`39bda5e` / `food-order-00009-jd9`), `9/9` partner re-tests pass, team Est posted `Accepted` on `songt888#126`, and EN-009_P3 signed `Accepted` on `songt888#129` (`2026-11-27`). Final Issue `#101` closure follows partner review/merge of PR `#209` into `lab6`.
 - Existing `CI` triggers (`main` and `lab-5`), so `lab6` verification rests on real local Postgres + Playwright runs recorded in `docs/labs/lab-06/evidence/`.
+
+## Appendices
+
+These appendices put the assessed material directly in this PDF (handout §4.1). Linked files are the same files in `docs/labs/lab-06/` on branch `lab6`.
+
+### Appendix A1 — Complete UAT cases we sent to EN-009_P3 (Part A)
+
+<!-- INCLUDE: uat-cases.md -->
+
+### Appendix A2 — Handoff pack we sent (Part A)
+
+<!-- INCLUDE: handoff.md -->
+
+### Appendix A3 — Test plan (Part A)
+
+<!-- INCLUDE: test-plan.md -->
+
+### Appendix B1 — Our execution of EN-009_P3's cases (Part B)
+
+<!-- INCLUDE: execution-partner.md -->
+
+### Appendix B2 — Outgoing findings we reported to EN-009_P3 (Part B)
+
+<!-- INCLUDE: outgoing-issues-draft.md -->
+
+### Appendix B3 — Selected screenshot evidence of our UAT on EN-009_P3 (Part B)
+
+![B-UAT01-s08 — Part B normal journey on EN-009_P3 (UAT-01): Participant 3 registered, 2 of 3 places left. v0.1.2-lab5 / 04e8590, 26 Nov 21:29 UTC+7, expected = actual, PASS](screenshots-partner/B-UAT01-s08-GD.png)
+
+![B-UAT06-s03 — Part B rejected sign-in (UAT-06): wrong password shows "Email or password is incorrect.", stays on /login, nothing disclosed. v0.1.2-lab5, 26 Nov 21:28 UTC+7, PASS](screenshots-partner/B-UAT06-s03-GD.png)
+
+![HQ-UAT03-s2 — Part B forbidden ownership (UAT-03): Organizer Two denied another organizer's event; protected data not shown. v0.1.3-lab6 / 502d2a6, PASS](screenshots-partner/HQ-UAT03-s2-O2-denied.png)
+
+![HQ-UAT02-s8 — Part B business rule (UAT-02): Participant 4 refused, "This event has no places left." v0.1.3-lab6, PASS](screenshots-partner/HQ-UAT02-s8-P4-no-places-left.png)
+
+![B-UAT04-s09 — Part B persistence (UAT-04): registration still ACTIVE in the organizer roster after redeploy to s47a6b53b-00006-7bv, 27 Nov 00:20 UTC+7, PASS](screenshots-partner/B-UAT04-s09-roster-GD.png)
+
+![HQ-143-b — Part B re-test of our outgoing finding #143 on v0.1.3-lab6: refused registration no longer changes the places count (2 of 3). PASS](screenshots-partner/HQ-143-b-tabA-refused-and-2of3.png)
+
+### Appendix C1 — Triage of the findings EN-009_P3 sent us (Part C)
+
+<!-- INCLUDE: triage.md -->
+
+### Appendix C2 — RED output before the fixes (Part C)
+
+```text
+RED run, 26 Nov 2026, on lab6 baseline commit e1057b7 (b71cdb2 app code before Lab 6 fixes).
+
+== Server API: cd server && npx vitest run tests/orders.test.ts tests/operator.test.ts ==
+   × F-03 GET /api/orders and /api/orders/:id > TEST-L6-121 rejects non-decimal/coerced id 0x1 with 400 VALIDATION_ERROR 768ms
+     → expected 200 to be 400 // Object.is equality
+   × F-03 GET /api/orders and /api/orders/:id > TEST-L6-121 rejects non-decimal/coerced id 1e0 with 400 VALIDATION_ERROR 1172ms
+     → expected 200 to be 400 // Object.is equality
+   × F-03 GET /api/orders and /api/orders/:id > TEST-L6-121 rejects non-decimal/coerced id 1.0 with 400 VALIDATION_ERROR 798ms
+     → expected 200 to be 400 // Object.is equality
+   × F-03 GET /api/orders and /api/orders/:id > TEST-L6-121 rejects non-decimal/coerced id +1 with 400 VALIDATION_ERROR 973ms
+     → expected 200 to be 400 // Object.is equality
+   × F-03 GET /api/orders and /api/orders/:id > TEST-L6-121 rejects non-decimal/coerced id 0b1 with 400 VALIDATION_ERROR 1240ms
+     → expected 200 to be 400 // Object.is equality
+   × F-03 GET /api/orders and /api/orders/:id > TEST-L6-121 rejects non-decimal/coerced id 0o1 with 400 VALIDATION_ERROR 991ms
+     → expected 200 to be 400 // Object.is equality
+   × F-03 GET /api/orders and /api/orders/:id > TEST-L6-121 rejects non-decimal/coerced id %201 with 400 VALIDATION_ERROR 878ms
+     → expected 200 to be 400 // Object.is equality
+   × F-04 accept > TEST-L6-121 accept rejects non-decimal/coerced id 0x1 with 400 VALIDATION_ERROR 501ms
+     → expected 200 to be 400 // Object.is equality
+   × F-04 accept > TEST-L6-121 accept rejects non-decimal/coerced id 1e0 with 400 VALIDATION_ERROR 420ms
+     → expected 200 to be 400 // Object.is equality
+   × F-04 accept > TEST-L6-121 accept rejects non-decimal/coerced id 1.0 with 400 VALIDATION_ERROR 529ms
+     → expected 200 to be 400 // Object.is equality
+   × F-04 accept > TEST-L6-121 accept rejects non-decimal/coerced id +1 with 400 VALIDATION_ERROR 630ms
+     → expected 200 to be 400 // Object.is equality
+   × F-04 accept > TEST-L6-121 accept rejects non-decimal/coerced id 0b1 with 400 VALIDATION_ERROR 402ms
+     → expected 200 to be 400 // Object.is equality
+   × F-04 accept > TEST-L6-121 accept rejects non-decimal/coerced id 0o1 with 400 VALIDATION_ERROR 418ms
+     → expected 200 to be 400 // Object.is equality
+   × F-04 accept > TEST-L6-121 accept rejects non-decimal/coerced id %201 with 400 VALIDATION_ERROR 810ms
+     → expected 200 to be 400 // Object.is equality
+ Test Files  2 failed (2)
+      Tests  14 failed | 40 passed (54)
+
+== E2E: npx playwright test e2e/lab6-fixes.spec.ts ==
+  x   1 [phone] › e2e\lab6-fixes.spec.ts:11:7 › TEST-L6-123 phone cart bar does not cover the last menu item (#123)
+      Expected: <= 676, Received: 701.140625
+  x   6 [phone] › e2e\lab6-fixes.spec.ts:120:7 › TEST-L6-128 cart badge counts cart lines rather than total item quantities (#128)
+      Expected: "Cart (1)", Received: "Cart (2)"
+  x   7 [phone] › e2e\lab6-fixes.spec.ts:139:7 › TEST-L6-129 phone top bar displays Campus Café brand without horizontal overflow (#129)
+      Expected substring: "Campus Café", Received string: "Hey, AliceCustomerLog out"
+  x   9 [desktop] › e2e\lab6-fixes.spec.ts:32:7 › TEST-L6-122 access warning clears on logout and on next navigation (#122)
+      getByText("You don't have access to that page.") Expected: 0, Received: 1
+  x  10 [desktop] › e2e\lab6-fixes.spec.ts:56:7 › TEST-L6-124 Order placed banner disappears after reload and after status becomes ACCEPTED (#124)
+      getByText("Order #2 placed!") Expected: 0, Received: 1
+  x  11 [desktop] › e2e\lab6-fixes.spec.ts:83:7 › TEST-L6-125 desktop split view keeps list status synced when Refresh status runs (#125)
+      locator('.order-list button').filter({ hasText: '#1' }) Expected substring: "ACCEPTED", Received: "#100:56 · 1 itemPLACED฿65.00"
+  x  12 [desktop] › e2e\lab6-fixes.spec.ts:101:7 › TEST-L6-126 login 400 shows server validation message instead of generic network error (#126)
+      Expected substring: not "Something went wrong", Received: "Something went wrong. Please try again."
+  x  13 [desktop] › e2e\lab6-fixes.spec.ts:120:7 › TEST-L6-128 cart badge counts cart lines rather than total item quantities (#128)
+      Expected: "1", Received: "2"
+  8 failed (0 passed, 6 skipped project-specific tests)
+
+== Additional E2E RED (#132 / EX-05, 26 Nov 2026): npx playwright test e2e/lab6-fixes.spec.ts -g TEST-L6-132 ==
+  1) [desktop] › e2e\lab6-fixes.spec.ts:149:7 › Lab 6 UAT defect regressions › TEST-L6-132 desktop operator queue uses a semantic table with column headers (#132)
+    Error: expect(locator).toBeVisible() failed
+    Locator: getByRole('table')
+    Expected: visible
+    Error: element(s) not found
+  1 failed (1 skipped project-specific test)
+```
+
+### Appendix C3 — GREEN output and full regression after the fixes (Part C)
+
+```text
+GREEN run, 26 Nov 2026, after fixes for UAT defects #121-#126, #128, #129 (follows RED commit cd56600).
+
+== Server API: cd server && npx vitest run tests/orders.test.ts tests/operator.test.ts ==
+ ✓ tests/orders.test.ts (37 tests) 16354ms
+   ✓ F-03 GET /api/orders and /api/orders/:id > TEST-L6-121 rejects non-decimal/coerced id 0x1 with 400 VALIDATION_ERROR  448ms
+   ✓ F-03 GET /api/orders and /api/orders/:id > TEST-L6-121 rejects non-decimal/coerced id 1e0 with 400 VALIDATION_ERROR  450ms
+   ✓ F-03 GET /api/orders and /api/orders/:id > TEST-L6-121 rejects non-decimal/coerced id 1.0 with 400 VALIDATION_ERROR  504ms
+   ✓ F-03 GET /api/orders and /api/orders/:id > TEST-L6-121 rejects non-decimal/coerced id +1 with 400 VALIDATION_ERROR  468ms
+   ✓ F-03 GET /api/orders and /api/orders/:id > TEST-L6-121 rejects non-decimal/coerced id 0b1 with 400 VALIDATION_ERROR  520ms
+   ✓ F-03 GET /api/orders and /api/orders/:id > TEST-L6-121 rejects non-decimal/coerced id 0o1 with 400 VALIDATION_ERROR  635ms
+   ✓ F-03 GET /api/orders and /api/orders/:id > TEST-L6-121 rejects non-decimal/coerced id %201 with 400 VALIDATION_ERROR  477ms
+ ✓ tests/operator.test.ts (17 tests) 8026ms
+   ✓ F-04 accept > TEST-L6-121 accept rejects non-decimal/coerced id 0x1..%201 with 400 VALIDATION_ERROR (all 7 passed)
+ Test Files  2 passed (2)
+      Tests  54 passed (54)
+
+== E2E: npx playwright test e2e/lab6-fixes.spec.ts ==
+  ok  1 [phone] › e2e\lab6-fixes.spec.ts:11:7 › TEST-L6-123 phone cart bar does not cover the last menu item (#123) (1.2s)
+  ok  6 [phone] › e2e\lab6-fixes.spec.ts:120:7 › TEST-L6-128 cart badge counts cart lines rather than total item quantities (#128) (895ms)
+  ok  7 [phone] › e2e\lab6-fixes.spec.ts:139:7 › TEST-L6-129 phone top bar displays Campus Café brand without horizontal overflow (#129) (747ms)
+  ok  9 [desktop] › e2e\lab6-fixes.spec.ts:32:7 › TEST-L6-122 access warning clears on logout and on next navigation (#122) (1.6s)
+  ok 10 [desktop] › e2e\lab6-fixes.spec.ts:56:7 › TEST-L6-124 Order placed banner disappears after reload and after status becomes ACCEPTED (#124) (1.3s)
+  ok 11 [desktop] › e2e\lab6-fixes.spec.ts:83:7 › TEST-L6-125 desktop split view keeps list status synced when Refresh status runs (#125) (987ms)
+  ok 12 [desktop] › e2e\lab6-fixes.spec.ts:101:7 › TEST-L6-126 login 400 shows server validation message instead of generic network error (#126) (890ms)
+  ok 13 [desktop] › e2e\lab6-fixes.spec.ts:120:7 › TEST-L6-128 cart badge counts cart lines rather than total item quantities (#128) (884ms)
+  6 skipped (viewport-specific tests skipped on the other project)
+  8 passed (24.2s)
+
+== Additional E2E GREEN (#132 / EX-05, 26 Nov 2026, follows RED d1bf95c): npx playwright test e2e/lab6-fixes.spec.ts e2e/queue.spec.ts ==
+  ok [desktop] › e2e\lab6-fixes.spec.ts:149:7 › TEST-L6-132 desktop operator queue uses a semantic table with column headers (#132)
+  ok [phone+desktop] › e2e\queue.spec.ts:14,26,35 › TEST-F04-11..13
+  15 passed (37.3s), 7 skipped (viewport-specific skips in lab6-fixes.spec.ts), 0 failed
+```
+
+```text
+Regression run, 26 Nov 2026, after Lab 6 fixes for #121-#126, #128, #129, #132 (semantic table) on lab6-vieng.
+Baseline before Lab 6 fixes (e1057b7 / b71cdb2 code): server 8 files / 71 tests pass, client 3 files / 6 tests pass.
+
+== Build: npm run build ==
+- server: prisma generate && tsc -> exit 0
+- client: tsc --noEmit && vite build -> exit 0 (52 modules, 1.46s)
+
+== Unit / API tests: npm test ==
+- server: Test Files 8 passed (8), Tests 85 passed (85), 0 failed, 0 skipped
+- client: Test Files 3 passed (3), Tests 6 passed (6), 0 failed, 0 skipped
+
+== Full Playwright E2E: npx playwright test ==
+- 33 passed (59.7s), 7 skipped (viewport-specific skips in e2e/lab6-fixes.spec.ts), 0 failed
+- Covers all Sprint 1 journeys (auth, menu, orders, operator queue) on phone (375px) + desktop (1280px) plus all 9 Lab 6 defect regression tests (#121-#126, #128, #129, #132).
+```
+
+### Appendix C4 — Review text of the fix PR #138 (Part C)
+
+```text
+PR #138 (lab6 fixes) — reviews and comments as on GitHub
+
+Title: L6-03/04: Triage UAT findings (#121-#133) and fix accepted defects (RED->GREEN)
+Author: vienggd  Merged by: NinjoMUDA at 2026-11-26T08:48:43Z
+
+Review by NinjoMUDA (CHANGES_REQUESTED) at 2026-11-26T06:46:25Z:
+Build on PR head: npm ci + npm run build OK. I could NOT run the DB tests/E2E myself (Docker not running here); I read the RED/GREEN/regression evidence instead: RED fails for the reported behaviour (expected 200 to be 400, Cart (2) vs Cart (1), overlap 701>676), not compile errors; GREEN 8 passed; regression 85+6 unit, 32 E2E.
+
+Please fix before merge:
+1. EX-05 (#132) is wrongly an enhancement. F-04 section UI line 59 says the desktop queue is 'the orders as a table (Order, Customer, Items, Placed, Total, Action), as in DesktopQueue.html', and the F-04 changelog v1.2 (6 Nov) says 'desktop queue is a table, no longer UI debt'. The triage reason 'already logged as UI debt' is the old v1.1 text. client/src/pages/QueuePage.tsx still renders ul + aria-hidden headrow. That is a broken written rule: reclassify as defect (minor), fix test-first (RED then GREEN) or keep it as an accepted known defect with a reason, but do not call it an enhancement.
+2. Wrong contract cites (decision may stay, quote the right line): #125/F4 cites AC-F03-07, but AC-F03-07 is 'list only own orders, newest first'; cite the ui-spec S3/S4 text instead. #123/F2 cites AC-F02-06, which is price/Sold-out display; the real basis is NFR-06 (works at 375 px) and AC-F02-06 only for 'add button reachable'. #126/F6 cites AC-F01-04 (API validation); the UI line is the ui-spec Errors table.
+3. ID EX-01 is used twice (umbrella #127 and the focus item #130). Give the focus item a distinct source ID so the table is traceable.
+4. #121 status says 'Fixing on lab6' but the table says fixed in #138; make Status consistent.
+5. #130/#131/#133 as enhancement look fine (no Sprint 1 line asks for focus move, aria-describedby, clear-on-change; NFR-09 is Sprint 3). Keep, with the F-12 issue link if one exists.
+6. Retest-handoff/Partner decision stay TBD; fine. Do not claim acceptance until A's rows UAT-01/03/05 arrive.
+
+Review by NinjoMUDA (APPROVED) at 2026-11-26T08:48:40Z:
+Re-checked. All 4 points fixed: #132 now a defect with RED d1bf95c (getByRole('table') not found, real behaviour failure) then GREEN 2e291c8 (QueuePage uses table + th scope=col); cites for #123/#125/#126 corrected; #127 umbrella id fixed; #121 status consistent. npm ci + npm run build OK on PR head. DB tests/E2E not run by me (Docker off); I rely on the evidence files (85 server + 6 client, Playwright 33 passed/7 skipped).
+Follow-up: partner decision stays TBD until A's UAT-01/03/05 rows and the post-deploy re-test; do not claim acceptance before.
+
+Comment by vienggd at 2026-11-26T08:47:39Z:
+Addressed all review points in RED d1bf95c -> GREEN 2e291c8:
+1. EX-05 (#132) reclassified as minor defect (per F-04 §3 UI & v1.2) and fixed test-first: TEST-L6-132 failed RED on ul (d1bf95c) -> converted QueuePage.tsx desktop queue to semantic <table> with <th> column headers while preserving the phone card grid (2e291c8), linked #132 to this PR.
+2. Fixed triage.md contract cites for #123 (NFR-06 + AC-F02-06 reachable +), #125 (ui-spec S3/S4, removed AC-F03-07), and #126 (ui-spec Errors table; API 400 already satisfies AC-F01-04).
+3. Renamed #127 Finding ID to 'Umbrella (#127)' so EX-01 is used only on #130.
+4. Updated #121 Status to 'Fixed in PR #138'.
+5. #130/#131/#133 enhancements now reference Sprint 3 docs/sprint_2/sprints/F-12-polish-a11y.md (NFR-09; no Sprint 3 implementation Issue yet).
+6. Updated retest-handoff.md with all 9 fixed defects and kept partner decision TBD until A's UAT-01/03/05 rows and post-deploy retest.
+Verification after 2e291c8: npm run build exit 0; npm test 85 server + 6 client; targeted E2E (lab6-fixes + queue) 15 passed / 7 skipped; full Playwright 33 passed / 7 skipped; Sprint 1 screenshots clean. Ready for re-review.
+
+Comment by NinjoMUDA at 2026-11-26T08:48:47Z:
+Merged after approval. Follow-ups: deploy the merged version, send retest-handoff.md to EN-009_P3, record their decision.
+```
+
+### Appendix D1 — Re-test handoff and EN-009_P3's signed acceptance (Part D)
+
+<!-- INCLUDE: retest-handoff.md -->
+
