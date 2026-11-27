@@ -1,0 +1,30 @@
+   × F-06 customer cancel (BR-11) > TEST-F06-01 cancels own PLACED order and it leaves the queue 889ms
+   × F-06 customer cancel (BR-11) > TEST-F06-02 refuses after the café accepted it (409) 611ms
+   × F-06 customer cancel (BR-11) > TEST-F06-03 refuses a REJECTED or CANCELLED order (409) 731ms
+   ✓ F-06 customer cancel (BR-11) > TEST-F06-04 someone else's order looks like a missing one (404)  567ms
+   × F-06 customer cancel (BR-11) > TEST-F06-05 unknown id is 404, bad ids are 400 610ms
+   ✓ F-06 customer cancel (BR-11) > TEST-F06-06 operator gets 403, anonymous gets 401  630ms
+   × F-06 operator reject (BR-12) > TEST-F06-07 rejects a PLACED order with a reason and it leaves the queue 630ms
+   × F-06 operator reject (BR-12) > TEST-F06-08 reason must be 3-200 characters after trimming 562ms
+   × F-06 operator reject (BR-12) > TEST-F06-09 saves the trimmed reason 613ms
+   × F-06 operator reject (BR-12) > TEST-F06-10 refuses ACCEPTED, CANCELLED and REJECTED orders (409) and keeps the old reason 620ms
+   × F-06 operator reject (BR-12) > TEST-F06-13 unknown id is 404, bad ids are 400 456ms
+   ✓ F-06 operator reject (BR-12) > TEST-F06-14 customer gets 403, anonymous gets 401  697ms
+   × F-06 operator reject (BR-12) > TEST-F06-15 the customer sees the reason, others get 404 654ms
+   × F-06 races (BR-12, NFR-04) > TEST-F06-11 accept and reject together: one 200, one 409, DB matches the winner 672ms
+   × F-06 races (BR-12, NFR-04) > TEST-F06-12 accept and cancel together: one 200, one 409, DB matches the winner 698ms
+   × F-06 status transitions > TEST-F06-16 PLACED may also move to REJECTED and CANCELLED; nothing else changes 570ms
+⎯⎯⎯⎯⎯⎯ Failed Tests 13 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  tests/cancel-reject.test.ts > F-06 customer cancel (BR-11) > TEST-F06-01 cancels own PLACED order and it leaves the queue
+ FAIL  tests/cancel-reject.test.ts > F-06 customer cancel (BR-11) > TEST-F06-02 refuses after the café accepted it (409)
+ FAIL  tests/cancel-reject.test.ts > F-06 customer cancel (BR-11) > TEST-F06-03 refuses a REJECTED or CANCELLED order (409)
+ FAIL  tests/cancel-reject.test.ts > F-06 customer cancel (BR-11) > TEST-F06-05 unknown id is 404, bad ids are 400
+ FAIL  tests/cancel-reject.test.ts > F-06 operator reject (BR-12) > TEST-F06-07 rejects a PLACED order with a reason and it leaves the queue
+ FAIL  tests/cancel-reject.test.ts > F-06 operator reject (BR-12) > TEST-F06-08 reason must be 3-200 characters after trimming
+ FAIL  tests/cancel-reject.test.ts > F-06 operator reject (BR-12) > TEST-F06-09 saves the trimmed reason
+ FAIL  tests/cancel-reject.test.ts > F-06 operator reject (BR-12) > TEST-F06-10 refuses ACCEPTED, CANCELLED and REJECTED orders (409) and keeps the old reason
+ FAIL  tests/cancel-reject.test.ts > F-06 operator reject (BR-12) > TEST-F06-13 unknown id is 404, bad ids are 400
+ FAIL  tests/cancel-reject.test.ts > F-06 operator reject (BR-12) > TEST-F06-15 the customer sees the reason, others get 404
+ FAIL  tests/cancel-reject.test.ts > F-06 races (BR-12, NFR-04) > TEST-F06-11 accept and reject together: one 200, one 409, DB matches the winner
+ FAIL  tests/cancel-reject.test.ts > F-06 races (BR-12, NFR-04) > TEST-F06-12 accept and cancel together: one 200, one 409, DB matches the winner
+ FAIL  tests/cancel-reject.test.ts > F-06 status transitions > TEST-F06-16 PLACED may also move to REJECTED and CANCELLED; nothing else changes

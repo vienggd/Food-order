@@ -1,0 +1,17 @@
+ ✓ tests/menu-management.test.ts (14 tests) 8134ms
+   ✓ F-05 operator menu API > TEST-5.1 lists every item including sold-out ones  699ms
+   ✓ F-05 operator menu API > TEST-5.2 adds an item that customers then see  426ms
+   ✓ F-05 operator menu API > TEST-5.3 refuses an empty, blank or 61-character name  705ms
+   ✓ F-05 operator menu API > TEST-5.4 accepts names of 1 and 60 characters  432ms
+   ✓ F-05 operator menu API > TEST-5.5 refuses a duplicate name on POST and PATCH, ignoring case  630ms
+   ✓ F-05 operator menu API > TEST-5.6 refuses prices 0, -1, 100001, 55.5 and a string  707ms
+   ✓ F-05 operator menu API > TEST-5.7 accepts prices 1 and 100000  481ms
+   ✓ F-05 operator menu API > TEST-5.8 a sold-out item is refused in a new order  556ms
+   ✓ F-05 operator menu API > TEST-5.9 putting the item back makes it orderable again  621ms
+   ✓ F-05 operator menu API > TEST-5.10 an old order keeps its price after a price edit (BR-05, BR-10)  489ms
+   ✓ F-05 operator menu API > TEST-5.11 PATCH with a bad body or id is 400, never 500  660ms
+   ✓ F-05 operator menu API > TEST-5.12 PATCH of a missing item is 404  502ms
+   ✓ F-05 operator menu API > TEST-5.13 customers get 403, anonymous gets 401, data unchanged  533ms
+   ✓ F-05 operator menu API > TEST-5.14 seeding again keeps an operator's price edit  689ms
+ Test Files  1 passed (1)
+      Tests  14 passed (14)

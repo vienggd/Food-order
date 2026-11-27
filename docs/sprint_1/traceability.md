@@ -1,5 +1,7 @@
 # Traceability matrix — Campus Café Pre-order
 
+> **Frozen as submitted for Deliverable 1.** Do not edit. The living version is [`../traceability.md`](../traceability.md).
+
 Deliverable 1, part B (2 of 2). Issue #7. Features: [`features.md`](features.md). Requirements: `docs/sprint_1/srs.md` (#6).
 Version 1 — 6 Nov 2026 (draft).
 
