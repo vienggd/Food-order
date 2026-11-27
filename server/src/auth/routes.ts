@@ -21,29 +21,43 @@ authRouter.post("/login", async (req, res) => {
   const { email: rawEmail, password } = loginBody.parse(req.body);
   const email = rawEmail.toLowerCase(); // BR-21: counted per email, letter case ignored
 
-  const recent = await prisma.loginFailure.findMany({
-    where: { email, createdAt: { gt: new Date(Date.now() - WINDOW_MS) } },
-    orderBy: { createdAt: "asc" },
-    take: MAX_FAILURES,
-  });
-  if (recent.length >= MAX_FAILURES) {
-    // The attempt is refused before the password is checked, even if the password is right.
-    const retryAfterSeconds = Math.max(1, Math.ceil((recent[MAX_FAILURES - 1].createdAt.getTime() + WINDOW_MS - Date.now()) / 1000));
-    const minutes = Math.ceil(retryAfterSeconds / 60);
-    res.set("Retry-After", String(retryAfterSeconds));
+  // One transaction per email, serialised by an advisory lock: counting, checking the password and saving the
+  // failure cannot interleave, so a parallel burst cannot get past the limit (AC-12.9).
+  const outcome = await prisma.$transaction(
+    async (tx) => {
+      await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${email}))`;
+      const recent = await tx.loginFailure.findMany({
+        where: { email, createdAt: { gt: new Date(Date.now() - WINDOW_MS) } },
+        orderBy: { createdAt: "asc" },
+        take: MAX_FAILURES,
+      });
+      if (recent.length >= MAX_FAILURES) {
+        // Refused before the password is checked, even if the password is right.
+        const secs = Math.max(1, Math.ceil((recent[MAX_FAILURES - 1].createdAt.getTime() + WINDOW_MS - Date.now()) / 1000));
+        return { kind: "locked" as const, retryAfterSeconds: secs };
+      }
+      const user = await tx.user.findUnique({ where: { email } });
+      const ok = await bcrypt.compare(password, user?.passwordHash ?? DUMMY_HASH);
+      if (!user || !ok) {
+        await tx.loginFailure.create({ data: { email } }); // unknown emails are counted too
+        return { kind: "wrong" as const };
+      }
+      await tx.loginFailure.deleteMany({ where: { email } }); // BR-20: success clears the count
+      return { kind: "ok" as const, user };
+    },
+    { timeout: 15_000 },
+  );
+
+  if (outcome.kind === "locked") {
+    const minutes = Math.ceil(outcome.retryAfterSeconds / 60);
+    res.set("Retry-After", String(outcome.retryAfterSeconds));
     res.status(429).json({
-      error: { code: "RATE_LIMITED", message: `Too many failed logins. Try again in ${minutes} ${minutes === 1 ? "minute" : "minutes"}.`, details: { retryAfterSeconds } },
+      error: { code: "RATE_LIMITED", message: `Too many failed logins. Try again in ${minutes} ${minutes === 1 ? "minute" : "minutes"}.`, details: { retryAfterSeconds: outcome.retryAfterSeconds } },
     });
     return;
   }
-
-  const user = await prisma.user.findUnique({ where: { email } });
-  const ok = await bcrypt.compare(password, user?.passwordHash ?? DUMMY_HASH);
-  if (!user || !ok) {
-    await prisma.loginFailure.create({ data: { email } }); // unknown emails are counted too
-    throw new AppError(401, "UNAUTHENTICATED", "Incorrect email or password.");
-  }
-  await prisma.loginFailure.deleteMany({ where: { email } }); // BR-20: success clears the count
+  if (outcome.kind === "wrong") throw new AppError(401, "UNAUTHENTICATED", "Incorrect email or password.");
+  const user = outcome.user;
   const sid = await createSession(user.id);
   res.cookie(SESSION_COOKIE, sid, sessionCookieOptions(process.env.NODE_ENV === "production"));
   res.json({ id: user.id, name: user.name, role: user.role });
