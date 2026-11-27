@@ -1,0 +1,5 @@
+GREEN: NFR-09 axe + keyboard + UAT findings #130 #131 #133 (sprint3-ninja-a11y)
+command: npx playwright test e2e/a11y.spec.ts -> 15 passed, 1 skipped (TEST-A11Y-06 runs on the phone project only)
+whole suite: npm run build ok; server vitest 193 passed; client vitest 9 passed; Playwright 88 passed, 8 skipped, 0 failed
+fixes: sold-out menu text/badge colours (axe color-contrast serious, opacity replaced by colours); Dialog keeps Tab inside and returns focus to the opener;
+       cart view takes focus when opened (#130); login field errors have aria-describedby + role=alert (#131) and clear when corrected (#133)

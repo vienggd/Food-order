@@ -39,7 +39,7 @@ test.describe("NFR-09 axe: no critical or serious violations", () => {
     await expect(page.getByRole("region", { name: "Cart" })).toBeVisible();
     expect(await seriousViolations(page), "cart").toEqual([]);
     await page.goto("/orders");
-    await expect(page.getByTestId(`order-${orderId}`).first()).toBeVisible();
+    await expect(page.getByText(`#${orderId}`).first()).toBeVisible();
     expect(await seriousViolations(page), "my orders").toEqual([]);
     await page.goto(`/orders/${orderId}`);
     await expect(page.getByRole("heading", { name: `Order #${orderId}` })).toBeVisible();
