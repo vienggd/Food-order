@@ -12,6 +12,7 @@ Staging branch for all Lab 6 work: **`lab6`**. Corrected fixes are deployed on `
 | **B** | UAT team | Testing partner **EN-009_P3** (`event-registration-system`) | [`part-b-uat-team.md`](part-b-uat-team.md), [`execution-partner.md`](execution-partner.md) (PRs [#105](https://github.com/vienggd/Food-order/pull/105), [#111](https://github.com/vienggd/Food-order/pull/111), [#140](https://github.com/vienggd/Food-order/pull/140), [#149](https://github.com/vienggd/Food-order/pull/149), [#153](https://github.com/vienggd/Food-order/pull/153), [#156](https://github.com/vienggd/Food-order/pull/156)) | Outgoing `#141–#148`, `#151–#155`; `B-*-GD.png` & `HQ-*.png` (`X1–X7` not run) |
 | **C** | Product team | Partner findings triage (`#121–#133`) & RED→GREEN fixes | [`triage.md`](triage.md), `docs/labs/lab-06/evidence/` (`red.txt`, `green.txt`, `regression.txt`), PR [#138](https://github.com/vienggd/Food-order/pull/138) | `TEST-L6-121..132`; Partner B `UAT-02/04/06` PASS |
 | **D** | Product team | Fix verification, re-test handoff & final acceptance | [`retest-handoff.md`](retest-handoff.md), Issue `#101` | `9/9` fixes + `UAT-01/03/04/05` PASS (`39bda5e` / `food-order-00009-jd9`); **Accepted** (`songt888#129`) |
+| **E** | Both | Communication between the two teams (Discord group chat) | `docs/labs/lab-06/communication/chat-01..16.png` | Release handoffs, re-test requests, decisions |
 
 ## Team
 
@@ -96,6 +97,42 @@ Full contract rationale and step/date provenance are recorded in [`triage.md`](t
 | Deployed Cloud Run revision | `food-order-00009-jd9` (`index-DbdmxBc6.js`, `/api/ready` OK; `#121–#129` verified on `food-order-00008-v6c`) |
 | Partner re-test execution (`#123`, other 8 fixes, `UAT-01/03/04/05`) | **9/9 fixes PASS & UAT-01/03/04/05 all PASS** (`#121–#129` PASS on `163fdb7` / `food-order-00008-v6c` by Nattakit & Kirakit `00:18–01:45 UTC+7`; `#132` fixed in PR `#174`/`#181` and verified **PASS** on `39bda5e` / `food-order-00009-jd9` by Kirakit `03:32 UTC+7`; Sprint 3 deferral of `#130/#131/#133` accepted). |
 | Independent acceptance decision by EN-009_P3 (`Accepted` / `Accepted with limitations` / `Not Accepted`) | **Accepted** — signed by Kirakit Kingkaew (A) & Nattakit Prasertsak (B), 2026-11-27 ([`songt888/event-registration-system#129`](https://github.com/songt888/event-registration-system/issues/129)): 9/9 defects PASS (incl. `#123` major, `#132` by A `03:32` `#191` & B `03:34` `#192`, full 9-defect regression `#192`), `UAT-01/03/04/05` PASS (`#186/#187`), 0 open defects, `#130/#131/#133` deferred enhancements (no condition). |
+
+## Team communication between Est and EN-009_P3
+
+Both teams coordinated Lab 6 in one Discord group chat (4 members: vieng and ninja for Est; song and kakakaka for EN-009_P3). The group was used to hand over each release (version, commit, Cloud Run revision, URL, release notes), ask for re-tests of named Issues, report re-test results, and send the signed acceptance decisions. Passwords were never posted in the group; accounts were shared privately. The screenshots below are cropped to the message area only, in the order they were taken.
+
+![Chat 1 of 16 — Discord group "Est × EN-009_P3" (members: vieng, ninja/DBNN, song, kakakaka), 25–27 Nov 2026](communication/chat-01.png)
+
+![Chat 2 of 16 — Discord group "Est × EN-009_P3" (members: vieng, ninja/DBNN, song, kakakaka), 25–27 Nov 2026](communication/chat-02.png)
+
+![Chat 3 of 16 — Discord group "Est × EN-009_P3" (members: vieng, ninja/DBNN, song, kakakaka), 25–27 Nov 2026](communication/chat-03.png)
+
+![Chat 4 of 16 — Discord group "Est × EN-009_P3" (members: vieng, ninja/DBNN, song, kakakaka), 25–27 Nov 2026](communication/chat-04.png)
+
+![Chat 5 of 16 — Discord group "Est × EN-009_P3" (members: vieng, ninja/DBNN, song, kakakaka), 25–27 Nov 2026](communication/chat-05.png)
+
+![Chat 6 of 16 — Discord group "Est × EN-009_P3" (members: vieng, ninja/DBNN, song, kakakaka), 25–27 Nov 2026](communication/chat-06.png)
+
+![Chat 7 of 16 — Discord group "Est × EN-009_P3" (members: vieng, ninja/DBNN, song, kakakaka), 25–27 Nov 2026](communication/chat-07.png)
+
+![Chat 8 of 16 — Discord group "Est × EN-009_P3" (members: vieng, ninja/DBNN, song, kakakaka), 25–27 Nov 2026](communication/chat-08.png)
+
+![Chat 9 of 16 — Discord group "Est × EN-009_P3" (members: vieng, ninja/DBNN, song, kakakaka), 25–27 Nov 2026](communication/chat-09.png)
+
+![Chat 10 of 16 — Discord group "Est × EN-009_P3" (members: vieng, ninja/DBNN, song, kakakaka), 25–27 Nov 2026](communication/chat-10.png)
+
+![Chat 11 of 16 — Discord group "Est × EN-009_P3" (members: vieng, ninja/DBNN, song, kakakaka), 25–27 Nov 2026](communication/chat-11.png)
+
+![Chat 12 of 16 — Discord group "Est × EN-009_P3" (members: vieng, ninja/DBNN, song, kakakaka), 25–27 Nov 2026](communication/chat-12.png)
+
+![Chat 13 of 16 — Discord group "Est × EN-009_P3" (members: vieng, ninja/DBNN, song, kakakaka), 25–27 Nov 2026](communication/chat-13.png)
+
+![Chat 14 of 16 — Discord group "Est × EN-009_P3" (members: vieng, ninja/DBNN, song, kakakaka), 25–27 Nov 2026](communication/chat-14.png)
+
+![Chat 15 of 16 — Discord group "Est × EN-009_P3" (members: vieng, ninja/DBNN, song, kakakaka), 25–27 Nov 2026](communication/chat-15.png)
+
+![Chat 16 of 16 — Discord group "Est × EN-009_P3" (members: vieng, ninja/DBNN, song, kakakaka), 25–27 Nov 2026](communication/chat-16.png)
 
 ## Contribution
 
