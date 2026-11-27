@@ -1,12 +1,12 @@
 # Deliverable 2, Part A: System summary and release status
 
-Campus Café Pre-order — Team **Est** (`vienggd/Food-order`). Author: **vieng** (`vienggd`). Draft target: `sprint2` (commit `__COMMIT__`).
+Campus Café Pre-order — Team **Est** (`vienggd/Food-order`). Author: **vieng** (`vienggd`). Report commit: `__COMMIT__` on `main` (release `v0.2.0-sprint2` = `df6db99`).
 
 ## A.1 Executive summary
 
 Campus Café Pre-order lets students and campus staff pre-order café drinks and snacks, pick ASAP or a bounded pickup slot, pay (simulated), and track preparation through counter pickup, while café operators manage daily menu availability, accept/reject incoming orders, and advance active orders through fulfilment.
 
-Between Deliverable 1 (`v0.1.0-sprint1`) and this Deliverable 2 draft:
+Between Deliverable 1 (`v0.1.0-sprint1`) and this Deliverable 2:
 - **Lab 5 cloud deployment & CI** shipped Docker multi-stage packaging, GitHub Actions CI + Cloud Run deploy, and managed PostgreSQL (Cloud SQL).
 - **Lab 6 cross-team UAT & fixes** deployed all 9 verified defect fixes to `main` (`163fdb7` -> `39bda5e`, live revision `food-order-00009-jd9`, all 9/9 partner re-test findings **PASS**).
 - **Sprint 2 (`F-05`..`F-08`)** is 100 % implemented and verified on `sprint2`, including cross-feature business rules `BR-15` (paid before pickup) and `BR-16` (automatic simulated refund on cancel/reject of paid orders).
@@ -18,9 +18,9 @@ Between Deliverable 1 (`v0.1.0-sprint1`) and this Deliverable 2 draft:
 |---|---|---|---|---|
 | Sprint 1 baseline | `main` | `v0.1.0-sprint1` (`PR #46`) | `12c1052` | Released & verified (`F-01`..`F-04`) |
 | Lab 5 cloud & CI | `main` | PRs `#78, #80, #82, #84` | `b71cdb2` | Released; live Cloud Run URL & CI pipeline |
-| Lab 6 UAT fixes (latest `main`) | `main` | `food-order-00009-jd9` (PRs `#168, #181`) | `39bda5e` | **Released & PASS** (9/9 defects closed; awaiting Nattakit block on `EN-009_P3#129`) |
+| Lab 6 UAT fixes | `main` | `food-order-00009-jd9` (PRs `#168, #181`) | `39bda5e` | **Released & PASS** (9/9 defects closed; EN-009_P3 signed **Accepted**, `songt888#129`) |
 | Sprint 2 staging branch | `sprint2` | Integrated staging + synced `39bda5e` (`PR #191`) | `__COMMIT__` | **All tests pass locally** (`build` 0, server `177/177`, client `8/8`, E2E `67/7/0`) |
-| Sprint 2 release to `main` | `sprint2 -> main` | `v0.2.0-sprint2` | `PENDING` | **PENDING** — held cleanly so `main` stays frozen on `39bda5e` during Lab 6 sign-off |
+| **Sprint 2 release to `main`** | `sprint2 -> main` (PR `#210`) | **`v0.2.0-sprint2`** · `food-order-00010-7vp` | `df6db99` | **Released** 27 Nov 23:55 UTC+7: CI `test-and-docker` SUCCESS, *Deploy demo* run `46037590468` SUCCESS, `/api/ready` ready + db connected |
 
 ## A.3 Scope completion overview (vs SRS / Plan baseline)
 

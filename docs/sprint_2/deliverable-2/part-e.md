@@ -21,7 +21,7 @@ Both students enforced strict **contract before code** and **red-before-green TD
 - **No self-approvals:** Every PR is reviewed by the partner (`vienggd` or `NinjoMUDA`) with an explicit `"What I checked: ..."` review comment verifying `npm run build`, server/client Vitest, and Playwright E2E locally against Postgres before merging. Reviews caught real bugs prior to merge (e.g., `PR #144` and `PR #147` caught Playwright runs overwriting Sprint 1 screenshots -> `CHANGES_REQUESTED`, restored before approval; `TEST-F11-12` caught unescaped SQL `LIKE` wildcards `%`/`_` in Prisma search -> fixed before green merge `#158`).
 - **Project Board 4 & linking:** Every Issue starts in `Backlog`, transitions in order (`Backlog -> Specified -> Started -> PR Review -> Fixing (when needed) -> Done`), creates its branch with `gh issue develop --base sprint2`, and links its closing PR via GitHub GraphQL `addCloseIssueReferences` (since GitHub closing keywords only auto-link on the default branch `main`). Process note: Issue `#157` was linked to `PR #158` via `addCloseIssueReferences` cleanly, though its branch had been created before the Issue was opened (logged as a minor process gap in Part D).
 
-## E.3 Team contributions (Sprint 1 -> Deliverable 2 draft)
+## E.3 Team contributions (Sprint 1 -> Deliverable 2)
 
 | Work area | `vieng` (Garunyapas Danpitakkul, `vienggd`) | `ninja` (Dechayut Panyawutvorakul, `NinjoMUDA`) |
 |---|---|---|
@@ -37,6 +37,6 @@ Both students used AI coding assistants (Claude Code sessions for `ninja` and `v
 ## E.5 Known limitations and plan confirmation
 
 1. **Unimplemented Sprint 3 scope:** `F-10` Sales Summary (`AC-10.1..10.9`), `F-12` login rate limiting (`NFR-08`, `AC-12.1..12.8`) & axe/keyboard checks (`NFR-09`), and `F-09` picker E2E (`TEST-F09-15..17`) remain specified and scheduled in **Part C §5** (`29–30 Nov`).
-2. **Sprint 2 release to `main` (`v0.2.0-sprint2`) PENDING:** Intentionally held on staging `sprint2` so `main` (`39bda5e`, `food-order-00009-jd9`) remains clean for EN-009_P3 final Lab 6 sign-off; once signed off, `sprint2 -> main` will deploy all Sprint 2 + `F-09`/`F-11` changes together.
+2. **Sprint 2 release order:** `sprint2` was intentionally held on staging until EN-009_P3 signed the Lab 6 acceptance (`songt888#129`, 27 Nov), so `main` stayed stable for their re-test. It was then released the same night as `v0.2.0-sprint2` (`df6db99`, PR `#210`, Cloud Run `food-order-00010-7vp`); Lab 7 change C-1 followed as `food-order-00011-9nh`.
 3. **Desktop Queue vs UI Spec S8:** Currently ships the 7-column semantic table (`Order | Status | Customer | Items | Placed | Total | Action`); team decision on keeping the semantic table or building the S8 card board is scheduled for `29 Nov`.
 4. **Confirmed remaining schedule:** We confirm the **Part C §5** schedule (`vieng`: `F-10` + `F-12` rate limit `29–30 Nov`; `ninja`: `F-09` E2E + `NFR-09` axe `30 Nov`; final UAT/regression `12–13 Dec`; exam window `1–11 Dec` protected).
