@@ -13,7 +13,7 @@ Sprint 2 UI is designed in `docs/sprint_2/ui/` (start at `design/index.html`).
 | **Lab 6** — cross-team UAT + defect management (Sprint 1 scope) | **Sun 29 Nov 23:59** (moved by the TA) | 100 lab | §4 |
 | **Lab 7** — one approved change to a Sprint 1 rule + metrics + readiness | **Sun 29 Nov 23:59** | 100 lab | §5 |
 | **Deliverable 2** — Sprint 2 complete + Sprint 3 contracts and progress + deployed candidate | **Sun 29 Nov 23:59** | 70 project | §6 |
-| **Final delivery** — complete product, final QA, video ≤10 min, 1-page summary | **Sun 13 Dec 23:59** | 100 project | §7 |
+| **Final delivery** — complete product, final QA, video ≤4 min, 1-page summary | **Sun 13 Dec 23:59** | 100 project | §7 |
 
 We submit all three on 29 Nov by **21:00** (3 h buffer). Exams 1–11 Dec: only light work then.
 
@@ -134,7 +134,7 @@ PDF must include: cover (names, IDs, theme, repo, tag/commit, URL + version), **
 | Process & team evidence | 15 | same Issue → PR → review → staging → release chain; contribution table |
 | Final traceability | 20 | complete matrix requirement → feature → AC → test → final result |
 | Final QA & DoD | 20 | full regression + E2E on the final commit, UAT re-tests, defect status, deployed `v1.0.0`, reproducible setup, known debt |
-| Video | 8 | ≤10 min, **both on camera**: live journeys, one rejected rule, one access case, architecture, test/CI, one requirement-to-test chain |
+| Video | 10 | ≤4 min (max 4 min per `final_project_delivery.pdf` §3.5), **both on camera together**: live journeys, one business rule, one rejected case, closing/limitations |
 | Release summary | 2 | one page: scope, version/commit, links, completion, limitations, team |
 
 ---

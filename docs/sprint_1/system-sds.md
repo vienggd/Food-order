@@ -1,5 +1,7 @@
 # System-Level Software Design Specification — Campus Café Pre-order
 
+> **Frozen as submitted for Deliverable 1.** Do not edit. The living version is [`../system-sds.md`](../system-sds.md).
+
 Deliverable 1, part C. Issue #8. Requirements: [`srs.md`](srs.md). Screens: [`ui/ui-spec.md`](ui/ui-spec.md).
 Authors: A (vieng) sections 1, 2, 5, 6, 7; B (ninja) sections 3, 4.
 Version 1 — 6 Nov 2026. Later changes go in the change log at the bottom.

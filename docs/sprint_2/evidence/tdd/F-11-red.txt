@@ -1,0 +1,10 @@
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  tests/order-filter.test.ts > F-11 customer status filter (BR-25, BR-27) > TEST-F11-01 one status returns only those orders
+ FAIL  tests/order-filter.test.ts > F-11 customer status filter (BR-25, BR-27) > TEST-F11-02 a list of statuses returns those orders, newest first
+ FAIL  tests/order-filter.test.ts > F-11 customer status filter (BR-25, BR-27) > TEST-F11-04 another customer's orders never appear, whatever the filter
+ FAIL  tests/order-filter.test.ts > F-11 customer status filter (BR-25, BR-27) > TEST-F11-05 bad status values are 400 with details.field = status
+ FAIL  tests/order-filter.test.ts > F-11 customer status filter (BR-25, BR-27) > TEST-F11-06 a status with no orders is 200 with an empty list
+ Test Files  1 failed (1)
+      Tests  5 failed | 1 passed (6)
+      1     Error: locator.click: Test timeout of 30000ms exceeded.
+      1   1 failed

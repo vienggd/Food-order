@@ -1,0 +1,5 @@
+ FAIL  tests/pickup-slots.test.ts [ tests/pickup-slots.test.ts ]
+Error: Cannot find module '../src/orders/slots.js' imported from 'D:/Lab Software2026/Food-order/.claude/worktrees/jolly-antonelli-2702ec/server/tests/pickup-slots.test.ts'
+Caused by: Error: Failed to load url ../src/orders/slots.js (resolved id: ../src/orders/slots.js) in D:/Lab Software2026/Food-order/.claude/worktrees/jolly-antonelli-2702ec/server/tests/pickup-slots.test.ts. Does the file exist?
+ Test Files  1 failed (1)
+      Tests  no tests

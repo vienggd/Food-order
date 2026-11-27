@@ -143,8 +143,8 @@ describe("F-03 GET /api/orders and /api/orders/:id", () => {
     const res = await get(alice, "/api/orders");
     expect(res.status).toBe(200);
     expect(res.body).toEqual([
-      { id: second.body.id, status: "PLACED", total: 6500 + 16500, itemCount: 4, createdAt: second.body.createdAt },
-      { id: first.body.id, status: "PLACED", total: 13000, itemCount: 2, createdAt: first.body.createdAt },
+      { id: second.body.id, status: "PLACED", paymentStatus: "UNPAID", total: 6500 + 16500, itemCount: 4, createdAt: second.body.createdAt },
+      { id: first.body.id, status: "PLACED", paymentStatus: "UNPAID", total: 13000, itemCount: 2, createdAt: first.body.createdAt },
     ]);
   });
 
@@ -170,6 +170,16 @@ describe("F-03 GET /api/orders and /api/orders/:id", () => {
     expect(res.status).toBe(400);
     expect(res.body.error.code).toBe("VALIDATION_ERROR");
   });
+
+  it.each(["0x1", "1e0", "1.0", "+1", "0b1", "0o1", "%201"])(
+    "TEST-L6-121 rejects non-decimal/coerced id %s with 400 VALIDATION_ERROR",
+    async (id) => {
+      await place(alice, { items: [{ menuItemId: menu["Latte"], quantity: 1 }] });
+      const res = await get(alice, `/api/orders/${id}`);
+      expect(res.status).toBe(400);
+      expect(res.body.error.code).toBe("VALIDATION_ERROR");
+    },
+  );
 });
 
 describe("F-03 id range", () => {

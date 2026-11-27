@@ -1,0 +1,6 @@
+ ✓ tests/pickup-slots.test.ts (14 tests) 8263ms
+ Test Files  12 passed (12)
+      Tests  131 passed (131)
+client vitest: 8 passed
+Playwright whole suite on this branch: 34 passed (F-09 E2E TEST-F09-15..17 are not written yet)
+root npm run build: no errors

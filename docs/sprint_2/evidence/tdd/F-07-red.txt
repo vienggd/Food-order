@@ -1,0 +1,18 @@
+⎯⎯⎯⎯⎯⎯ Failed Tests 14 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  tests/fulfilment.test.ts > F-07 advance (BR-13) > TEST-F07-01 ACCEPTED -> PREPARING sets preparingAt
+ FAIL  tests/fulfilment.test.ts > F-07 advance (BR-13) > TEST-F07-02 PREPARING -> READY sets readyAt
+ FAIL  tests/fulfilment.test.ts > F-07 advance (BR-13) > TEST-F07-03 READY -> PICKED_UP sets pickedUpAt and the order leaves the queue
+ FAIL  tests/fulfilment.test.ts > F-07 advance (BR-13) > TEST-F07-04 one order walks all three steps, each a separate 200, times set in order
+ FAIL  tests/fulfilment.test.ts > F-07 advance (BR-13) > TEST-F07-05 PLACED, REJECTED and CANCELLED orders cannot move (409)
+ FAIL  tests/fulfilment.test.ts > F-07 advance (BR-13) > TEST-F07-06 a PICKED_UP order cannot move again (409)
+ FAIL  tests/fulfilment.test.ts > F-07 advance (BR-13) > TEST-F07-07 no skipping: wrong or invalid `from` is refused and the order stays
+ FAIL  tests/fulfilment.test.ts > F-07 advance (BR-13) > TEST-F07-08 a stale second press does not move the order two steps
+ FAIL  tests/fulfilment.test.ts > F-07 advance (BR-13) > TEST-F07-09 20 parallel advances of one step: exactly one 200
+ FAIL  tests/fulfilment.test.ts > F-07 advance (BR-13) > TEST-F07-10 unknown id is 404, bad ids are 400
+ FAIL  tests/fulfilment.test.ts > F-07 advance (BR-13) > TEST-F07-14 the customer sees the new step and its time
+ FAIL  tests/fulfilment.test.ts > F-07 queue status list > TEST-F07-12 one call returns the four open statuses, oldest first, with customer and lines
+ FAIL  tests/fulfilment.test.ts > F-07 queue status list > TEST-F07-13 status values: missing and PLACED give PLACED only; READY gives READY; closed statuses and junk are 400
+TypeError: (intermediate value).body.map is not a function
+ FAIL  tests/fulfilment.test.ts > F-07 status transitions > TEST-F07-15 only the chain ACCEPTED -> PREPARING -> READY -> PICKED_UP is added; nextStep follows it
+ Test Files  1 failed (1)
+      Tests  14 failed | 1 passed (15)
