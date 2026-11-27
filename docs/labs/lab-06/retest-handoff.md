@@ -22,7 +22,7 @@ Start with `#123` (F2, the release-blocking **major** defect), then check the re
 | #126 (F6) | 400 validation on login showed network error | On `/login`, submit `a..b@cafe.test` or `alice@cafe.test` with a 201-character password. | Error box shows the server's 400 validation message, not `"Something went wrong. Please try again."`. | **PASS** (Nattakit, 27 Nov `00:18 UTC+7`, Playwright on `163fdb7` / `food-order-00008-v6c`) |
 | #128 (EX-04) | Phone Cart badge counted total quantity | As CUSTOMER-A, add Latte ×2 (1 line). | Phone Cart tab shows `Cart (1)` (and desktop Menu cart badge shows `1`), counting cart lines. | **PASS** (Nattakit, 27 Nov `00:18 UTC+7`, Playwright on `163fdb7` / `food-order-00008-v6c`) |
 | #129 (EX-06) | Phone top bar missed `Campus Café` brand | View `/menu` at `375×812` logged in as CUSTOMER-A. | Header shows `Campus Café` beside `"Hey, Alice"`, role chip, and `Log out`, with no horizontal overflow. | **PASS** (Nattakit, 27 Nov `00:18 UTC+7`, Playwright on `163fdb7` / `food-order-00008-v6c`) |
-| #132 (EX-05) | Desktop queue used `<ul>` instead of `<table>` | On desktop (`1280 px`), log in as OPERATOR with at least one PLACED order. | Order queue renders a semantic `<table>` with column headers matching its columns. | First `163fdb7` / `food-order-00008-v6c`: **FAIL** (Nattakit 27 Nov `00:41`, Kirakit `03:05` — 6 `<th>` vs 7 `<td>`). Re-tested on `39bda5e` / `food-order-00009-jd9`: **PASS** (Kirakit, 27 Nov `03:32 UTC+7`, manual `1280×800`: 7 `scope="col"` headers aligned within 2 px with 7 cells across 4 rows; `songt888` `retest-132-0305.md`). |
+| #132 (EX-05) | Desktop queue used `<ul>` instead of `<table>` | On desktop (`1280 px`), log in as OPERATOR with at least one PLACED order. | Order queue renders a semantic `<table>` with column headers matching its columns. | First `163fdb7` / `food-order-00008-v6c`: **FAIL** (Nattakit 27 Nov `00:41`, Kirakit `03:05` — 6 `<th>` vs 7 `<td>`). Re-tested on `39bda5e` / `food-order-00009-jd9`: **PASS** (Kirakit, 27 Nov `03:32 UTC+7`, manual `1280×800`: 7 `scope="col"` headers aligned within 2 px with 7 cells across 4 rows, `songt888#191`; Nattakit, 27 Nov `03:34 UTC+7` + full 9-defect regression PASS, `songt888#192`). |
 
 ## Affected Sprint 1 cases & pending records
 
@@ -32,7 +32,7 @@ Start with `#123` (F2, the release-blocking **major** defect), then check the re
 
 ## Independent Sprint 1 acceptance decision (filled by EN-009_P3)
 
-- **Corrected version tested:** commit `<main SHA>` / Cloud Run revision `<revision>`
-- **Testers & date:** `<Kirakit Kingkaew, Nattakit Prasertsak>` — `<YYYY-MM-DD>`
-- **Decision (pick one):** `[ ] Accepted` · `[ ] Accepted with explicitly documented minor limitations` · `[ ] Not Accepted`
-- **Conditions / notes (if any):** `<list any remaining minor limitations or failed checks>`
+- **Corrected version tested:** `vienggd/Food-order` `main` `39bda5e` (PR `#181`) / Cloud Run revision `food-order-00009-jd9`, live bundle `index-DbdmxBc6.js` (deployed `2026-11-27 03:19–03:24 UTC+7`)
+- **Testers & date:** Kirakit Kingkaew (A), Nattakit Prasertsak (B) — `2026-11-27` (signed on [`songt888/event-registration-system#129`](https://github.com/songt888/event-registration-system/issues/129))
+- **Decision (pick one):** `[x] Accepted` · `[ ] Accepted with explicitly documented minor limitations` · `[ ] Not Accepted`
+- **Conditions / notes (if any):** None. All 9 accepted defects PASS (including major `#123` on both versions, `#132` PASS by A at `03:32` in `#191` and B at `03:34` in `#192`, plus B's full 9-defect regression PASS in `#192`). `UAT-01`, `UAT-03`, `UAT-05` (A, `#187`) and `UAT-04` (B, `#186`) PASS on `163fdb7` (only `QueuePage.tsx`, `styles.css`, tests, and docs changed in `39bda5e`); no case BLOCKED; 0 open critical/major/minor defects. `#130`, `#131`, and `#133` are deferred Sprint 3 enhancements with no condition.

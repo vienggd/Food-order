@@ -1,7 +1,7 @@
 # Lab 6 — Independent User Acceptance Testing (UAT)
 
 CPE 334 · Semester 1/2026 · Section 131 · group **Est** · Campus Café Pre-order (`Food-order`).
-**DRAFT.** Staging branch for all Lab 6 work: **`lab6`**. Corrected fixes are deployed on `main` (`39bda5e` / `food-order-00009-jd9`) with `9/9` partner re-tests **PASS**; only **EN-009_P3**'s signed `Accepted` block on `EN-009_P3#129` remains `PENDING` before final Lab 6 submission.
+Staging branch for all Lab 6 work: **`lab6`**. Corrected fixes are deployed on `main` (`39bda5e` / `food-order-00009-jd9`) with `9/9` partner re-tests **PASS** and **EN-009_P3**'s signed **Accepted** decision recorded on [`songt888/event-registration-system#129`](https://github.com/songt888/event-registration-system/issues/129) (`2026-11-27`).
 
 ## Contents
 
@@ -11,7 +11,7 @@ CPE 334 · Semester 1/2026 · Section 131 · group **Est** · Campus Café Pre-o
 | **A** | Product team | Test plan, UAT cases (`UAT-01..06`), and handoff pack | `docs/labs/lab-06/test-plan.md`, `uat-cases.md`, `handoff.md` (PR [#107](https://github.com/vienggd/Food-order/pull/107)) | Accounts `CUSTOMER-A`, `CUSTOMER-B`, `OPERATOR` (no passwords) |
 | **B** | UAT team | Testing partner **EN-009_P3** (`event-registration-system`) | [`part-b-uat-team.md`](part-b-uat-team.md), [`execution-partner.md`](execution-partner.md) (PRs [#105](https://github.com/vienggd/Food-order/pull/105), [#111](https://github.com/vienggd/Food-order/pull/111), [#140](https://github.com/vienggd/Food-order/pull/140), [#149](https://github.com/vienggd/Food-order/pull/149), [#153](https://github.com/vienggd/Food-order/pull/153), [#156](https://github.com/vienggd/Food-order/pull/156)) | Outgoing `#141–#148`, `#151–#155`; `B-*-GD.png` & `HQ-*.png` (`X1–X7` not run) |
 | **C** | Product team | Partner findings triage (`#121–#133`) & RED→GREEN fixes | [`triage.md`](triage.md), `docs/labs/lab-06/evidence/` (`red.txt`, `green.txt`, `regression.txt`), PR [#138](https://github.com/vienggd/Food-order/pull/138) | `TEST-L6-121..132`; Partner B `UAT-02/04/06` PASS |
-| **D** | Product team | Fix verification, re-test handoff & final acceptance | [`retest-handoff.md`](retest-handoff.md), Issue `#101` | `9/9` fixes + `UAT-01/03/04/05` PASS (`39bda5e` / `food-order-00009-jd9`); partner block PENDING |
+| **D** | Product team | Fix verification, re-test handoff & final acceptance | [`retest-handoff.md`](retest-handoff.md), Issue `#101` | `9/9` fixes + `UAT-01/03/04/05` PASS (`39bda5e` / `food-order-00009-jd9`); **Accepted** (`songt888#129`) |
 
 ## Team
 
@@ -31,7 +31,7 @@ CPE 334 · Semester 1/2026 · Section 131 · group **Est** · Campus Café Pre-o
 | **Est (`Food-order`)** Lab 6 triage & defect fixes | PR `#138` (RED `cd56600` / `d1bf95c` -> GREEN `c576273` / `2e291c8`, merge `8356adb`) | `lab6` | Merged into `lab6` & deployed to `main` (`PR #168`, `PR #181`) |
 | **Est (`Food-order`)** corrected `main` release | `39bda5e` (PR `#181`, merged `2026-11-27 03:19 UTC+7`; includes `#132` fix after `163fdb7`) | `main` | Merged into `main` |
 | **Est (`Food-order`)** deployed revision for re-test | `food-order-00009-jd9` (`index-DbdmxBc6.js`, `/api/ready` OK; previous `food-order-00008-v6c`) | Cloud Run | Deployed; **9/9 fixes + UAT-01/03/04/05 PASS** (`#132` PASS at `03:32 UTC+7`) |
-| **Est (`Food-order`)** partner acceptance decision | __PARTNER_ACCEPTANCE__ | `retest-handoff.md` | PENDING (`9/9` PASS verified; awaiting Nattakit's signed `Accepted` block on `songt888#129`) |
+| **Est (`Food-order`)** partner acceptance decision | **Accepted** ([`songt888#129`](https://github.com/songt888/event-registration-system/issues/129)) | `retest-handoff.md` | Signed by Kirakit (A) & Nattakit (B), 27 Nov 2026 (0 conditions) |
 | **EN-009_P3 (`event-registration-system`)** under test | tag `v0.1.2-lab5` (`04e8590`, Cloud Run `s47a6b53b-00005-5l7`) | Partner repo / Cloud Run | Initial UAT done (`UAT-01..06` PASS, 13 findings `#141–#148`, `#151–#155`) |
 | **EN-009_P3** fixed release for re-test (`RT-F02`, `#141–#161`) | `v0.1.3-lab6` / `502d2a6` / `s47a6b53b-00006-7bv` (`index-CcXia3Aw.js`) | Partner Cloud Run | **Accepted** by team Est on [`songt888#126`](https://github.com/songt888/event-registration-system/issues/126#issuecomment-7202511583) (`13/13` findings & `6/6` UAT cases PASS) |
 
@@ -95,7 +95,7 @@ Full contract rationale and step/date provenance are recorded in [`triage.md`](t
 | Corrected `main` commit | `39bda5e` (PR `#181`; preceded by `163fdb7` / PR `#168`) |
 | Deployed Cloud Run revision | `food-order-00009-jd9` (`index-DbdmxBc6.js`, `/api/ready` OK; `#121–#129` verified on `food-order-00008-v6c`) |
 | Partner re-test execution (`#123`, other 8 fixes, `UAT-01/03/04/05`) | **9/9 fixes PASS & UAT-01/03/04/05 all PASS** (`#121–#129` PASS on `163fdb7` / `food-order-00008-v6c` by Nattakit & Kirakit `00:18–01:45 UTC+7`; `#132` fixed in PR `#174`/`#181` and verified **PASS** on `39bda5e` / `food-order-00009-jd9` by Kirakit `03:32 UTC+7`; Sprint 3 deferral of `#130/#131/#133` accepted). |
-| Independent acceptance decision by EN-009_P3 (`Accepted` / `Accepted with limitations` / `Not Accepted`) | __PARTNER_ACCEPTANCE__ |
+| Independent acceptance decision by EN-009_P3 (`Accepted` / `Accepted with limitations` / `Not Accepted`) | **Accepted** — signed by Kirakit Kingkaew (A) & Nattakit Prasertsak (B), 2026-11-27 ([`songt888/event-registration-system#129`](https://github.com/songt888/event-registration-system/issues/129)): 9/9 defects PASS (incl. `#123` major, `#132` by A `03:32` `#191` & B `03:34` `#192`, full 9-defect regression `#192`), `UAT-01/03/04/05` PASS (`#186/#187`), 0 open defects, `#130/#131/#133` deferred enhancements (no condition). |
 
 ## Contribution
 
@@ -110,5 +110,5 @@ Both students used AI assistants (Claude worker sessions and Antigravity + Playw
 
 ## Limitations
 
-- This is a **pre-closure Lab 6 draft** on branch `lab6`: all 9 fixes are deployed on `main` (`39bda5e` / `food-order-00009-jd9`), `9/9` partner re-tests pass, and team Est posted `Accepted` on `songt888#126`; only **EN-009_P3**'s signed `Accepted` block (`EN-009_P3#129`) remains `PENDING` before closing Issue `#101` and exporting the final PDF.
+- All 9 accepted fixes are deployed on `main` (`39bda5e` / `food-order-00009-jd9`), `9/9` partner re-tests pass, team Est posted `Accepted` on `songt888#126`, and EN-009_P3 signed `Accepted` on `songt888#129` (`2026-11-27`). Final Issue `#101` closure follows partner review/merge of PR `#209` into `lab6`.
 - Existing `CI` triggers (`main` and `lab-5`), so `lab6` verification rests on real local Postgres + Playwright runs recorded in `docs/labs/lab-06/evidence/`.
