@@ -51,7 +51,7 @@ Version 1 — 6 Nov 2026. Later changes go in the change log at the bottom.
 |---|---|---|
 | Logged in, role (FR-04) | `requireAuth` / `requireRole` middleware on every protected route | API tests for 401 and 403 |
 | Ownership (FR-08) | Order queries always filter by `customerId = session user` | API test: other customer's order → 404 |
-| BR-01, BR-02, BR-04 | Strict Zod schema on `POST /api/orders` | DB unique `(order_id, menu_item_id)` for BR-02 |
+| BR-01 (incl. 15-item total, C-1), BR-02, BR-04 | Strict Zod schema on `POST /api/orders`; the total-quantity check runs in the same handler right after the schema | DB unique `(order_id, menu_item_id)` for BR-02 |
 | BR-03 | Order service inside one Prisma transaction | Nothing saved on error (transaction rolls back) |
 | BR-05 | Order service copies name and price into `order_lines` | Lines are never updated after insert |
 | BR-06 | `canTransition(from, to)` + transition table | Conditional update |
@@ -61,7 +61,7 @@ Version 1 — 6 Nov 2026. Later changes go in the change log at the bottom.
 
 1. Browser sends `POST /api/orders` with `{ items: [{ menuItemId, quantity }] }` and the session cookie.
 2. `requireRole('CUSTOMER')` loads the session; missing/expired → 401, operator → 403.
-3. Zod strict schema checks BR-01, BR-02 and rejects any extra field such as `price` (BR-04) → 400.
+3. Zod strict schema checks BR-01 (per line 1–10), BR-02 and rejects any extra field such as `price` (BR-04) → 400; then the handler checks the C-1 total (at most 15 items) → 400.
 4. In one transaction: load the items; any missing or sold out → 400, nothing saved (BR-03); compute the total from DB prices; insert the order and lines with copied name and price (BR-05).
 5. Respond 201 with the saved order. The UI goes to `/orders/:id`.
 
@@ -158,7 +158,7 @@ menu_items 1 ─ * order_lines     (menu_item_id; name and price are copied, BR-
 | | `menu_item_id` | int | FK → `menu_items.id` |
 | | `name` | text | copy of the menu name at order time (BR-05) |
 | | `unit_price` | int | copy of the menu price at order time, satang (BR-05) |
-| | `quantity` | int | 1–10 (BR-01, checked by the API schema) |
+| | `quantity` | int | 1–10 (BR-01, checked by the API schema); the sum over one order is at most 15 (C-1, no DB constraint, no migration) |
 | | | | **unique (`order_id`, `menu_item_id`)** — no duplicate item in one order (BR-02) |
 
 Indexes: `orders (status, created_at)` for the operator queue (PLACED, oldest first); `orders (customer_id)` for "my orders"; `sessions (user_id)`.
