@@ -11,6 +11,7 @@ const LINKS: Record<Role, { to: string; label: string }[]> = {
   OPERATOR: [
     { to: "/operator/orders", label: "Order queue" },
     { to: "/operator/menu", label: "Menu items" },
+    { to: "/operator/sales", label: "Sales" },
   ],
 };
 

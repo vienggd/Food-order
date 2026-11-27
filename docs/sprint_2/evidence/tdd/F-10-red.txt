@@ -1,0 +1,12 @@
+   × F-10 sales summary > TEST-10.1 one row per day with the right count and total, newest day first 581ms
+   × F-10 sales summary > TEST-10.2 cancelled, rejected, unpaid, refunded and open orders are not counted 475ms
+   × F-10 sales summary > TEST-10.3 Bangkok day boundaries: 23:30 and 00:30 local fall on different days 352ms
+   × F-10 sales summary > TEST-10.4 top 3 items by quantity, ties broken by name 459ms
+   × F-10 sales summary > TEST-10.5 a price edit after the sale does not change past sales 372ms
+   × F-10 sales summary > TEST-10.6 bad dates, from after to, and a range over 92 days are 400 431ms
+   × F-10 sales summary > TEST-10.7 no sales in range gives 200 with empty lists 448ms
+   ✓ F-10 sales summary > TEST-10.8 customers get 403 and anonymous gets 401  383ms
+   × F-10 sales summary > without from and to it uses the last 7 days including today 514ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  1 failed (1)
+      Tests  8 failed | 1 passed (9)
