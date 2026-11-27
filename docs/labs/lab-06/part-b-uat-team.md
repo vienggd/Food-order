@@ -1,6 +1,6 @@
 # Lab 6 Part B — Est as UAT team for EN-009_P3's app
 
-Written by ninja's side for inclusion in `report.md`. Live working sheet: [`execution-partner.md`](execution-partner.md). All results below are AI-driven runs on the students' requests (see B8), recorded from what was observed; nothing is copied from Expected into Actual. Final status as of 27 Nov 2026: Est accepted EN-009_P3's app (`v0.1.3-lab6`) on [`songt888/event-registration-system#126`](https://github.com/songt888/event-registration-system/issues/126#issuecomment-7202511583). Our own fixes are released on `main` as `39bda5e` and deployed as Cloud Run revision `food-order-00009-jd9`; the partner's acceptance of our app (EN-009_P3 `#129`) is still PENDING.
+Written by ninja's side for inclusion in `report.md`. Live working sheet: [`execution-partner.md`](execution-partner.md). All results below are AI-driven runs on the students' requests (see B8), recorded from what was observed; nothing is copied from Expected into Actual. Final status as of 27 Nov 2026: Est accepted EN-009_P3's app (`v0.1.3-lab6`) on [`songt888/event-registration-system#126`](https://github.com/songt888/event-registration-system/issues/126#issuecomment-7202511583). Our own fixes are released on `main` as `39bda5e` and deployed as Cloud Run revision `food-order-00009-jd9`; EN-009_P3 signed **Accepted** for our app on [`songt888/event-registration-system#129`](https://github.com/songt888/event-registration-system/issues/129) (27 Nov 2026).
 
 ## B1. Teams and product
 - UAT team: Est (EN-033), section 131 — Garunyapas Danpitakkul (vieng) and Dechayut Panyawutvorakul (ninja).
@@ -81,4 +81,4 @@ The 13 outgoing findings come from AI-driven exploratory checks (computer-use br
 ## Limitations
 - Both initial `v0.1.2-lab5` execution and `v0.1.3-lab6` re-tests were AI-driven browser runs on the students' requests rather than manual student runs; final triage and **Accepted** sign-off belong to the students.
 - Screenshots of the first `v0.1.2-lab5` runs of `UAT-02`/`03`/`05`/`X8` were kept only in a working session and are not in the repo; the cells say so. The `v0.1.3-lab6` re-test of `UAT-02`/`03` and findings `#141–#148` has 18 cropped screenshots (`HQ-*.png`).
-- `X1–X7` were not run. The partner's acceptance of our app (EN-009_P3 `#129`) is PENDING.
+- `X1–X7` were not run.
