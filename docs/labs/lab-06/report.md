@@ -139,16 +139,18 @@ Both teams coordinated Lab 6 in one Discord group chat (4 members: vieng and nin
 | Work item | Owner | Reviewer / verifier |
 |---|---|---|
 | Part A (`uat-cases.md`, `test-plan.md`, `handoff.md`) & Part C (`triage.md`, RED/GREEN fixes PR `#138`, `retest-handoff.md`) & Part D / Report (`#101`) | `vieng` | `ninja` (reviewed/merged PRs `#107`, `#138`) |
-| Part B (`execution-partner.md`, outgoing `#141–#148`, extra case `X8`, `part-b-uat-team.md`), Part B `UAT-02/03/05` & `v0.1.3-lab6` re-tests (AI-driven with ninja sign-in), PR reviews on `lab6` | `ninja` | `vieng` (reviewed/merged PRs `#105`, `#111`, `#140`, `#149`, `#153`, `#156`; added `#151–#155` & `#141/#142` comments) |
+| Part B (`execution-partner.md`, outgoing `#141–#148`, extra case `X8`, `part-b-uat-team.md`), Part B `UAT-02/03/05` & `v0.1.3-lab6` re-tests (AI-driven with ninja sign-in), PR reviews on `lab6` | `ninja` |
+| Part B `UAT-01/04/06` runs and `#151–#155` re-tests (AI-driven on vieng's request), Section E team communication with EN-009_P3, releases to `main` (PRs `#168`, `#181`) | `vieng` | `ninja` (reviewed/merged) | `vieng` (reviewed/merged PRs `#105`, `#111`, `#140`, `#149`, `#153`, `#156`; added `#151–#155` & `#141/#142` comments) |
 
 ## AI use
 
-Both students used AI assistants (Claude worker sessions and Antigravity + Playwright Chromium) to draft `uat-cases.md`, `triage.md`, `part-b-uat-team.md`, `report.md`, reproducing RED→GREEN regression tests (`TEST-L6-121..132`), PDF scripts, and browser UAT / multi-viewport audits on the partner app. Every PR was reviewed and merged by the other student's side, and all triage and `Accepted` sign-off decisions belong to the students. No account passwords, tokens, or session secrets appear anywhere in the repo, Issues, or this report.
+Both students used AI assistants (Claude worker sessions and Antigravity + Playwright Chromium) to draft `uat-cases.md`, `triage.md`, `part-b-uat-team.md`, `report.md`, reproducing RED→GREEN regression tests (`TEST-L6-121..132`), PDF scripts, and browser UAT / multi-viewport audits on the partner app. Every PR was reviewed and merged by the other student's side, and all triage and `Accepted` sign-off decisions belong to the students. No account passwords, tokens or session secrets appear in this report: one partner chat message that contained a shared test password is blacked out in Section E, and test accounts were always exchanged privately.
 
 ## Limitations
 
-- All 9 accepted fixes are deployed on `main` (`39bda5e` / `food-order-00009-jd9`), `9/9` partner re-tests pass, team Est posted `Accepted` on `songt888#126`, and EN-009_P3 signed `Accepted` on `songt888#129` (`2026-11-27`). Final Issue `#101` closure follows partner review/merge of PR `#209` into `lab6`.
-- Existing `CI` triggers (`main` and `lab-5`), so `lab6` verification rests on real local Postgres + Playwright runs recorded in `docs/labs/lab-06/evidence/`.
+- All 9 accepted fixes are deployed on `main` (`39bda5e` / `food-order-00009-jd9`), `9/9` partner re-tests pass, team Est posted `Accepted` on `songt888#126`, and EN-009_P3 signed `Accepted` on `songt888#129` (`2026-11-27`). Issue `#101` is closed and its board card is Done.
+- GitHub Actions CI runs on pull requests into `main` (and `lab-5`), not into `lab6`. Fixes on `lab6` were therefore verified with full local real-Postgres and Playwright runs (`docs/labs/lab-06/evidence/`), and CI `test-and-docker` then passed on both release PRs `#168` and `#181` before deploy (Appendix C6).
+- Part B test runs on EN-009_P3's app were driven by an AI browser on the students' request, with the students choosing the cases and owning every PASS/FAIL and the final decision (ninja signed in by hand for his runs); each execution row states exactly how it was run.
 
 ## Appendices
 
