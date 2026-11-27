@@ -3,7 +3,7 @@ import { SlotPicker } from "../components/SlotPicker";
 import { useLocation, useNavigate } from "react-router-dom";
 import { api, ApiError, NETWORK_MESSAGE } from "../api";
 import { useCart } from "../cart";
-import { canAddFromMenu, estimatedTotal, MAX_QTY } from "../lib/cart";
+import { atItemLimit, canAddFromMenu, estimatedTotal, MAX_ITEMS, MAX_QTY } from "../lib/cart";
 import { formatBaht } from "../lib/money";
 import type { Order } from "../lib/orders";
 
@@ -102,7 +102,8 @@ export function MenuPage() {
   const count = cart.lines.reduce((n, l) => n + l.quantity, 0);
   const total = estimatedTotal(cart);
   const full = !canAddFromMenu(cart);
-  const fullMsg = "Cart is full (20 different items max).";
+  const atLimit = atItemLimit(cart);
+  const fullMsg = atLimit ? "" : "Cart is full (20 different items max).";
 
   async function placeOrder() {
     setSubmitting(true);
@@ -198,7 +199,7 @@ export function MenuPage() {
                   <button
                     aria-label={`More ${l.name}`}
                     title={l.quantity >= MAX_QTY ? "Max 10 per item." : undefined}
-                    disabled={submitting || l.quantity >= MAX_QTY}
+                    disabled={submitting || l.quantity >= MAX_QTY || atLimit}
                     onClick={() => dispatch({ type: "setQty", menuItemId: l.menuItemId, quantity: l.quantity + 1 })}
                   >
                     +
@@ -223,7 +224,12 @@ export function MenuPage() {
           ))}
         </ul>
       )}
-      {full && <div className="msg info">{fullMsg}</div>}
+      {atLimit && (
+        <div className="msg info" role="status">
+          Limit reached: an order can have at most {MAX_ITEMS} items in total.
+        </div>
+      )}
+      {full && !atLimit && <div className="msg info">{fullMsg}</div>}
       <SlotPicker value={pickupSlot} onChange={setPickupSlot} reloadKey={slotsKey} />
       <div className="cart-total">
         <span>Estimated total</span>
@@ -249,7 +255,7 @@ export function MenuPage() {
             <p className="muted">{load.items.length} items · sold-out items can't be added</p>
           </div>
         )}
-        {full && <p className="hint">{fullMsg}</p>}
+        {full && !atLimit && <p className="hint">{fullMsg}</p>}
         <MenuList
           load={load}
           reload={reload}

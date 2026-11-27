@@ -12,6 +12,8 @@ import { CAPACITY, parsePickupSlot } from "./slots.js";
 export const ordersRouter = Router();
 ordersRouter.use(requireRole("CUSTOMER"));
 
+const MAX_ORDER_ITEMS = 15; // BR-01b
+
 // Strict: any extra key (price, unitPrice, total, customerId...) is a 400 (BR-04).
 const placeBody = z.strictObject({
   items: z
@@ -32,6 +34,16 @@ ordersRouter.post("/", async (req, res) => {
   const { pickupSlot: rawSlot, ...rest } = (req.body ?? {}) as Record<string, unknown>;
   const { items } = placeBody.parse(rest);
   const slot = rawSlot === undefined || rawSlot === null ? null : parsePickupSlot(rawSlot);
+
+  // BR-01b (Lab 7, C-1): at most 15 items in total over all lines.
+  const total = items.reduce((n, i) => n + i.quantity, 0);
+  if (total > MAX_ORDER_ITEMS) {
+    throw new AppError(400, "VALIDATION_ERROR", `An order can have at most ${MAX_ORDER_ITEMS} items in total`, {
+      field: "lines",
+      max: MAX_ORDER_ITEMS,
+      total,
+    });
+  }
 
   const seen = new Set<number>();
   const duplicates: BadItem[] = [];
