@@ -1,0 +1,33 @@
+PR #138 (lab6 fixes) — reviews and comments as on GitHub
+
+Title: L6-03/04: Triage UAT findings (#121-#133) and fix accepted defects (RED->GREEN)
+Author: vienggd  Merged by: NinjoMUDA at 2026-11-26T08:48:43Z
+
+Review by NinjoMUDA (CHANGES_REQUESTED) at 2026-11-26T06:46:25Z:
+Build on PR head: npm ci + npm run build OK. I could NOT run the DB tests/E2E myself (Docker not running here); I read the RED/GREEN/regression evidence instead: RED fails for the reported behaviour (expected 200 to be 400, Cart (2) vs Cart (1), overlap 701>676), not compile errors; GREEN 8 passed; regression 85+6 unit, 32 E2E.
+
+Please fix before merge:
+1. EX-05 (#132) is wrongly an enhancement. F-04 section UI line 59 says the desktop queue is 'the orders as a table (Order, Customer, Items, Placed, Total, Action), as in DesktopQueue.html', and the F-04 changelog v1.2 (6 Nov) says 'desktop queue is a table, no longer UI debt'. The triage reason 'already logged as UI debt' is the old v1.1 text. client/src/pages/QueuePage.tsx still renders ul + aria-hidden headrow. That is a broken written rule: reclassify as defect (minor), fix test-first (RED then GREEN) or keep it as an accepted known defect with a reason, but do not call it an enhancement.
+2. Wrong contract cites (decision may stay, quote the right line): #125/F4 cites AC-F03-07, but AC-F03-07 is 'list only own orders, newest first'; cite the ui-spec S3/S4 text instead. #123/F2 cites AC-F02-06, which is price/Sold-out display; the real basis is NFR-06 (works at 375 px) and AC-F02-06 only for 'add button reachable'. #126/F6 cites AC-F01-04 (API validation); the UI line is the ui-spec Errors table.
+3. ID EX-01 is used twice (umbrella #127 and the focus item #130). Give the focus item a distinct source ID so the table is traceable.
+4. #121 status says 'Fixing on lab6' but the table says fixed in #138; make Status consistent.
+5. #130/#131/#133 as enhancement look fine (no Sprint 1 line asks for focus move, aria-describedby, clear-on-change; NFR-09 is Sprint 3). Keep, with the F-12 issue link if one exists.
+6. Retest-handoff/Partner decision stay TBD; fine. Do not claim acceptance until A's rows UAT-01/03/05 arrive.
+
+Review by NinjoMUDA (APPROVED) at 2026-11-26T08:48:40Z:
+Re-checked. All 4 points fixed: #132 now a defect with RED d1bf95c (getByRole('table') not found, real behaviour failure) then GREEN 2e291c8 (QueuePage uses table + th scope=col); cites for #123/#125/#126 corrected; #127 umbrella id fixed; #121 status consistent. npm ci + npm run build OK on PR head. DB tests/E2E not run by me (Docker off); I rely on the evidence files (85 server + 6 client, Playwright 33 passed/7 skipped).
+Follow-up: partner decision stays TBD until A's UAT-01/03/05 rows and the post-deploy re-test; do not claim acceptance before.
+
+Comment by vienggd at 2026-11-26T08:47:39Z:
+Addressed all review points in RED d1bf95c -> GREEN 2e291c8:
+1. EX-05 (#132) reclassified as minor defect (per F-04 §3 UI & v1.2) and fixed test-first: TEST-L6-132 failed RED on ul (d1bf95c) -> converted QueuePage.tsx desktop queue to semantic <table> with <th> column headers while preserving the phone card grid (2e291c8), linked #132 to this PR.
+2. Fixed triage.md contract cites for #123 (NFR-06 + AC-F02-06 reachable +), #125 (ui-spec S3/S4, removed AC-F03-07), and #126 (ui-spec Errors table; API 400 already satisfies AC-F01-04).
+3. Renamed #127 Finding ID to 'Umbrella (#127)' so EX-01 is used only on #130.
+4. Updated #121 Status to 'Fixed in PR #138'.
+5. #130/#131/#133 enhancements now reference Sprint 3 docs/sprint_2/sprints/F-12-polish-a11y.md (NFR-09; no Sprint 3 implementation Issue yet).
+6. Updated retest-handoff.md with all 9 fixed defects and kept partner decision TBD until A's UAT-01/03/05 rows and post-deploy retest.
+Verification after 2e291c8: npm run build exit 0; npm test 85 server + 6 client; targeted E2E (lab6-fixes + queue) 15 passed / 7 skipped; full Playwright 33 passed / 7 skipped; Sprint 1 screenshots clean. Ready for re-review.
+
+Comment by NinjoMUDA at 2026-11-26T08:48:47Z:
+Merged after approval. Follow-ups: deploy the merged version, send retest-handoff.md to EN-009_P3, record their decision.
+
