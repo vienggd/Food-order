@@ -4,20 +4,40 @@ import { prisma } from "../db.js";
 import { AppError } from "../errors.js";
 import { requireRole } from "../auth/middleware.js";
 import { toOrderJson } from "../orders/json.js";
-import { statusesThatCanMoveTo } from "../orders/transitions.js";
-import { dbId } from "../ids.js";
+import { nextStep, statusesThatCanMoveTo } from "../orders/transitions.js";
+import { dbId, MAX_DB_ID } from "../ids.js";
+import { OrderStatus } from "@prisma/client";
 
 export const operatorRouter = Router();
 operatorRouter.use(requireRole("OPERATOR"));
 
-// Sprint 1 supports only the PLACED queue; missing status means PLACED.
-const queueQuery = z.object({ status: z.literal("PLACED").default("PLACED") });
+// F-07/F-11: `status` is a comma-separated list of the 7 statuses; missing means PLACED (Sprint 1 behaviour).
+const queueQuery = z.object({
+  status: z
+    .string()
+    .default("PLACED")
+    .transform((v) => v.split(","))
+    .pipe(z.array(z.enum(OrderStatus)).min(1)),
+  q: z.string().optional(),
+});
+const SEARCH_LIMIT = 200;
 
 operatorRouter.get("/orders", async (req, res) => {
-  const { status } = queueQuery.parse(req.query);
+  const { status, q } = queueQuery.parse(req.query);
+  // F-11 search (BR-26): an order number matches exactly, a customer name matches by part, ignoring case. Then AND with status.
+  let search = {};
+  if (q !== undefined) {
+    const raw = q.trim();
+    const text = (raw.startsWith("#") ? raw.slice(1) : raw).trim();
+    if (text.length < 1 || text.length > 60) throw new AppError(400, "VALIDATION_ERROR", "Search must be 1–60 characters.", { field: "q" });
+    const number = /^\d+$/.test(text) && Number(text) <= MAX_DB_ID ? Number(text) : null;
+    // Prisma passes `contains` to LIKE unescaped, so % _ and \ are escaped to be plain characters.
+    search = { OR: [{ customer: { name: { contains: text.replace(/[\\%_]/g, "\\$&"), mode: "insensitive" } } }, ...(number ? [{ id: number }] : [])] };
+  }
   const orders = await prisma.order.findMany({
-    where: { status },
+    where: { status: { in: status }, ...search },
     orderBy: [{ createdAt: "asc" }, { id: "asc" }],
+    take: SEARCH_LIMIT,
     include: { lines: { orderBy: { id: "asc" } }, customer: { select: { id: true, name: true } } },
   });
   res.json(orders.map((o) => ({ ...toOrderJson(o), customer: o.customer })));
@@ -34,6 +54,75 @@ operatorRouter.post("/orders/:id/accept", async (req, res) => {
   if (!order) throw new AppError(404, "NOT_FOUND", "Order not found.");
   if (count === 0) {
     const message = order.status === "ACCEPTED" ? "Already accepted by another staff member." : "Only PLACED orders can be accepted.";
+    throw new AppError(409, "INVALID_STATE", message, { status: order.status });
+  }
+  res.json(toOrderJson(order));
+});
+
+// F-06 reject (BR-12) + F-08 automatic refund if PAID (BR-16). Reason is checked first (400); one conditional update decides races.
+const rejectBody = z.strictObject({
+  reason: z.string({ error: "Reason must be 3–200 characters." }).trim().min(3, "Reason must be 3–200 characters.").max(200, "Reason must be 3–200 characters."),
+});
+
+operatorRouter.post("/orders/:id/reject", async (req, res) => {
+  const id = dbId.parse(req.params.id);
+  const parsed = rejectBody.safeParse(req.body);
+  if (!parsed.success) throw new AppError(400, "VALIDATION_ERROR", parsed.error.issues[0].message, { field: "reason" });
+  const allowed = statusesThatCanMoveTo("REJECTED");
+  const count = await prisma.$executeRaw`
+    UPDATE "orders"
+    SET "status" = 'REJECTED'::"OrderStatus",
+        "rejected_at" = NOW(),
+        "reject_reason" = ${parsed.data.reason},
+        "updated_at" = NOW(),
+        "payment_status" = CASE WHEN "payment_status" = 'PAID'::"PaymentStatus" THEN 'REFUNDED'::"PaymentStatus" ELSE "payment_status" END,
+        "refunded_at" = CASE WHEN "payment_status" = 'PAID'::"PaymentStatus" THEN NOW() ELSE "refunded_at" END
+    WHERE "id" = ${id}
+      AND "status"::text = ANY(${allowed})
+  `;
+  const order = await prisma.order.findUnique({ where: { id }, include: { lines: { orderBy: { id: "asc" } } } });
+  if (!order) throw new AppError(404, "NOT_FOUND", "Order not found.");
+  if (count === 0) {
+    const message =
+      order.status === "CANCELLED"
+        ? `Order #${id} was already cancelled by the customer.`
+        : order.status === "REJECTED"
+          ? `Order #${id} was already rejected.`
+          : `Order #${id} was already accepted by another staff member.`;
+    throw new AppError(409, "INVALID_STATE", message, { status: order.status });
+  }
+  res.json(toOrderJson(order));
+});
+
+// F-07 advance (BR-13): one step at a time. `from` is the status the operator saw, so a stale press cannot move an order twice.
+const STEP_COLUMN = { PREPARING: "preparingAt", READY: "readyAt", PICKED_UP: "pickedUpAt" } as const;
+const CHAIN = ["ACCEPTED", "PREPARING", "READY", "PICKED_UP"];
+const advanceBody = z.strictObject({ from: z.enum(["ACCEPTED", "PREPARING", "READY"]) });
+
+operatorRouter.post("/orders/:id/advance", async (req, res) => {
+  const id = dbId.parse(req.params.id);
+  const parsed = advanceBody.safeParse(req.body);
+  if (!parsed.success) throw new AppError(400, "VALIDATION_ERROR", "from must be ACCEPTED, PREPARING or READY.", { field: "from" });
+  const { from } = parsed.data;
+  const next = nextStep(from)!;
+  // BR-15: READY -> PICKED_UP requires paymentStatus = PAID in the same atomic update so no race slips through.
+  const { count } = await prisma.order.updateMany({
+    where: from === "READY" ? { id, status: from, paymentStatus: "PAID" } : { id, status: from },
+    data: { status: next, [STEP_COLUMN[next as keyof typeof STEP_COLUMN]]: new Date() },
+  });
+  const order = await prisma.order.findUnique({ where: { id }, include: { lines: { orderBy: { id: "asc" } } } });
+  if (!order) throw new AppError(404, "NOT_FOUND", "Order not found.");
+  if (count === 0) {
+    if (from === "READY" && order.status === "READY" && order.paymentStatus !== "PAID") {
+      throw new AppError(409, "INVALID_STATE", `Order #${id} is not paid yet.`, {
+        status: order.status,
+        paymentStatus: order.paymentStatus,
+      });
+    }
+    const moved = CHAIN.indexOf(order.status) > CHAIN.indexOf(from);
+    const message = moved
+      ? `Order #${id} is already ${order.status}. Another staff member moved it.`
+      : `Order #${id} is ${order.status}, so it can't be moved to the next step.`;
     throw new AppError(409, "INVALID_STATE", message, { status: order.status });
   }
   res.json(toOrderJson(order));

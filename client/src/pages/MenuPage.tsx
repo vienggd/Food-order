@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { SlotPicker } from "../components/SlotPicker";
 import { useLocation, useNavigate } from "react-router-dom";
 import { api, ApiError, NETWORK_MESSAGE } from "../api";
 import { useCart } from "../cart";
@@ -94,6 +95,8 @@ export function MenuPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<{ text: string; retry: boolean } | null>(null);
   const [badLines, setBadLines] = useState<Record<number, string>>({});
+  const [pickupSlot, setPickupSlot] = useState(""); // F-09: "" = ASAP
+  const [slotsKey, setSlotsKey] = useState(0);
 
   const inCart = Object.fromEntries(cart.lines.map((l) => [l.menuItemId, l.quantity]));
   const count = cart.lines.reduce((n, l) => n + l.quantity, 0);
@@ -107,7 +110,8 @@ export function MenuPage() {
     try {
       // Only ids and quantities: the server owns prices and the total (BR-04).
       const items = cart.lines.map(({ menuItemId, quantity }) => ({ menuItemId, quantity }));
-      const order = await api<Order>("/api/orders", { method: "POST", body: { items } });
+      const body = pickupSlot ? { items, pickupSlot } : { items };
+      const order = await api<Order>("/api/orders", { method: "POST", body });
       dispatch({ type: "clear" });
       setBadLines({});
       navigate(`/orders/${order.id}`, { state: { placed: true } });
@@ -117,6 +121,15 @@ export function MenuPage() {
         const bad = (err.details as { items?: { menuItemId: number; reason: string }[] } | null)?.items ?? [];
         setBadLines(Object.fromEntries(bad.map((b) => [b.menuItemId, REASON[b.reason] ?? "Check this item."])));
         reload(); // sold-out flags may have changed since the page loaded
+        if ((err.details as { field?: string } | null)?.field === "pickupSlot") {
+          setPickupSlot("");
+          setSlotsKey((k) => k + 1);
+        }
+      } else if (err instanceof ApiError && err.status === 409) {
+        // F-09: the slot filled up while the customer was choosing; show the server text and reload the slots.
+        setError({ text: err.message, retry: false });
+        setPickupSlot("");
+        setSlotsKey((k) => k + 1);
       } else if (!(err instanceof ApiError && err.status === 401)) {
         setError({ text: NETWORK_MESSAGE, retry: true });
       }
@@ -211,7 +224,7 @@ export function MenuPage() {
         </ul>
       )}
       {full && <div className="msg info">{fullMsg}</div>}
-      <p className="muted">Pickup: ASAP</p>
+      <SlotPicker value={pickupSlot} onChange={setPickupSlot} reloadKey={slotsKey} />
       <div className="cart-total">
         <span>Estimated total</span>
         <strong>{formatBaht(total)}</strong>
