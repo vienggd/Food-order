@@ -63,6 +63,14 @@ describe("F-12 login rate limit", () => {
     expect((await login("nobody@cafe.test", "wrong")).status).toBe(429);
   });
 
+  it("TEST-12.9 twenty wrong logins at the same time: exactly five 401, fifteen 429, five rows saved", async () => {
+    const results = await bad("alice@cafe.test", 20);
+    const codes = results.map((r) => r.status);
+    expect(codes.filter((c) => c === 401)).toHaveLength(5);
+    expect(codes.filter((c) => c === 429)).toHaveLength(15);
+    expect(await failuresOf("alice@cafe.test")).toBe(5);
+  });
+
   it("TEST-12.7 email letter case does not matter (BR-21)", async () => {
     const forms = ["Alice@cafe.test", "ALICE@cafe.test", "alice@CAFE.test", "alice@cafe.test", "aLiCe@cafe.test"];
     for (const e of forms) expect((await login(e, "wrong")).status).toBe(401);
