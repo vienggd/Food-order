@@ -10,8 +10,8 @@ Staging branch for all Lab 6 work: **`lab6`**. Corrected fixes are deployed on `
 | — | Both | Team, staging branch (`lab6`), version & contribution tables | `docs/labs/lab-06/report.md` (Issue [#101](https://github.com/vienggd/Food-order/issues/101)) | `v0.1.0-sprint1`, `b71cdb2` | 1–3, 21–23 |
 | **A** | Product team | Test plan, UAT cases (`UAT-01..06`), and handoff pack | `docs/labs/lab-06/test-plan.md`, `uat-cases.md`, `handoff.md` (PR [#107](https://github.com/vienggd/Food-order/pull/107)) | Accounts `CUSTOMER-A`, `CUSTOMER-B`, `OPERATOR` (no passwords) | 4; App. A1–A3 pp. 24–28 |
 | **B** | UAT team | Testing partner **EN-009_P3** (`event-registration-system`) | [`part-b-uat-team.md`](part-b-uat-team.md), [`execution-partner.md`](execution-partner.md) (PRs [#105](https://github.com/vienggd/Food-order/pull/105), [#111](https://github.com/vienggd/Food-order/pull/111), [#140](https://github.com/vienggd/Food-order/pull/140), [#149](https://github.com/vienggd/Food-order/pull/149), [#153](https://github.com/vienggd/Food-order/pull/153), [#156](https://github.com/vienggd/Food-order/pull/156)) | Outgoing `#141–#148`, `#151–#155`; `B-*-GD.png` & `HQ-*.png` (`X1–X7` not run) | 5–8; App. B1–B3 pp. 29–42 |
-| **C** | Product team | Partner findings triage (`#121–#133`) & RED→GREEN fixes | [`triage.md`](triage.md), `docs/labs/lab-06/evidence/` (`red.txt`, `green.txt`, `regression.txt`), PR [#138](https://github.com/vienggd/Food-order/pull/138) | `TEST-L6-121..132`; Partner B `UAT-02/04/06` PASS | 9–10; App. C1–C4 pp. 43–49 |
-| **D** | Product team | Fix verification, re-test handoff & final acceptance | [`retest-handoff.md`](retest-handoff.md), Issue `#101` | `9/9` fixes + `UAT-01/03/04/05` PASS (`39bda5e` / `food-order-00009-jd9`); **Accepted** (`songt888#129`) | 11; App. D1 pp. 49–51 |
+| **C** | Product team | Partner findings triage (`#121–#133`) & RED→GREEN fixes | [`triage.md`](triage.md), `docs/labs/lab-06/evidence/` (`red.txt`, `green.txt`, `regression.txt`), PR [#138](https://github.com/vienggd/Food-order/pull/138) | `TEST-L6-121..132`; Partner B `UAT-02/04/06` PASS | 9–10; App. C1–C6 pp. 43–54 |
+| **D** | Product team | Fix verification, re-test handoff & final acceptance | [`retest-handoff.md`](retest-handoff.md), Issue `#101` | `9/9` fixes + `UAT-01/03/04/05` PASS (`39bda5e` / `food-order-00009-jd9`); **Accepted** (`songt888#129`) | 11; App. D1 pp. 55–56 |
 | **E** | Both | Communication between the two teams (Discord group chat) | `docs/labs/lab-06/communication/chat-01..16.png` | Release handoffs, re-test requests, decisions | 12–20 |
 
 ## Team
@@ -346,6 +346,384 @@ Verification after 2e291c8: npm run build exit 0; npm test 85 server + 6 client;
 
 Comment by NinjoMUDA at 2026-11-26T08:48:47Z:
 Merged after approval. Follow-ups: deploy the merged version, send retest-handoff.md to EN-009_P3, record their decision.
+```
+
+### Appendix C5 — Code diff of the fixes (Part C)
+
+```text
+Code changes of the accepted-defect fixes: PR #138 into lab6 and the #132 fix PR #174. Source .ts/.tsx files only (CSS left out for length); the tests are in Appendix C2/C3.
+
+diff --git a/client/src/App.tsx b/client/src/App.tsx
+index e626150..351e6a8 100644
+--- a/client/src/App.tsx
++++ b/client/src/App.tsx
+@@ -1,4 +1,5 @@
+-import { Link, Navigate, Route, Routes } from "react-router-dom";
++import { useEffect, useRef } from "react";
++import { Link, Navigate, Route, Routes, useLocation } from "react-router-dom";
+ import { homeFor, useAuth } from "./auth";
+ import { RequireRole } from "./Layout";
+ import { LoginPage } from "./pages/LoginPage";
+@@ -26,7 +27,23 @@ function NotFound() {
+ 
+ export function App() {
+   // key: a new user gets a new, empty cart.
+-  const { user } = useAuth();
++  const { user, notice, noticeTarget, setNotice } = useAuth();
++  const { pathname } = useLocation();
++  const shownOnRef = useRef<string | null>(null);
++
++  useEffect(() => {
++    if (!notice) {
++      shownOnRef.current = null;
++      return;
++    }
++    const expected = noticeTarget ?? pathname;
++    if (pathname === expected) {
++      shownOnRef.current = expected;
++    } else if (shownOnRef.current !== null && pathname !== shownOnRef.current) {
++      setNotice(null);
++    }
++  }, [notice, noticeTarget, pathname, setNotice]);
++
+   return (
+     <CartProvider key={user?.id ?? 0}>
+     <Routes>
+diff --git a/client/src/Layout.tsx b/client/src/Layout.tsx
+index 15c818f..622860c 100644
+--- a/client/src/Layout.tsx
++++ b/client/src/Layout.tsx
+@@ -13,7 +13,7 @@ const LINKS: Record<Role, { to: string; label: string }[]> = {
+ 
+ function WrongRole({ home }: { home: string }) {
+   const { setNotice } = useAuth();
+-  useEffect(() => setNotice("You don't have access to that page."), [setNotice]);
++  useEffect(() => setNotice("You don't have access to that page.", home), [home, setNotice]);
+   return <Navigate to={home} replace />;
+ }
+ 
+@@ -37,7 +37,7 @@ export function RequireRole({ role, title, children }: { role: Role; title: stri
+ 
+   const links = LINKS[user.role];
+   const clearNotice = () => setNotice(null); // a notice is for one redirect, not every page after it
+-  const cartCount = cart.lines.reduce((n, l) => n + l.quantity, 0);
++  const cartCount = cart.lines.length;
+   const roleChip = user.role === "OPERATOR" ? "Operator" : "Customer";
+   const logoutButton = (cls: string) => (
+     <button className={cls} onClick={doLogout} disabled={leaving}>
+@@ -67,6 +67,7 @@ export function RequireRole({ role, title, children }: { role: Role; title: stri
+ 
+       <header className="top">
+         <div>
++          <p className="brand small">Campus Café</p>
+           <p className="hey">Hey, {user.name}</p>
+           <p className="role">{roleChip}</p>
+         </div>
+diff --git a/client/src/auth.tsx b/client/src/auth.tsx
+index 7748e55..55e75f4 100644
+--- a/client/src/auth.tsx
++++ b/client/src/auth.tsx
+@@ -10,7 +10,8 @@ type Auth = {
+   user: User | null;
+   loading: boolean;
+   notice: string | null; // one-off message shown on the next screen
+-  setNotice: (n: string | null) => void;
++  noticeTarget: string | null;
++  setNotice: (n: string | null, targetPath?: string) => void;
+   login: (email: string, password: string) => Promise<User>;
+   logout: () => Promise<void>;
+ };
+@@ -20,7 +21,11 @@ const AuthContext = createContext<Auth | null>(null);
+ export function AuthProvider({ children }: { children: ReactNode }) {
+   const [user, setUser] = useState<User | null>(null);
+   const [loading, setLoading] = useState(true);
+-  const [notice, setNotice] = useState<string | null>(null);
++  const [noticeState, setNoticeState] = useState<{ text: string; targetPath: string | null } | null>(null);
++
++  const setNotice = useCallback((n: string | null, targetPath?: string) => {
++    setNoticeState(n ? { text: n, targetPath: targetPath ?? null } : null);
++  }, []);
+ 
+   useEffect(() => {
+     api<User>("/api/auth/me")
+@@ -29,24 +34,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
+       .finally(() => setLoading(false));
+     setUnauthorizedHandler(() => {
+       setUser(null);
+-      setNotice("Your session has ended. Please log in again.");
++      setNotice("Your session has ended. Please log in again.", "/login");
+     });
+-  }, []);
++  }, [setNotice]);
+ 
+   const login = useCallback(async (email: string, password: string) => {
+     const u = await api<User>("/api/auth/login", { method: "POST", body: { email, password } });
+     setUser(u);
+-    setNotice(null);
++    setNoticeState(null);
+     return u;
+   }, []);
+ 
+   const logout = useCallback(async () => {
+     await api("/api/auth/logout", { method: "POST" }).catch(() => {});
+     setUser(null); // whatever the result, the client forgets the user
++    setNoticeState(null);
+   }, []);
+ 
+   return (
+-    <AuthContext.Provider value={{ user, loading, notice, setNotice, login, logout }}>{children}</AuthContext.Provider>
++    <AuthContext.Provider
++      value={{
++        user,
++        loading,
++        notice: noticeState?.text ?? null,
++        noticeTarget: noticeState?.targetPath ?? null,
++        setNotice,
++        login,
++        logout,
++      }}
++    >
++      {children}
++    </AuthContext.Provider>
+   );
+ }
+ 
+diff --git a/client/src/pages/LoginPage.tsx b/client/src/pages/LoginPage.tsx
+index 507998d..f8d3809 100644
+--- a/client/src/pages/LoginPage.tsx
++++ b/client/src/pages/LoginPage.tsx
+@@ -32,7 +32,13 @@ export function LoginPage() {
+       navigate(homeFor(u.role), { replace: true });
+     } catch (err) {
+       setPassword("");
+-      setError(err instanceof ApiError && err.status === 401 ? "Incorrect email or password." : NETWORK_MESSAGE);
++      setError(
++        err instanceof ApiError && err.status === 401
++          ? "Incorrect email or password."
++          : err instanceof ApiError && err.status === 400
++            ? err.message
++            : NETWORK_MESSAGE,
++      );
+       setBusy(false);
+     }
+   }
+diff --git a/client/src/pages/OrdersPage.tsx b/client/src/pages/OrdersPage.tsx
+index bed2a6e..498165a 100644
+--- a/client/src/pages/OrdersPage.tsx
++++ b/client/src/pages/OrdersPage.tsx
+@@ -1,4 +1,4 @@
+-import { useCallback, useEffect, useState } from "react";
++import { useCallback, useEffect, useRef, useState } from "react";
+ import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+ import { api, ApiError } from "../api";
+ import { formatBaht } from "../lib/money";
+@@ -23,14 +23,15 @@ function Skeletons() {
+ // Phone: the list, or the detail when an order is open.
+ export function OrdersSplit() {
+   const { id } = useParams();
++  const [synced, setSynced] = useState<{ id: number; status: OrderStatus } | null>(null);
+   return (
+     <div className={"orders-split" + (id ? " has-detail" : "")}>
+       <section className="split-list">
+-        <OrdersPage selectedId={id} />
++        <OrdersPage selectedId={id} synced={synced} />
+       </section>
+       <section className="split-detail">
+         {id ? (
+-          <OrderDetailPage key={id} />
++          <OrderDetailPage key={id} onLoaded={(o) => setSynced({ id: o.id, status: o.status })} />
+         ) : (
+           <div className="empty">
+             <p className="muted">Select an order to see its details.</p>
+@@ -42,7 +43,13 @@ export function OrdersSplit() {
+ }
+ 
+ // S3 My orders (F-03): own orders, newest first. Refresh by hand (no polling in Sprint 1).
+-export function OrdersPage({ selectedId }: { selectedId?: string }) {
++export function OrdersPage({
++  selectedId,
++  synced,
++}: {
++  selectedId?: string;
++  synced?: { id: number; status: OrderStatus } | null;
++}) {
+   const [orders, setOrders] = useState<OrderSummary[] | "loading" | "error">("loading");
+   const navigate = useNavigate();
+   const load = useCallback(() => {
+@@ -95,7 +102,7 @@ export function OrdersPage({ selectedId }: { selectedId?: string }) {
+               <span className="muted">
+                 {formatPlacedTime(o.createdAt)} · {o.itemCount} {o.itemCount === 1 ? "item" : "items"}
+               </span>
+-              <StatusPill status={o.status} />
++              <StatusPill status={synced && synced.id === o.id ? synced.status : o.status} />
+               <strong>{formatBaht(o.total)}</strong>
+             </button>
+           </li>
+@@ -111,16 +118,28 @@ const HINT: Partial<Record<OrderStatus, string>> = {
+ };
+ 
+ // S4 Order detail (F-03): lines and total come from the order itself (BR-05), never from the menu.
+-export function OrderDetailPage() {
++export function OrderDetailPage({ onLoaded }: { onLoaded?: (order: Order) => void }) {
+   const { id } = useParams();
+   const location = useLocation();
+-  const justPlaced = (location.state as { placed?: boolean } | null)?.placed;
++  const navigate = useNavigate();
++  const [justPlaced] = useState(() => Boolean((location.state as { placed?: boolean } | null)?.placed));
+   const [order, setOrder] = useState<Order | "loading" | "notfound" | "error">("loading");
++  const onLoadedRef = useRef(onLoaded);
++  onLoadedRef.current = onLoaded;
++
++  useEffect(() => {
++    if ((location.state as { placed?: boolean } | null)?.placed) {
++      navigate(location.pathname, { replace: true, state: null });
++    }
++  }, [location.pathname, location.state, navigate]);
+ 
+   const load = useCallback(() => {
+     setOrder("loading");
+     api<Order>(`/api/orders/${id}`)
+-      .then(setOrder)
++      .then((o) => {
++        setOrder(o);
++        onLoadedRef.current?.(o);
++      })
+       .catch((e) => setOrder(e instanceof ApiError && (e.status === 404 || e.status === 400) ? "notfound" : "error"));
+   }, [id]);
+   useEffect(load, [load]);
+@@ -151,7 +170,7 @@ export function OrderDetailPage() {
+   return (
+     <div className="order-detail">
+       {back}
+-      {justPlaced && (
++      {justPlaced && order.status === "PLACED" && (
+         <div className="msg success" role="status">
+           Order #{order.id} placed!
+         </div>
+diff --git a/client/src/pages/QueuePage.tsx b/client/src/pages/QueuePage.tsx
+index a08f3f0..169c5b4 100644
+--- a/client/src/pages/QueuePage.tsx
++++ b/client/src/pages/QueuePage.tsx
+@@ -109,30 +109,40 @@ export function QueuePage() {
+           <p className="muted">New orders appear here when you refresh.</p>
+         </div>
+       ) : (
+-        // Phone: one card per order. Desktop: the same items laid out as table rows (styles.css).
+-        <ul className="queue">
+-          <li className="queue-headrow" aria-hidden="true">
+-            <span>Order</span>
+-            <span>Customer</span>
+-            <span>Items</span>
+-            <span>Placed</span>
+-            <span>Total</span>
+-            <span>Action</span>
+-          </li>
+-          {orders.map((o) => (
+-            <li className="card order-card" key={o.id} data-testid={`order-${o.id}`}>
+-              <span className="q-no order-no">#{o.id}</span>
+-              <span className="q-pill pill placed">PLACED</span>
+-              <span className="q-who">{o.customer.name}</span>
+-              <span className="q-time muted">{formatPlacedTime(o.createdAt)}</span>
+-              <span className="q-items muted">{items(o)}</span>
+-              <strong className="q-total">{baht(o.total)}</strong>
+-              <button className="q-action btn small" disabled={busyId === o.id} onClick={() => accept(o.id)}>
+-                {busyId === o.id ? "Accepting…" : "Accept order"}
+-              </button>
+-            </li>
+-          ))}
+-        </ul>
++        // Phone: one card per order (CSS grid). Desktop: semantic table (styles.css).
++        <table className="queue">
++          <thead>
++            <tr className="queue-headrow">
++              <th scope="col">Order</th>
++              <th scope="col">Customer</th>
++              <th scope="col">Items</th>
++              <th scope="col">Placed</th>
++              <th scope="col">Total</th>
++              <th scope="col">Action</th>
++            </tr>
++          </thead>
++          <tbody>
++            {orders.map((o) => (
++              <tr className="card order-card" key={o.id} data-testid={`order-${o.id}`}>
++                <td className="q-no order-no">#{o.id}</td>
++                <td className="q-pill">
++                  <span className="pill placed">PLACED</span>
++                </td>
++                <td className="q-who">{o.customer.name}</td>
++                <td className="q-items muted">{items(o)}</td>
++                <td className="q-time muted">{formatPlacedTime(o.createdAt)}</td>
++                <td className="q-total">
++                  <strong>{baht(o.total)}</strong>
++                </td>
++                <td className="q-action">
++                  <button className="btn small" disabled={busyId === o.id} onClick={() => accept(o.id)}>
++                    {busyId === o.id ? "Accepting…" : "Accept order"}
++                  </button>
++                </td>
++              </tr>
++            ))}
++          </tbody>
++        </table>
+       )}
+     </section>
+   );
+diff --git a/server/src/ids.ts b/server/src/ids.ts
+index 8f2368b..1762a66 100644
+--- a/server/src/ids.ts
++++ b/server/src/ids.ts
+@@ -2,4 +2,8 @@ import { z } from "zod";
+ 
+ // Database ids are Postgres `int`: 1..2147483647. A larger number would make Prisma throw (500), so reject it here (400).
+ export const MAX_DB_ID = 2147483647;
+-export const dbId = z.coerce.number().int().min(1).max(MAX_DB_ID);
++export const dbId = z
++  .string()
++  .regex(/^[1-9]\d*$/, "Invalid id.")
++  .transform(Number)
++  .pipe(z.number().int().min(1).max(MAX_DB_ID));
+
+=== PR #174 (#132 desktop queue table) ===
+diff --git a/client/src/pages/QueuePage.tsx b/client/src/pages/QueuePage.tsx
+index 169c5b4..31cc29c 100644
+--- a/client/src/pages/QueuePage.tsx
++++ b/client/src/pages/QueuePage.tsx
+@@ -114,6 +114,7 @@ export function QueuePage() {
+           <thead>
+             <tr className="queue-headrow">
+               <th scope="col">Order</th>
++              <th scope="col">Status</th>
+               <th scope="col">Customer</th>
+               <th scope="col">Items</th>
+               <th scope="col">Placed</th>
+```
+
+### Appendix C6 — Review, CI and deploy evidence of the fixes (Part C/D)
+
+```text
+CI / review / deploy evidence for the Lab 6 fixes (from GitHub, gh CLI)
+
+PR #138 L6-03/04: Triage UAT findings (#121-#133) and fix accepted defects (RED->GREEN)
+  into lab6, merged by NinjoMUDA at 2026-11-26T08:48:43Z, merge commit 8356adb
+  reviews: NinjoMUDA CHANGES_REQUESTED, NinjoMUDA APPROVED
+  checks: 
+PR #174 fix(lab6): add Status header to desktop queue table (#132)
+  into lab6, merged by NinjoMUDA at 2026-11-26T19:13:35Z, merge commit 4a136c8
+  reviews: NinjoMUDA APPROVED
+  checks: 
+PR #168 Release Lab 6: Sprint 1 defect fixes (#138) and UAT execution records
+  into main, merged by NinjoMUDA at 2026-11-26T16:36:25Z, merge commit 163fdb7
+  reviews: NinjoMUDA APPROVED
+  checks: test-and-docker=SUCCESS
+PR #181 release(lab6): deploy #132 desktop queue Status header fix and Lab 6 retest docs
+  into main, merged by NinjoMUDA at 2026-11-26T20:19:31Z, merge commit 39bda5e
+  reviews: NinjoMUDA APPROVED
+  checks: test-and-docker=SUCCESS
+
+Deploy runs on main (GitHub Actions "Deploy demo"):
+  163fdb7 (PR #168): run 45860319259 success, 2026-11-26T16:36Z -> Cloud Run food-order-00008-v6c
+  39bda5e (PR #181): run 45890211288 success, 2026-11-26T20:19Z -> Cloud Run food-order-00009-jd9 (/api/ready ok)
 ```
 
 ### Appendix D1 — Re-test handoff and EN-009_P3's signed acceptance (Part D)
