@@ -1,0 +1,15 @@
+RED: F-09 picker E2E before the clock hook and the UI text changes (sprint3-ninja, 05887e2 + new spec)
+command: npx playwright test e2e/pickup-slots.spec.ts
+  x  1 [phone] › e2e\pickup-slots.spec.ts:29:7 › F-09 pickup slot picker › TEST-F09-15 the cart lists ASAP and the slots; past the cut-off ones are disabled and say Closed (5.9s)
+  x  2 [phone] › e2e\pickup-slots.spec.ts:41:7 › F-09 pickup slot picker › TEST-F09-16 picking 10:30 and placing the order shows Pickup 10:30 on the order (6.0s)
+  x  3 [phone] › e2e\pickup-slots.spec.ts:49:7 › F-09 pickup slot picker › TEST-F09-17 slot filled by someone else after the page loaded: the server text shows under the picker, slots reload, cart kept (5.9s)
+  x  4 [desktop] › e2e\pickup-slots.spec.ts:29:7 › F-09 pickup slot picker › TEST-F09-15 the cart lists ASAP and the slots; past the cut-off ones are disabled and say Closed (5.7s)
+  x  5 [desktop] › e2e\pickup-slots.spec.ts:41:7 › F-09 pickup slot picker › TEST-F09-16 picking 10:30 and placing the order shows Pickup 10:30 on the order (5.8s)
+  x  6 [desktop] › e2e\pickup-slots.spec.ts:49:7 › F-09 pickup slot picker › TEST-F09-17 slot filled by someone else after the page loaded: the server text shows under the picker, slots reload, cart kept (5.9s)
+    Error: expect(locator).toBeDisabled() failed
+    Error: expect(locator).toBeVisible() failed
+    Error: expect(locator).toBeVisible() failed
+    Error: expect(locator).toBeDisabled() failed
+    Error: expect(locator).toBeVisible() failed
+    Error: expect(locator).toBeVisible() failed
+  6 failed
