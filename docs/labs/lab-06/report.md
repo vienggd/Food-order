@@ -1,6 +1,6 @@
 # Lab 6 — Independent User Acceptance Testing (UAT)
 
-CPE 334 · Semester 1/2026 · Section 131 · group **Est** · Campus Café Pre-order (`Food-order`).
+CPE 334 · Semester 1/2026 · Section 131 · group **Est** · Theme 4 (Ordering system) · Campus Café Pre-order (`Food-order`).
 Staging branch for all Lab 6 work: **`lab6`**. Corrected fixes are deployed on `main` (`39bda5e` / `food-order-00009-jd9`) with `9/9` partner re-tests **PASS** and **EN-009_P3**'s signed **Accepted** decision recorded on [`songt888/event-registration-system#129`](https://github.com/songt888/event-registration-system/issues/129) (`2026-11-27`).
 
 ## Contents
