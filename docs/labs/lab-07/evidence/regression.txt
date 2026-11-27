@@ -1,0 +1,15 @@
+Regression run, 25 Nov 2026, on the fix commit. Same suites as Sprint 1 plus the new tests. No existing test deleted or weakened; 3 old tests got reachable numbers (impact.md section 3).
+Baseline before the change (b71cdb2 code, vieng and ninja runs): server 8 files / 71 tests pass, client 3 files / 6 tests pass.
+
+== selected suites (orders, operator, auth): cd server && npx vitest run tests/orders.test.ts tests/operator.test.ts tests/auth.test.ts ==
+ Test Files  3 passed (3)
+      Tests  58 passed (58)
+
+== all unit/API tests: npm test ==
+ Test Files  8 passed (8)
+      Tests  78 passed (78)
+ Test Files  3 passed (3)
+      Tests  7 passed (7)
+
+== all E2E: npx playwright test ==
+  26 passed (28.3s)

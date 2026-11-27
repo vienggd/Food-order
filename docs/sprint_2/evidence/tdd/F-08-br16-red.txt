@@ -1,0 +1,25 @@
+RED run, 26 Nov 2026, on sprint2 commit 34c6e13 (before BR-16 implementation).
+Command: cd server && npx vitest run tests/payments.test.ts
+
+   ✓ F-08 pay own order > TEST-8.1 pays a PLACED order: PAID, paidAt set, order status unchanged  778ms
+   ✓ F-08 pay own order > TEST-8.2 a newly placed order is UNPAID in the response and in the list  606ms
+   ✓ F-08 pay own order > TEST-8.3 pays ACCEPTED, PREPARING and READY orders  869ms
+   ✓ F-08 pay own order > TEST-8.4 refuses CANCELLED, REJECTED and PICKED_UP orders with 409  732ms
+   ✓ F-08 pay own order > TEST-8.5 paying twice gives 409 and keeps the first paidAt  649ms
+   ✓ F-08 pay own order > TEST-8.6 ten parallel pays: exactly one 200, nine 409  667ms
+   ✓ F-08 pay own order > TEST-8.7 another customer's order and a missing order both give 404  771ms
+   ✓ F-08 pay own order > TEST-8.8 a bad id is 400, never 500  616ms
+   ✓ F-08 pay own order > TEST-8.9 anonymous gets 401 and staff gets 403; order unchanged  607ms
+   ✓ F-08 pay own order > TEST-8.10 an amount in the body is ignored  894ms
+   ✓ F-08 pay own order > order JSON and the order list show the payment fields  574ms
+   × F-08 BR-16 refund on cancel and reject > TEST-8.11 customer cancelling a PAID order refunds it in the same step 833ms
+     → expected { id: 1, status: 'CANCELLED', …(10) } to match object { id: 1, status: 'CANCELLED', …(1) } (paymentStatus: 'PAID' vs 'REFUNDED')
+   × F-08 BR-16 refund on cancel and reject > TEST-8.12 operator rejecting a PAID order refunds it in the same step 687ms
+     → expected { id: 1, status: 'REJECTED', …(10) } to match object { id: 1, status: 'REJECTED', …(2) } (paymentStatus: 'PAID' vs 'REFUNDED')
+   ✓ F-08 BR-16 refund on cancel and reject > TEST-8.13 cancelling or rejecting an UNPAID order keeps it UNPAID with refundedAt null  848ms
+   ✓ F-08 BR-16 refund on cancel and reject > 409 failed cancel or reject never touches PAID paymentStatus  730ms
+   × F-08 BR-16 refund on cancel and reject > pay and cancel at the same time never leave a CANCELLED order PAID 1098ms
+     → expected 'PAID' to be 'REFUNDED' // Object.is equality
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  1 failed (1)
+      Tests  3 failed | 13 passed (16)

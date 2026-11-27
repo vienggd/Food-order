@@ -1,0 +1,2 @@
+Playwright (phone + desktop), whole suite after the F-07 UI: 52 passed
+F-07 UI tests TEST-F07-16..19 pass on both projects (8 of 8)

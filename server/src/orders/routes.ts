@@ -1,13 +1,18 @@
 import { Router } from "express";
 import { z } from "zod";
+import { OrderStatus } from "@prisma/client";
 import { prisma } from "../db.js";
 import { AppError } from "../errors.js";
 import { requireRole } from "../auth/middleware.js";
 import { toOrderJson } from "./json.js";
+import { statusesThatCanMoveTo } from "./transitions.js";
 import { dbId, MAX_DB_ID } from "../ids.js";
+import { CAPACITY, parsePickupSlot } from "./slots.js";
 
 export const ordersRouter = Router();
 ordersRouter.use(requireRole("CUSTOMER"));
+
+const MAX_ORDER_ITEMS = 15; // BR-01b
 
 // Strict: any extra key (price, unitPrice, total, customerId...) is a 400 (BR-04).
 const placeBody = z.strictObject({
@@ -25,7 +30,20 @@ const placeBody = z.strictObject({
 type BadItem = { menuItemId: number; reason: "DUPLICATE" | "NOT_FOUND" | "SOLD_OUT" };
 
 ordersRouter.post("/", async (req, res) => {
-  const { items } = placeBody.parse(req.body);
+  // F-09: pickupSlot is read here, outside the place-order schema block above (Lab 7 edits that block).
+  const { pickupSlot: rawSlot, ...rest } = (req.body ?? {}) as Record<string, unknown>;
+  const { items } = placeBody.parse(rest);
+  const slot = rawSlot === undefined || rawSlot === null ? null : parsePickupSlot(rawSlot);
+
+  // BR-01b (Lab 7, C-1): at most 15 items in total over all lines.
+  const total = items.reduce((n, i) => n + i.quantity, 0);
+  if (total > MAX_ORDER_ITEMS) {
+    throw new AppError(400, "VALIDATION_ERROR", `An order can have at most ${MAX_ORDER_ITEMS} items in total`, {
+      field: "lines",
+      max: MAX_ORDER_ITEMS,
+      total,
+    });
+  }
 
   const seen = new Set<number>();
   const duplicates: BadItem[] = [];
@@ -57,6 +75,13 @@ ordersRouter.post("/", async (req, res) => {
       throw new AppError(400, "VALIDATION_ERROR", `Order not placed. ${what} no longer available.`, { items: bad });
     }
 
+    // F-09: a per-slot lock makes "count, then insert" safe: 20 parallel orders for the last place give one success.
+    if (slot) {
+      await tx.$executeRaw`SELECT pg_advisory_xact_lock(${Math.floor(slot.getTime() / 60000)}::bigint)`;
+      const taken = await tx.order.count({ where: { pickupSlot: slot, status: { notIn: ["CANCELLED", "REJECTED"] } } });
+      if (taken >= CAPACITY) throw new AppError(409, "INVALID_STATE", "This pickup slot is full. Pick another slot.", { pickupSlot: slot.toISOString() });
+    }
+
     // Prices and names come from the database and are copied onto the lines (BR-04, BR-05).
     const lines = items.map(({ menuItemId, quantity }) => {
       const m = byId.get(menuItemId)!;
@@ -64,7 +89,7 @@ ordersRouter.post("/", async (req, res) => {
     });
     const total = lines.reduce((sum, l) => sum + l.unitPrice * l.quantity, 0);
     return tx.order.create({
-      data: { customerId: req.user!.id, total, lines: { create: lines } },
+      data: { customerId: req.user!.id, total, pickupSlot: slot, lines: { create: lines } },
       include: { lines: { orderBy: { id: "asc" } } },
     });
   });
@@ -72,9 +97,18 @@ ordersRouter.post("/", async (req, res) => {
   res.status(201).json(toOrderJson(order));
 });
 
+// F-11: `status` is one status or a comma-separated list of the 7; missing means all own orders.
+const statusFilter = z.array(z.enum(OrderStatus)).min(1);
+
 ordersRouter.get("/", async (req, res) => {
+  let statuses: OrderStatus[] | undefined;
+  if (req.query.status !== undefined) {
+    const parsed = statusFilter.safeParse(typeof req.query.status === "string" ? req.query.status.split(",") : null);
+    if (!parsed.success) throw new AppError(400, "VALIDATION_ERROR", "status must be one or more order statuses, separated by commas.", { field: "status" });
+    statuses = parsed.data;
+  }
   const orders = await prisma.order.findMany({
-    where: { customerId: req.user!.id },
+    where: { customerId: req.user!.id, ...(statuses ? { status: { in: statuses } } : {}) },
     orderBy: [{ createdAt: "desc" }, { id: "desc" }],
     include: { lines: { select: { quantity: true } } },
   });
@@ -82,6 +116,7 @@ ordersRouter.get("/", async (req, res) => {
     orders.map((o) => ({
       id: o.id,
       status: o.status,
+      paymentStatus: o.paymentStatus,
       total: o.total,
       itemCount: o.lines.reduce((n, l) => n + l.quantity, 0),
       createdAt: o.createdAt.toISOString(),
@@ -97,5 +132,36 @@ ordersRouter.get("/:id", async (req, res) => {
     include: { lines: { orderBy: { id: "asc" } } },
   });
   if (!order) throw new AppError(404, "NOT_FOUND", "Order not found.");
+  res.json(toOrderJson(order));
+});
+
+// F-06 customer cancel (BR-11) + F-08 automatic refund if PAID (BR-16). One conditional update decides races.
+ordersRouter.post("/:id/cancel", async (req, res) => {
+  const id = dbId.parse(req.params.id);
+  const customerId = req.user!.id;
+  const allowed = statusesThatCanMoveTo("CANCELLED");
+  const count = await prisma.$executeRaw`
+    UPDATE "orders"
+    SET "status" = 'CANCELLED'::"OrderStatus",
+        "cancelled_at" = NOW(),
+        "updated_at" = NOW(),
+        "payment_status" = CASE WHEN "payment_status" = 'PAID'::"PaymentStatus" THEN 'REFUNDED'::"PaymentStatus" ELSE "payment_status" END,
+        "refunded_at" = CASE WHEN "payment_status" = 'PAID'::"PaymentStatus" THEN NOW() ELSE "refunded_at" END
+    WHERE "id" = ${id}
+      AND "customer_id" = ${customerId}
+      AND "status"::text = ANY(${allowed})
+  `;
+  // Only own orders are read: someone else's order looks exactly like a missing one.
+  const order = await prisma.order.findFirst({ where: { id, customerId }, include: { lines: { orderBy: { id: "asc" } } } });
+  if (!order) throw new AppError(404, "NOT_FOUND", "Order not found.");
+  if (count === 0) {
+    const message =
+      order.status === "CANCELLED"
+        ? "This order is already cancelled."
+        : order.status === "REJECTED"
+          ? "This order was already rejected, so it can't be cancelled."
+          : "This order was already accepted, so it can't be cancelled.";
+    throw new AppError(409, "INVALID_STATE", message, { status: order.status });
+  }
   res.json(toOrderJson(order));
 });

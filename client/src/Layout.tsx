@@ -8,7 +8,10 @@ const LINKS: Record<Role, { to: string; label: string }[]> = {
     { to: "/menu", label: "Menu" },
     { to: "/orders", label: "My orders" },
   ],
-  OPERATOR: [{ to: "/operator/orders", label: "Order queue" }],
+  OPERATOR: [
+    { to: "/operator/orders", label: "Order queue" },
+    { to: "/operator/menu", label: "Menu items" },
+  ],
 };
 
 function WrongRole({ home }: { home: string }) {

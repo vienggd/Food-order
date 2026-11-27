@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { canAddFromMenu, cartReducer, emptyCart, MAX_LINES, type Cart } from "./cart";
+import { canAddFromMenu, cartReducer, emptyCart, MAX_ITEMS, MAX_LINES, type Cart } from "./cart";
 
 const item = (id: number, price = 1000) => ({ id, name: `Item ${id}`, price });
 const apply = (cart: Cart, ...actions: Parameters<typeof cartReducer>[1][]) => actions.reduce(cartReducer, cart);
@@ -20,9 +20,8 @@ describe("cartReducer", () => {
     cart = apply(cart, { type: "setQty", menuItemId: 1, quantity: 10 }, { type: "add", item: item(1) });
     expect(cart.lines[0].quantity).toBe(10); // + at 10 does nothing
 
-    let full = emptyCart;
-    for (let i = 1; i <= MAX_LINES; i++) full = apply(full, { type: "add", item: item(i) });
-    expect(full.lines).toHaveLength(20);
+    // 20 lines built directly: the reducer itself stops at 15 items (C-1)
+    const full: Cart = { lines: Array.from({ length: MAX_LINES }, (_, i) => ({ menuItemId: i + 1, name: `Item ${i + 1}`, price: 1000, quantity: 1 })) };
     expect(apply(full, { type: "add", item: item(21) }).lines).toHaveLength(20);
   });
 
@@ -33,11 +32,30 @@ describe("cartReducer", () => {
     expect(apply(cart, { type: "clear" }).lines).toEqual([]);
   });
 
-  it("TEST-F03-23 at 20 lines every menu + is disabled", () => {
+  it("TEST-F03-23 at 15 items every menu + is disabled (was 20 lines; 20 lines are no longer reachable)", () => {
     let cart = emptyCart;
-    for (let i = 1; i < MAX_LINES; i++) cart = apply(cart, { type: "add", item: item(i) });
-    expect(canAddFromMenu(cart)).toBe(true);
-    cart = apply(cart, { type: "add", item: item(MAX_LINES) });
+    for (let i = 1; i < MAX_ITEMS; i++) cart = apply(cart, { type: "add", item: item(i) });
+    expect(canAddFromMenu(cart)).toBe(true); // 14 lines of 1
+    cart = apply(cart, { type: "add", item: item(MAX_ITEMS) });
+    expect(canAddFromMenu(cart)).toBe(false); // 15
+    const twenty: Cart = { lines: Array.from({ length: MAX_LINES }, (_, i) => ({ menuItemId: i + 1, name: "x", price: 1, quantity: 1 })) };
+    expect(canAddFromMenu(twenty)).toBe(false);
+  });
+});
+
+// Lab 7, change C-1: at most 15 items in total.
+describe("Lab 7 C-1 cart limit of 15 items in total", () => {
+  const itemCount = (c: Cart) => c.lines.reduce((n, l) => n + l.quantity, 0);
+  it("TEST-L7-4 total never goes above 15; + is refused at 15; every + on the menu is disabled only at 15", () => {
+    let cart = apply(emptyCart, { type: "add", item: item(1) }, { type: "add", item: item(2) });
+    cart = apply(cart, { type: "setQty", menuItemId: 1, quantity: 10 }, { type: "setQty", menuItemId: 2, quantity: 4 });
+    expect(itemCount(cart)).toBe(14);
+    expect(itemCount(apply(cart, { type: "add", item: item(2) }))).toBe(15); // the 15th is allowed
+    cart = apply(cart, { type: "setQty", menuItemId: 2, quantity: 9 }); // asks for 19 in total
+    expect(itemCount(cart)).toBe(15); // capped
+    expect(itemCount(apply(cart, { type: "add", item: item(2) }))).toBe(15); // + at 15 does nothing
+    expect(itemCount(apply(cart, { type: "add", item: item(3) }))).toBe(15); // a new item is refused too
     expect(canAddFromMenu(cart)).toBe(false);
+    expect(canAddFromMenu(apply(cart, { type: "setQty", menuItemId: 2, quantity: 4 }))).toBe(true); // 14
   });
 });

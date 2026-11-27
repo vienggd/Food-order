@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import { api, ApiError } from "../api";
+import { Link, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { api, ApiError, NETWORK_MESSAGE } from "../api";
 import { formatBaht } from "../lib/money";
 import type { Order, OrderStatus, OrderSummary } from "../lib/orders";
 import { formatPlacedTime } from "../lib/time";
+import { PaymentBadge, PaymentCard } from "../components/Payment";
+import { Dialog } from "../components/Dialog";
 
 function StatusPill({ status }: { status: OrderStatus }) {
   return <span className={`pill ${status.toLowerCase()}`}>{status}</span>;
@@ -42,6 +44,18 @@ export function OrdersSplit() {
   );
 }
 
+// F-11 status chips; "" means All.
+const CHIPS: { value: string; label: string }[] = [
+  { value: "", label: "All" },
+  { value: "PLACED", label: "Placed" },
+  { value: "ACCEPTED", label: "Accepted" },
+  { value: "PREPARING", label: "Preparing" },
+  { value: "READY", label: "Ready" },
+  { value: "PICKED_UP", label: "Picked up" },
+  { value: "REJECTED", label: "Rejected" },
+  { value: "CANCELLED", label: "Cancelled" },
+];
+
 // S3 My orders (F-03): own orders, newest first. Refresh by hand (no polling in Sprint 1).
 export function OrdersPage({
   selectedId,
@@ -52,35 +66,65 @@ export function OrdersPage({
 }) {
   const [orders, setOrders] = useState<OrderSummary[] | "loading" | "error">("loading");
   const navigate = useNavigate();
+  const [params, setParams] = useSearchParams();
+  const status = CHIPS.some((c) => c.value === params.get("status")) ? params.get("status")! : ""; // F-11: kept in the URL
   const load = useCallback(() => {
     setOrders("loading");
-    api<OrderSummary[]>("/api/orders")
+    api<OrderSummary[]>(`/api/orders${status ? `?status=${status}` : ""}`)
       .then(setOrders)
       .catch(() => setOrders("error"));
-  }, []);
+  }, [status]);
   useEffect(load, [load]);
 
-  if (orders === "loading") return <Skeletons />;
+  const chips = (
+    <div className="chips" role="group" aria-label="Filter by status">
+      {CHIPS.map((c) => (
+        <button
+          key={c.value}
+          className={"btn small " + (c.value === status ? "" : "ghost")}
+          aria-pressed={c.value === status}
+          onClick={() => setParams(c.value ? { status: c.value } : {})}
+        >
+          {c.label}
+        </button>
+      ))}
+    </div>
+  );
+
+  if (orders === "loading") return <>{chips}<Skeletons /></>;
   if (orders === "error")
     return (
-      <div className="empty" role="alert">
-        <p className="empty-title">Couldn't load your orders.</p>
-        <button className="btn inline small" onClick={load}>
-          Reload orders
-        </button>
-      </div>
+      <>
+        {chips}
+        <div className="empty" role="alert">
+          <p className="empty-title">Couldn't load your orders.</p>
+          <button className="btn inline small" onClick={load}>
+            Reload orders
+          </button>
+        </div>
+      </>
     );
   if (orders.length === 0)
     return (
-      <div className="empty">
-        <p>No orders yet. Your orders will show up here.</p>
-        <Link className="btn inline small" to="/menu">
-          Browse the menu
-        </Link>
-      </div>
+      <>
+        {chips}
+        <div className="empty">
+          {status ? (
+            <p>No orders with this status.</p>
+          ) : (
+            <>
+              <p>No orders yet. Your orders will show up here.</p>
+              <Link className="btn inline small" to="/menu">
+                Browse the menu
+              </Link>
+            </>
+          )}
+        </div>
+      </>
     );
   return (
     <>
+      {chips}
       <button className="btn ghost small refresh" onClick={load}>
         Refresh list
       </button>
@@ -102,7 +146,9 @@ export function OrdersPage({
               <span className="muted">
                 {formatPlacedTime(o.createdAt)} · {o.itemCount} {o.itemCount === 1 ? "item" : "items"}
               </span>
-              <StatusPill status={synced && synced.id === o.id ? synced.status : o.status} />
+              <span>
+                <StatusPill status={synced && synced.id === o.id ? synced.status : o.status} /> <PaymentBadge status={o.paymentStatus} />
+              </span>
               <strong>{formatBaht(o.total)}</strong>
             </button>
           </li>
@@ -115,7 +161,57 @@ export function OrdersPage({
 const HINT: Partial<Record<OrderStatus, string>> = {
   PLACED: "Waiting for the café to accept your order.",
   ACCEPTED: "Accepted — being prepared soon.",
+  PREPARING: "Your order is being prepared.",
+  READY: "Ready! Show your order number at the counter.",
+  PICKED_UP: "Picked up. Enjoy!",
 };
+
+// F-06: Cancel area, only while PLACED (BR-11). The server checks again and answers 409 if the order moved on.
+function CancelArea({ order, onChanged, onNote }: { order: Order; onChanged: (o: Order) => void; onNote: (n: { kind: "success" | "error"; text: string }) => void }) {
+  const [open, setOpen] = useState(false);
+  const [busy, setBusy] = useState(false);
+  if (order.status !== "PLACED") return null;
+
+  async function confirm() {
+    setBusy(true);
+    try {
+      const updated = await api<Order>(`/api/orders/${order.id}/cancel`, { method: "POST" });
+      setOpen(false);
+      onChanged(updated);
+      onNote({ kind: "success", text: `Order #${order.id} cancelled.` });
+    } catch (err) {
+      setOpen(false);
+      onNote({ kind: "error", text: err instanceof ApiError ? `Not cancelled. ${err.message}` : NETWORK_MESSAGE });
+      if (err instanceof ApiError && err.status === 409) onChanged(await api<Order>(`/api/orders/${order.id}`).catch(() => order));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <>
+      <button className="btn danger-outline" onClick={() => setOpen(true)}>
+        Cancel order
+      </button>
+      {open && (
+        <Dialog title={`Cancel order #${order.id}?`} onClose={() => !busy && setOpen(false)}>
+          <p className="muted">
+            You can't undo this.
+            {order.paymentStatus === "PAID" && " Your payment will be refunded (simulated)."}
+          </p>
+          <div className="dialog-actions">
+            <button className="btn ghost" autoFocus disabled={busy} onClick={() => setOpen(false)}>
+              Keep order
+            </button>
+            <button className="btn danger" disabled={busy} onClick={confirm}>
+              {busy ? "Cancelling…" : "Cancel order"}
+            </button>
+          </div>
+        </Dialog>
+      )}
+    </>
+  );
+}
 
 // S4 Order detail (F-03): lines and total come from the order itself (BR-05), never from the menu.
 export function OrderDetailPage({ onLoaded }: { onLoaded?: (order: Order) => void }) {
@@ -124,14 +220,15 @@ export function OrderDetailPage({ onLoaded }: { onLoaded?: (order: Order) => voi
   const navigate = useNavigate();
   const [justPlaced] = useState(() => Boolean((location.state as { placed?: boolean } | null)?.placed));
   const [order, setOrder] = useState<Order | "loading" | "notfound" | "error">("loading");
-  const onLoadedRef = useRef(onLoaded);
-  onLoadedRef.current = onLoaded;
-
-  useEffect(() => {
-    if ((location.state as { placed?: boolean } | null)?.placed) {
-      navigate(location.pathname, { replace: true, state: null });
-    }
-  }, [location.pathname, location.state, navigate]);
+  const [note, setNote] = useState<{ kind: "success" | "error"; text: string } | null>(null);
+  const onLoadedRef = useRef(onLoaded);
+  onLoadedRef.current = onLoaded;
+
+  useEffect(() => {
+    if ((location.state as { placed?: boolean } | null)?.placed) {
+      navigate(location.pathname, { replace: true, state: null });
+    }
+  }, [location.pathname, location.state, navigate]);
 
   const load = useCallback(() => {
     setOrder("loading");
@@ -170,6 +267,11 @@ export function OrderDetailPage({ onLoaded }: { onLoaded?: (order: Order) => voi
   return (
     <div className="order-detail">
       {back}
+      {note && (
+        <div className={"msg " + note.kind} role={note.kind === "error" ? "alert" : "status"}>
+          {note.text}
+        </div>
+      )}
       {justPlaced && order.status === "PLACED" && (
         <div className="msg success" role="status">
           Order #{order.id} placed!
@@ -181,7 +283,7 @@ export function OrderDetailPage({ onLoaded }: { onLoaded?: (order: Order) => voi
           <StatusPill status={order.status} />
         </div>
         <p className="muted">
-          Placed {formatPlacedTime(order.createdAt)} · Pickup: ASAP
+          Placed {formatPlacedTime(order.createdAt)} · Pickup: {order.pickupSlot ? formatPlacedTime(order.pickupSlot).split(" ").pop() : "ASAP"}
         </p>
         <table className="lines">
           <tbody>
@@ -201,6 +303,21 @@ export function OrderDetailPage({ onLoaded }: { onLoaded?: (order: Order) => voi
           <strong>{formatBaht(order.total)}</strong>
         </div>
         <p className="muted">{HINT[order.status]}</p>
+        {order.status === "CANCELLED" && (
+          <div className="final-card">
+            <strong>You cancelled this order</strong>
+            {order.cancelledAt && <p>{formatPlacedTime(order.cancelledAt)}</p>}
+          </div>
+        )}
+        {order.status === "REJECTED" && (
+          <div className="final-card rejected">
+            <strong>The café rejected this order</strong>
+            <p>Reason: "{order.rejectReason}"</p>
+            {order.rejectedAt && <p>{formatPlacedTime(order.rejectedAt)}</p>}
+          </div>
+        )}
+        <PaymentCard order={order} onPaid={setOrder} />
+        <CancelArea order={order} onChanged={setOrder} onNote={setNote} />
         <ol className="timeline">
           <li>Placed {formatPlacedTime(order.createdAt)}</li>
           <li>{order.acceptedAt ? `Accepted ${formatPlacedTime(order.acceptedAt)}` : "Waiting for the café"}</li>

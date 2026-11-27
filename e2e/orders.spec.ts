@@ -17,6 +17,22 @@ test.describe("F-03 place order", () => {
     await db.menuItem.updateMany({ where: { name: "Latte" }, data: { isAvailable: true } });
   });
 
+  test("TEST-L7-5 at 15 items the cart shows a warning and + is disabled; the order is still placed", async ({ page }, info) => {
+    await loginAs(page, "alice@cafe.test");
+    await page.getByRole("button", { name: "Add Latte" }).click();
+    await page.getByRole("button", { name: "Add Americano" }).click();
+    await openCart(page, info.project.name);
+    const cart = page.getByRole("region", { name: "Cart" });
+    await cart.getByLabel("Quantity of Latte").fill("10");
+    await cart.getByLabel("Quantity of Americano").fill("5");
+    await expect(cart).toContainText("15 items");
+    await expect(cart.getByText(/at most 15 items in total/i)).toBeVisible();
+    await expect(cart.getByRole("button", { name: "More Americano" })).toBeDisabled();
+    await shot(page, "L7-cart-limit", info.project.name);
+    await cart.getByRole("button", { name: "Place order →" }).click();
+    await expect(page).toHaveURL(/\/orders\/\d+$/);
+  });
+
   test("TEST-F03-19 add Latte twice + Thai Milk Tea, place order, see server total and the order in My orders", async ({ page }, info) => {
     await loginAs(page, "alice@cafe.test");
     await expect(page).toHaveURL(/\/menu$/);

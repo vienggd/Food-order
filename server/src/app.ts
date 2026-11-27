@@ -6,7 +6,10 @@ import { prisma } from "./db.js";
 import { AppError, errorHandler } from "./errors.js";
 import { authRouter } from "./auth/routes.js";
 import { ordersRouter } from "./orders/routes.js";
+import { slotsRouter } from "./orders/slotsRoutes.js";
+import { paymentsRouter } from "./payments/routes.js";
 import { menuRouter } from "./menu/routes.js";
+import { menuAdminRouter } from "./operator/menu.js";
 import { operatorRouter } from "./operator/routes.js";
 
 // addRoutes lets tests mount extra routes before the 404 and error handlers.
@@ -29,8 +32,11 @@ export function createApp(addRoutes?: (app: Express) => void) {
     }
   });
   api.use("/auth", authRouter);
+  api.use("/orders", paymentsRouter); // F-08: only POST /:id/pay, before the orders router
   api.use("/orders", ordersRouter);
+  api.use("/slots", slotsRouter); // F-09
   api.use("/menu", menuRouter);
+  api.use("/operator/menu", menuAdminRouter); // F-05, before the operator order routes
   api.use("/operator", operatorRouter);
   addRoutes?.(app);
 

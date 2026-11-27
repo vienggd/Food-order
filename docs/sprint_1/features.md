@@ -1,5 +1,7 @@
 # Feature inventory — Campus Café Pre-order
 
+> **Frozen as submitted for Deliverable 1.** Do not edit. The living version is [`../features.md`](../features.md).
+
 Deliverable 1, part B (1 of 2). Issue #7. Traceability: [`traceability.md`](traceability.md). Sprint plan: [`sprints/plan.md`](sprints/plan.md).
 Version 1 — 6 Nov 2026 (draft). Requirement IDs match the SRS (#6).
 
