@@ -107,3 +107,13 @@ model OrderLine {
   @@unique([orderId, menuItemId]) // BR-02: no duplicate item lines
   @@map("order_lines")
 }
+
+// F-12: one row per failed login (NFR-08). Counted per lower-cased email; unknown emails are counted too.
+model LoginFailure {
+  id        Int      @id @default(autoincrement())
+  email     String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([email, createdAt])
+  @@map("login_failures")
+}
