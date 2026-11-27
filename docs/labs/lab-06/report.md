@@ -1,7 +1,7 @@
 # Lab 6 — Independent User Acceptance Testing (UAT)
 
 CPE 334 · Semester 1/2026 · Section 131 · group **Est** · Campus Café Pre-order (`Food-order`).
-**DRAFT.** Staging branch for all Lab 6 work: **`lab6`**. Corrected fixes are deployed on `main` (`39bda5e` / `food-order-00009-jd9`) with `9/9` partner re-tests **PASS**; only **EN-009_P3**'s signed `Accepted` block on `EN-009_P3#129` (`__PARTNER_ACCEPTANCE__`) remains `PENDING` before final Lab 6 submission.
+**DRAFT.** Staging branch for all Lab 6 work: **`lab6`**. Corrected fixes are deployed on `main` (`39bda5e` / `food-order-00009-jd9`) with `9/9` partner re-tests **PASS**; only **EN-009_P3**'s signed `Accepted` block on `EN-009_P3#129` remains `PENDING` before final Lab 6 submission.
 
 ## Contents
 
