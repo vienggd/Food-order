@@ -12,7 +12,7 @@ Sprint 1 AC and test IDs come from the contracts in `docs/sprint_1/sprints/sprin
 
 | Req | Rule (short) | Feature | Sprint | AC | Tests | Result |
 |---|---|---|---|---|---|---|
-| BR-01 | Quantity per line is a whole number 1–10; **C-1:** at most 15 items in total per order | F-03 | 1 + Lab 7 | AC-F03-02, AC-F03-12, AC-L7-01..04 | TEST-F03-02, -03 (API); -18 (unit); TEST-L7-1..3 (API), -4 (unit), -5 (E2E) | Pass |
+| BR-01 | Quantity per line is a whole number 1–10 | F-03 | 1 | AC-F03-02, AC-F03-12 | TEST-F03-02, -03 (API); -18 (unit) | Pass |
 | BR-02 | 1–20 lines, no duplicate menu item | F-03 | 1 | AC-F03-03, AC-F03-12 | TEST-F03-04, -05, -06, -07 (API); -17, -18, -23 (unit) | Pass |
 | BR-03 | Every item exists and is available, else nothing is saved | F-02, F-03 | 1 | AC-F02-02, AC-F02-06, AC-F03-04, AC-F03-11 | TEST-F02-02 (API), -08 (E2E); TEST-F03-08, -09 (API), -20 (E2E) | Pass |
 | BR-04 | Server calculates the total; price/total in request → 400 | F-03 | 1 | AC-F03-01, AC-F03-05 | TEST-F03-01, -10 (API) | Pass |
