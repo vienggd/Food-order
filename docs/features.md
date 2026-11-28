@@ -1,6 +1,6 @@
 # Feature inventory — Campus Café Pre-order
 
-> **Living document.** Sprint 1 copy is frozen in `sprint_1/`. Status updated 27 Nov 2026 for Deliverable 2 (version 3, Issue #186). Contracts: `sprint_2/sprints/F-05..F-12`.
+> **Living document.** Sprint 1 copy is frozen in `sprint_1/`. Status updated 28 Nov 2026 for Sprint 3 (version 4, Issue #236); results are from `sprint3` `a6c9645` (see traceability.md). Contracts: `sprint_2/sprints/F-05..F-12`.
 
 Deliverable 1, part B (1 of 2). Issue #7. Traceability: [`traceability.md`](traceability.md). Sprint plan: [`sprints/plan.md`](sprints/plan.md).
 Version 1 — 6 Nov 2026 (draft). Requirement IDs match the SRS (#6).
@@ -15,14 +15,14 @@ Roles: **CUSTOMER** (orders food), **OPERATOR** (café staff; one shop, sees all
 | F-02 | Browse menu | 1 | CUSTOMER | FR-05 | BR-03 (sold-out shown) | Verified |
 | F-03 | Place order, my orders, order detail | 1 | CUSTOMER | FR-06..FR-08, NFR-04 | BR-01, BR-02, BR-03, BR-04, BR-05 | Verified |
 | F-04 | Operator queue + accept order | 1 | OPERATOR | FR-09, FR-10, NFR-04 | BR-06, BR-07 | Verified |
-| F-05 | Menu management + sold-out toggle | 2 | OPERATOR | FR-11 | BR-08, BR-09, BR-10 | Implemented and tested on `sprint2` `d10fac1` (17/17 AC pass); not released |
-| F-06 | Customer cancel / operator reject with reason | 2 | CUSTOMER, OPERATOR | FR-12, FR-13 | BR-11, BR-12 | Implemented and tested on `sprint2` `d10fac1` (21/21 AC pass: API + E2E); not released |
-| F-07 | Fulfilment: PREPARING → READY → PICKED_UP | 2 | OPERATOR | FR-14 | BR-13 | Implemented and tested on `sprint2` `d10fac1` (19/19 AC pass: API + E2E); not released |
-| F-08 | Simulated payment | 2 | CUSTOMER, OPERATOR | FR-15 | BR-14, BR-15, BR-16 | Implemented and tested on `sprint2` `d10fac1` (18/18 AC pass, incl. BR-15, BR-16); not released |
-| F-09 | Pickup time slots + order cut-off | 3 | CUSTOMER, OPERATOR | FR-16 | BR-22, BR-23, BR-24 | Implemented; server rules tested (AC-F09-01..14 pass), picker E2E AC-F09-15..17 not written; not released |
-| F-10 | Sales summary | 3 | OPERATOR | FR-17 | BR-17, BR-18, BR-19 | Specified (contract PR #106). **Not implemented**; planned 29–30 Nov |
-| F-11 | Order search / filter | 3 | CUSTOMER, OPERATOR | FR-18 | BR-25, BR-26, BR-27 | Implemented and tested on `sprint2` `d10fac1` (17/17 AC pass); not released |
-| F-12 | Hardening: login rate limit, error states, accessibility | 3 | all | NFR-08, NFR-09 | BR-20, BR-21 | Specified (contract PR #106). **Not implemented**; error states and accessibility (NFR-09) are ninja's part; planned 30 Nov |
+| F-05 | Menu management + sold-out toggle | 2 | OPERATOR | FR-11 | BR-08, BR-09, BR-10 | Released in `v0.2.0-sprint2` (`df6db99`); re-tested on `sprint3` `a6c9645`: 17/17 AC pass |
+| F-06 | Customer cancel / operator reject with reason | 2 | CUSTOMER, OPERATOR | FR-12, FR-13 | BR-11, BR-12 | Released in `v0.2.0-sprint2` (`df6db99`); re-tested on `sprint3` `a6c9645`: 21/21 AC pass (API + E2E) |
+| F-07 | Fulfilment: PREPARING → READY → PICKED_UP | 2 | OPERATOR | FR-14 | BR-13 | Released in `v0.2.0-sprint2` (`df6db99`); re-tested on `sprint3` `a6c9645`: 19/19 AC pass (API + E2E) |
+| F-08 | Simulated payment | 2 | CUSTOMER, OPERATOR | FR-15 | BR-14, BR-15, BR-16 | Released in `v0.2.0-sprint2` (`df6db99`); re-tested on `sprint3` `a6c9645`: 18/18 AC pass, incl. BR-15, BR-16 |
+| F-09 | Pickup time slots + order cut-off | 3 | CUSTOMER, OPERATOR | FR-16 | BR-22, BR-23, BR-24 | Server rules and picker released in `v0.2.0-sprint2`; picker E2E TEST-F09-15..17 added on `sprint3` (PR #226, not on `main` yet). 17/17 AC pass on `sprint3` `a6c9645` |
+| F-10 | Sales summary | 3 | OPERATOR | FR-17 | BR-17, BR-18, BR-19 | Implemented and tested on `sprint3` `a6c9645` (PR #221): 9/9 AC pass; not released |
+| F-11 | Order search / filter | 3 | CUSTOMER, OPERATOR | FR-18 | BR-25, BR-26, BR-27 | Released in `v0.2.0-sprint2`; re-tested on `sprint3` `a6c9645`: 17/17 AC pass |
+| F-12 | Hardening: login rate limit, error states, accessibility | 3 | all | NFR-08, NFR-09 | BR-20, BR-21 | Implemented and tested on `sprint3` `a6c9645` (PRs #223, #227): AC-12.1..12.9 pass (9/9); NFR-09: axe passes on all screens and dialog/cart/login keyboard checks pass (TEST-A11Y-01..08), full keyboard-only walk and screen-reader pass not done, so NFR-09 is partly verified; not released |
 
 All Sprint 1 features also follow NFR-03, NFR-05, NFR-06 and NFR-07.
 
@@ -72,3 +72,4 @@ Status values: Not started → Planned (in a sprint plan) → Specified (contrac
 | 6 Nov 2026 | F-01..F-04 status Verified: all tests pass on `sprint-1` (see traceability.md) (#28) | AC-B3 |
 | 26 Nov 2026 | Updated F-06..F-12 statuses to reflect merged PRs #102, #106, #115, #118, #120 and open BR-16 PR #136 | Sync living feature inventory (S2-8b) |
 | 27 Nov 2026 | Version 3 (Issue #186): F-05..F-09 and F-11 moved to Implemented and tested on `sprint2` `d10fac1` (results in traceability.md); F-10 and F-12 stated as not implemented | Deliverable 2 part D audit |
+| 28 Nov 2026 | Version 4 (Issue #236): F-05..F-08, F-09 (server, picker) and F-11 marked Released in `v0.2.0-sprint2` and re-tested on `sprint3` `a6c9645`; F-09 picker E2E, F-10 and F-12 moved to Implemented and tested on `sprint3` (not released); NFR-09 stated as partly verified | Sprint 3 state after PRs #221, #223, #226, #227 |
