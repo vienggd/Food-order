@@ -1,0 +1,22 @@
+CI / review / deploy evidence for the Lab 6 fixes (from GitHub, gh CLI)
+
+PR #138 L6-03/04: Triage UAT findings (#121-#133) and fix accepted defects (RED->GREEN)
+  into lab6, merged by NinjoMUDA at 2026-11-26T08:48:43Z, merge commit 8356adb
+  reviews: NinjoMUDA CHANGES_REQUESTED, NinjoMUDA APPROVED
+  checks: 
+PR #174 fix(lab6): add Status header to desktop queue table (#132)
+  into lab6, merged by NinjoMUDA at 2026-11-26T19:13:35Z, merge commit 4a136c8
+  reviews: NinjoMUDA APPROVED
+  checks: 
+PR #168 Release Lab 6: Sprint 1 defect fixes (#138) and UAT execution records
+  into main, merged by NinjoMUDA at 2026-11-26T16:36:25Z, merge commit 163fdb7
+  reviews: NinjoMUDA APPROVED
+  checks: test-and-docker=SUCCESS
+PR #181 release(lab6): deploy #132 desktop queue Status header fix and Lab 6 retest docs
+  into main, merged by NinjoMUDA at 2026-11-26T20:19:31Z, merge commit 39bda5e
+  reviews: NinjoMUDA APPROVED
+  checks: test-and-docker=SUCCESS
+
+Deploy runs on main (GitHub Actions "Deploy demo"):
+  163fdb7 (PR #168): run 45860319259 success, 2026-11-26T16:36Z -> Cloud Run food-order-00008-v6c
+  39bda5e (PR #181): run 45890211288 success, 2026-11-26T20:19Z -> Cloud Run food-order-00009-jd9 (/api/ready ok)

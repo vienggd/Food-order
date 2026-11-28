@@ -16,11 +16,11 @@ const commit = execSync("git rev-parse --short HEAD").toString().trim();
 const branch = execSync("git rev-parse --abbrev-ref HEAD").toString().trim();
 
 const PARTS = [
-  { id: "A", title: "Summary and release status", files: ["docs/sprint_2/deliverable-2/part-a.md"], ids: "Executive summary, v0.1.0-sprint1 / 39bda5e / PENDING v0.2.0-sprint2, scope & risks" },
+  { id: "A", title: "Summary and release status", files: ["docs/sprint_2/deliverable-2/part-a.md"], ids: "Executive summary, v0.1.0-sprint1 / 39bda5e / v0.2.0-sprint2 / df6db99 / food-order-00010-7vp, scope & risks" },
   { id: "B", title: "Working Sprint 2 prototype and demonstration", files: ["docs/sprint_2/deliverable-2/part-b.md"], ids: "Setup, Sprint 1 continuity, F-05..F-08 + F-09/F-11 @2x screenshots, API 401/403/404/400/409, test counts" },
   { id: "C", title: "Sprint 3 contracts, working progress, and plan to 13 Dec", files: ["docs/sprint_2/deliverable-2/part-c.md"], ids: "F-09..F-12 contracts, implemented F-09/F-11 progress, 13 Dec schedule (exam protection)" },
   { id: "D", title: "Updated requirements and test traceability", files: ["docs/sprint_2/deliverable-2/part-d.md"], ids: "Living docs v3 audit (153/173 AC), TEST-F09-02/03 & TEST-F11-15 excerpts, 2 Issue/PR chains" },
-  { id: "E", title: "Engineering process, collaboration, and reflection", files: ["docs/sprint_2/deliverable-2/part-e.md"], ids: "Contract-before-code, TDD red->green table, PR/Board 4 flow, contributions, AI use, limitations" },
+  { id: "E", title: "Integrated release candidate, readiness, process and reflection", files: ["docs/sprint_2/deliverable-2/part-e.md"], ids: "Contract-before-code, TDD red->green table, PR/Board 4 flow, contributions, AI use, limitations" },
   { id: "App 1", title: "Living SRS, feature inventory, and System-Level SDS", files: ["docs/srs.md", "docs/features.md", "docs/system-sds.md"], ids: "FR-01..FR-18, BR-01..BR-27, NFR-01..NFR-09, DEC-01..DEC-11, F-01..F-12, SDS v3" },
   { id: "App 2", title: "Updated traceability matrix (all requirements and 173 AC)", files: ["docs/traceability.md"], ids: "Requirements & per-AC matrix verified on sprint2 (153/173 Pass, 20 planned)" },
   {
@@ -156,7 +156,7 @@ for (let i = 0; i < 4; i++) {
   frontPages = measured;
 }
 
-const footer = `<div style="font-size:7px;width:100%;text-align:center;color:#6e5e4f">Food-order · Deliverable 2 (Draft) · commit ${commit} · page <span class="pageNumber"></span> of <span class="totalPages"></span></div>`;
+const footer = `<div style="font-size:7px;width:100%;text-align:center;color:#6e5e4f">Food-order · Deliverable 2 · commit ${commit} · page <span class="pageNumber"></span> of <span class="totalPages"></span></div>`;
 const pdf = await printPdf(front(starts) + sections.map((s) => `<section>${s.html}</section>`).join(""), {
   path: OUT_PDF,
   displayHeaderFooter: true,
