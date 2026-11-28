@@ -1,16 +1,16 @@
 # Lab 7 — Maintenance change C-1: at most 15 items per order
 
-CPE 334 · Semester 1/2026 · Section 131 · group **Est** · Campus Café Pre-order (Food-order).
-**DRAFT.** Parts A–C are filled with the evidence that exists on 27 Nov (snapshot 27 Nov 04:10 +07). Items marked PENDING are not done yet (release to `main`, CI run on `main`, deployed revision, live checks, final metrics). They must be filled before submission.
+CPE 334 · Semester 1/2026 · Section 131 · **Group EN-033_P4 (team Est)** · Campus Café Pre-order (Food-order).
+**Status 28 Nov 2026 08:45 (+07).** Parts A–D are filled. C-1 is released to `main` (`704a66b`), deployed (revision `food-order-00011-9nh`) and live checks L1–L8 all passed. What is still open is listed under Limitations.
 
 ## Contents
 
 | Part | Title | Points | Where |
 |---|---|---|---|
 | A | Change impact and contract | 25 | Issue [#96](https://github.com/vienggd/Food-order/issues/96), `docs/labs/lab-07/impact.md`, PR [#103](https://github.com/vienggd/Food-order/pull/103) |
-| B | Implementation and regression-safe delivery | 50 | PR [#112](https://github.com/vienggd/Food-order/pull/112), `evidence/red.txt`, `green.txt`, `regression.txt`; live checks PENDING |
-| C | Metrics | 15 | `docs/labs/lab-07/metrics.md` (snapshot 27 Nov 04:10; final values PENDING) |
-| D | Readiness and retrospective | 10 | summary table below; details in `docs/labs/lab-07/readiness.md` (verdict NOT READY until release and live checks) |
+| B | Implementation and regression-safe delivery | 50 | PR [#112](https://github.com/vienggd/Food-order/pull/112), `evidence/red.txt`, `green.txt`, `regression.txt`; live checks L1–L8 PASS (`evidence/live-checks.md`) |
+| C | Metrics | 15 | `docs/labs/lab-07/metrics.md` (snapshot 28 Nov 08:45, after the release) |
+| D | Readiness and retrospective | 10 | summary table below; details in `docs/labs/lab-07/readiness.md`; live-check evidence in `evidence/live/` |
 
 ## Team
 
@@ -32,9 +32,9 @@ CPE 334 · Semester 1/2026 · Section 131 · group **Est** · Campus Café Pre-o
 | Test commit (RED) | TEST-L7-1..5 + `red.txt` | `1b9e604` | done 25 Nov |
 | Contract follow-up | 20 lines no longer reachable | `41031b7` | done 25 Nov |
 | Fix commit | C-1 server check + cart | `7de5285` | done 25 Nov |
-| Release to `main` | PENDING | PENDING | PENDING (heads decide, after the TA answer) |
-| Deployed revision | PENDING | PENDING | PENDING |
-| Later-sprint changes | Lab 6 fixes are already in `main` (`163fdb7`, `39bda5e`); Sprint 2 arrives in `main` before this release; BR-01b is ported into the living docs in the release PR | | PENDING |
+| Release to `main` | Lab 7 release PR #216 (`lab7` → `main`, merge commit) | `704a66b` | done 28 Nov 00:13 +07 (27 Nov 17:13:46 UTC) |
+| Deployed revision | Cloud Run revision `food-order-00011-9nh`, bundle `assets/index-CDaqMZLn.js` | Deploy demo run `46040158850` | done, success (CI on the release PR: run `46039698561`, success) |
+| Later-sprint changes | Sprint 2 was released to `main` first (`df6db99`, tag `v0.2.0-sprint2`, revision `food-order-00010-7vp`); `lab7` merged `main` in PR #211 and BR-01b was ported into the living docs (PR #211, #214) | `2bcf439` | done 27 Nov |
 
 ## Answer Part A: Change impact and contract
 
@@ -117,29 +117,29 @@ Cart (`client/src/lib/cart.ts`): `MAX_ITEMS = 15`; `add` is refused at 15; `setQ
 
 **PR review.** PR [#112](https://github.com/vienggd/Food-order/pull/112) (opened 25 Nov 03:21:20 UTC, merged 03:28:06 with a merge commit). vieng, APPROVED 03:28:02: "What I checked: commit order (RED 1b9e604, contract follow-up 41031b7, fix, then cleanup commits); red.txt shows only L7-3, L7-4, L7-5 failing on b71cdb2 code; I ran npm test on the latest head 93b2738: server 78 pass, client 7 pass. Fix returns 400 VALIDATION_ERROR with the agreed message and details; cart caps at 15, warns, disables +. Sprint 1 screenshots restored."
 
-**Not done yet (PENDING).**
-- Release of `lab7` to `main`: PENDING (heads decide, after the TA answer; Lab 6 is already in `main`, Sprint 2 merges first).
-- CI run on the `main` release PR: PENDING (no CI runs on `lab7` PRs; workflows start on PRs into `main`).
-- Deployed revision: PENDING.
-- Live checks on the deployed URL (15 items accepted, 16 refused with 400, cart blocks the 16th, customer still gets 403 on the staff queue): PENDING.
+**Release, CI and live checks (done 28 Nov).**
+- Release: PR #216 `lab7` → `main`, `main` `704a66b`, merged 28 Nov 00:13:46 +07. Before it, `lab7` merged the released Sprint 2 (PR #211, one conflict in `MenuPage.tsx`; I checked that the code diff against `main` is only C-1, build ok, server 184 and client 9 tests pass).
+- CI on the release PR: `CI & Docker Build` run `46039698561`, success (npm test, build, Docker build; the first run `46039520267` was cancelled and re-run).
+- Deployed revision: `food-order-00011-9nh`, Deploy demo run `46040158850`, success.
+- Live checks on the deployed URL: all PASS, see Part D and `docs/labs/lab-07/evidence/live-checks.md`. Screenshots: `evidence/live/L2-order-18-placed.png`, `L4-cart-15-warning.png`, `L6-old-order-13.png`, `L7-staff-18-accepted.jpg`, `L8-bob-alice-order-404.jpg`.
 
 ## Answer Part C: Metrics
 
-Snapshot **27 Nov 2026 04:10 (+07)**, window 24–29 Nov, data from `gh`. Full definitions, scope and source lists: `docs/labs/lab-07/metrics.md`.
+Snapshot **28 Nov 2026 08:45 (+07)**, after the release; window 24–29 Nov, data from `gh`. Full definitions, scope and source lists: `docs/labs/lab-07/metrics.md`.
 
-| # | Metric | Snapshot value |
+| # | Metric | Value |
 |---|---|---|
-| M1 | Completed Issues | **46** (47 closed; #127 NOT_PLANNED) = 98 % |
-| M2 | Merged PRs | **44** = 17 into `sprint2`, 16 into `lab6`, 9 into `lab7`, 2 into `main` |
-| M3 | Tests on `lab7` | server **78** / client **7** / E2E **26**; 0 failed, 0 skipped |
-| M4 | UAT defect status | **9 of 9 accepted Lab 6 defects fixed, re-tested PASS and closed** (#121–#126, #128, #129, #132); 3 enhancements deferred to Sprint 3, still open (#130, #131, #133) |
-| M5 | CI and deploy runs | **4 success, 0 failure**: Deploy demo `45860319259` (`163fdb7`) and `45890211288` (`39bda5e`) on `main`, plus 2 CI runs on PRs into `main`; none for `lab7` yet |
+| M1 | Completed Issues | **63** (64 closed; #127 NOT_PLANNED) = 98 % |
+| M2 | Merged PRs | **66** = 25 into `sprint2`, 22 into `lab6`, 13 into `lab7`, 6 into `main` |
+| M3 | Tests | C-1 alone (`3c276b2`): server **78** / client **7** / E2E **26**, 0 failed, 0 skipped. With Sprint 2 merged (PR #211): server **184** / client **9** |
+| M4 | UAT defect status | **9 of 9 accepted Lab 6 defects fixed, re-tested PASS and closed**; of the 3 deferred enhancements #130 is closed, #131 and #133 are still open |
+| M5 | CI and deploy runs | **15 runs: 14 success, 0 failure, 1 cancelled (re-run, success)**; release PR #216 CI success; Deploy demo for `704a66b` success |
 
-Interpretation: the 9 accepted Lab 6 defects are fixed, re-tested and closed, and CI plus both `main` deploys were green; but CI has not run on `lab7` yet and C-1 is not in `main`, so C-1 rests on local runs (78 / 7 / 26) until the release PR. Action: release `lab7` and run the live checks; keep #130, #131, #133 visible for Sprint 3; owner vieng. Final values: PENDING (after the Lab 7 release).
+Interpretation: C-1 is released and verified: the release PR ran CI once (green), the deploy was green, live checks L1–L8 passed on `food-order-00011-9nh`, and no run failed in the window. Remaining risk: E2E is not part of CI, so the 26 E2E tests rest on local runs; #131 and #133 are open for Sprint 3. Action: add the E2E job to CI and schedule #131 and #133; owner vieng (CI), ninja (#131, #133).
 
 ## Answer Part D: Readiness and retrospective
 
-Full checklist, rollback, defects, technical debt, verdict and retrospective: `docs/labs/lab-07/readiness.md` (vieng). Summary as of **27 Nov 2026 04:10 (+07)**, before the release.
+Full checklist, rollback, defects, technical debt, verdict and retrospective: `docs/labs/lab-07/readiness.md` (vieng). Summary as of **28 Nov 2026 08:45 (+07)**, after the release and the live checks.
 
 **Release checklist (readiness.md section 1)**
 
@@ -151,33 +151,33 @@ Full checklist, rollback, defects, technical debt, verdict and retrospective: `d
 | 4 | GREEN after the fix (`evidence/green.txt`) | done |
 | 5 | Full regression: server 78, client 7, no test weakened | done |
 | 6 | E2E: 26 passed, 0 failed, 0 skipped | done |
-| 7 | CI on the `lab7` PRs | PENDING: CI does not run on `lab7`; it runs on the release PR into `main` |
+| 7 | CI | done: CI does not run on the staging PRs into `lab7`; on the release PR #216 run `46039698561` = success |
 | 8 | Docs match (SRS, F-03 contract, SDS, traceability) | done |
 | 9 | Migration | none needed (no schema change) |
 | 10 | Old data: old orders still open normally | done |
 | 11 | No secrets in the change | done |
 | 12 | Every Lab 7 PR approved by the other side, merge commit | done |
 
-**Rollback.** Code only, no migration, no data change. Run the `deploy` workflow manually with the full commit SHA of the previous good image (the Lab 6 release `39bda5e`), then check `/api/health`, `/api/ready` and the smoke test.
+**Rollback.** Code only, no migration, no data change. Run the `deploy` workflow manually with the full commit SHA of the previous good image (now the Sprint 2 release `df6db99`, revision `food-order-00010-7vp`), then check `/api/health`, `/api/ready` and the smoke test.
 
-**Live checks after deploy (readiness.md section 4): all PENDING until the release is deployed**
+**Live checks after the deploy (readiness.md section 4; revision `food-order-00011-9nh`, 28 Nov 2026, +07; details in `evidence/live-checks.md`)**
 
-| # | Check | Status |
-|---|---|---|
-| L1 | `/api/health` and `/api/ready` ok | PENDING |
-| L2 | 15 items in total: 201 | PENDING |
-| L3 | 16 items: 400 with the C-1 message and details | PENDING |
-| L4 | Cart warns at 15 and disables every + | PENDING |
-| L5 | One line of 11: 400 | PENDING |
-| L6 | Old orders still list and open | PENDING |
-| L7 | Operator accepts the 15-item order | PENDING |
-| L8 | Access path: customer on the staff queue 403, anonymous 401, other customer's order 404 | PENDING |
+| # | Check | Result | Time | Evidence |
+|---|---|---|---|---|
+| L1 | `/api/health` and `/api/ready` | PASS: ok; `{"status":"ready","db":"connected"}` | 28 Nov | response text |
+| L2 | 15 items in total (Latte ×10 + Americano ×5) | PASS: 201, order #18 PLACED, total 92500 satang | 01:19:43 | `live/L2-order-18-placed.png`, `live/L2-L6-my-orders-list.png` |
+| L3 | 16 items (10 + 6) | PASS: 400 `VALIDATION_ERROR`, "An order can have at most 15 items in total", details `{field:"lines",max:15,total:16}`; alice's orders 16 before and after | 00:52:18 | API response |
+| L4 | Cart warns at 15 and disables every + | PASS: warning shown; all 6 Add buttons and cart + disabled | 01:19:39 | `live/L4-cart-15-menu.png`, `live/L4-cart-15-warning.png` |
+| L5 | One line of 11 | PASS: 400 (`items.0.quantity`, max 10) | 00:52:18 | API response |
+| L6 | Old order #13 (26 Nov) still lists and opens | PASS | 01:20:08 | `live/L6-old-order-13.png` |
+| L7 | Staff accepts the 15-item order #18 | PASS: PLACED → ACCEPTED (`acceptedAt` 2026-11-28T01:39:21.738Z), toast "Order #18 accepted." | 08:39:21 | `live/L7-staff-queue-18-placed.jpg`, `live/L7-staff-accept-18-toast.jpg`, `live/L7-staff-18-accepted.jpg` |
+| L8 | Access path | PASS: anonymous 401; alice on the staff queue 403 `FORBIDDEN` (00:52:08); bob on alice's order 404 `NOT_FOUND` (08:34:45) | see left | `live/L8-bob-alice-order-404.jpg` |
 
-**Defects.** C-1: 0 defects found. Sprint 1 UAT findings: 9 of 9 accepted defects fixed, re-tested PASS and closed; 3 enhancements (#130, #131, #133) deferred to Sprint 3 (see Part C).
+**Defects.** C-1: 0 defects found, also none in the live checks. Sprint 1 UAT findings: 9 of 9 accepted defects fixed, re-tested PASS and closed; 3 enhancements (#130, #131, #133) deferred to Sprint 3, of which #131 and #133 are still open (see Part C).
 
-**Technical debt (readiness.md section 6).** The 15 limit is written twice (server and client), medium; CI does not start on staging-branch PRs, medium; BR-01b must be ported into the living docs in the release PR, low; E2E screenshots overwrite the Sprint 1 PNGs, low.
+**Technical debt (readiness.md section 6).** The 15 limit is written twice (server and client), medium; CI does not start on staging-branch PRs, medium; BR-01b is now in the living docs (PR #211, #214), done; E2E screenshots overwrite the Sprint 1 PNGs, low.
 
-**Verdict: NOT READY** (pre-release). Still needed: the TA answer on deploying to the Lab 5 URL, the release `lab7` to `main` with CI green, the deploy, the live checks L1–L8, and the final metrics and PDF.
+**Verdict: READY and released** for the maintained scope (C-1 plus preserved Sprint 1 behaviour): release `704a66b` is deployed as `food-order-00011-9nh`, CI and Deploy demo are green, live checks L1–L8 PASS. Open: the TA answer on deploying to the Lab 5 URL (owner: vieng) and the Sprint 3 items below. Rollback target if ever needed: `df6db99` / `food-order-00010-7vp`.
 
 **Retrospective (short).** Helped: reviewing the impact table and contract before any code caught the unreachable 20-line tests early. Hurt: a local E2E run overwrote the Sprint 1 screenshots (cleanup `8f6110f`), and CI does not start on staging branch PRs. Change for the final release: parameterize the screenshot folder and check `git status` for stray PNGs before every push.
 
@@ -194,6 +194,7 @@ Both students used Claude (worker sessions) for drafts of the impact table, test
 
 ## Limitations
 
-- Release, CI run on `main`, deploy and live checks are not done yet (PENDING above).
-- CI did not run on staging branch PRs, so test evidence is from local runs.
+- Open items: the TA answer on deploying to the Lab 5 URL (owner: vieng); #131 and #133 (Sprint 3).
+- CI did not run on the staging PRs into `lab7`, so their test evidence is from local runs; CI ran once on the release PR. E2E is not part of CI.
+- Live-check results for L1, L3, L5 are API responses without a screenshot; the others have screenshots in `evidence/live/`.
 - The 15-item cap makes the old 20-line limit unreachable (kept in the schema).
