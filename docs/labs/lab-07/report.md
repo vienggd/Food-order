@@ -8,10 +8,10 @@ Repository https://github.com/vienggd/Food-order · deployed https://food-order-
 
 | Part | Title | Points | Where | Pages |
 |---|---|---|---|---|
-| A | Change impact and contract | 25 | Issue [#96](https://github.com/vienggd/Food-order/issues/96), `docs/labs/lab-07/impact.md`, PR [#103](https://github.com/vienggd/Food-order/pull/103) | 4; App. A1–A3 pp. 13–17 |
-| B | Implementation and regression-safe delivery | 50 | PR [#112](https://github.com/vienggd/Food-order/pull/112), `evidence/red.txt`, `green.txt`, `regression.txt`; live checks L1–L8 PASS (`evidence/live-checks.md`) | 5–6; App. B1–B5 pp. 18–29 |
-| C | Metrics | 15 | `docs/labs/lab-07/metrics.md` (snapshot 28 Nov 08:45, after the release) | 7; App. C1 p. 30 |
-| D | Readiness and retrospective | 10 | summary table below; details in `docs/labs/lab-07/readiness.md`; live-check evidence in `evidence/live/` | 8–12; App. D1 pp. 31–34 |
+| A | Change impact and contract | 25 | Issue [#96](https://github.com/vienggd/Food-order/issues/96), `docs/labs/lab-07/impact.md`, PR [#103](https://github.com/vienggd/Food-order/pull/103) | 4; App. A1–A3 pp. 13–16 |
+| B | Implementation and regression-safe delivery | 50 | PR [#112](https://github.com/vienggd/Food-order/pull/112), `evidence/red.txt`, `green.txt`, `regression.txt`; live checks L1–L8 PASS (`evidence/live-checks.md`) | 5–6; App. B1–B5 pp. 17–28 |
+| C | Metrics | 15 | `docs/labs/lab-07/metrics.md` (snapshot 28 Nov 08:45, after the release) | 7; App. C1 pp. 29–30 |
+| D | Readiness and retrospective | 10 | summary table below; details in `docs/labs/lab-07/readiness.md`; live-check evidence in `evidence/live/` | 8–12; App. D1 pp. 30–33 |
 
 ## Team
 
@@ -207,9 +207,7 @@ These appendices put the assessed material directly in this PDF (handout §4.1).
 
 ### Appendix A1 — TA approval of change C-1 (25 Nov 2026)
 
-![TA approval part 1 — Prapatsorn Sangrod (TA), 25 Nov 2026](evidence/ta-approval-1.png)
-
-![TA approval part 2 — approver and date](evidence/ta-approval-2.png)
+![TA approval of change C-1 in the TA's chat, read left column then right column. Approver: Prapatsorn Sangrod (TA), 25 November 2026 (bottom right). The TA approves the C-1 rule change and asks for its own Issue, branch and PR, contract and tests before code, RED on the old commit then GREEN, and full evidence in each PDF. Cropped from the two phone screenshots `evidence/ta-approval-1.png` and `-2.png` (overlap removed).](evidence/ta-approval.png)
 
 ### Appendix A2 — Impact analysis
 
