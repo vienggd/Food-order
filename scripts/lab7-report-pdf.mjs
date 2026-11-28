@@ -61,7 +61,7 @@ const CSS = `
   pre { font: 7.6pt/1.35 Consolas, monospace; background: #f4f1ec; padding: 6px 8px; border-radius: 4px; white-space: pre-wrap; break-inside: avoid; margin: 5px 0 8px; }
   pre code { background: none; padding: 0; }
   figure { margin: 6px 0 10px; break-inside: avoid; }
-  figure img { display: block; max-width: 100%; max-height: 215mm; border: 1px solid #c9c0b4; }
+  figure img { display: block; max-width: 100%; max-height: 215mm; object-fit: contain; object-position: left top; border: 1px solid #c9c0b4; }
   figcaption { font-size: 7.8pt; color: #4d4438; margin-top: 2px; }
   a { color: #1f5f3f; }
   .todo { display: inline-block; background: #fde3e0; color: #7a1c12; border: 1px solid #e2a59d; font-weight: 600; padding: 2px 5px; border-radius: 3px; }

@@ -8,10 +8,10 @@ Repository https://github.com/vienggd/Food-order · deployed https://food-order-
 
 | Part | Title | Points | Where | Pages |
 |---|---|---|---|---|
-| A | Change impact and contract | 25 | Issue [#96](https://github.com/vienggd/Food-order/issues/96), `docs/labs/lab-07/impact.md`, PR [#103](https://github.com/vienggd/Food-order/pull/103) | 4; App. A1–A3 pp. 13–17 |
-| B | Implementation and regression-safe delivery | 50 | PR [#112](https://github.com/vienggd/Food-order/pull/112), `evidence/red.txt`, `green.txt`, `regression.txt`; live checks L1–L8 PASS (`evidence/live-checks.md`) | 5–6; App. B1–B5 pp. 18–29 |
-| C | Metrics | 15 | `docs/labs/lab-07/metrics.md` (snapshot 28 Nov 08:45, after the release) | 7; App. C1 p. 30 |
-| D | Readiness and retrospective | 10 | summary table below; details in `docs/labs/lab-07/readiness.md`; live-check evidence in `evidence/live/` | 8–12; App. D1 pp. 31–34 |
+| A | Change impact and contract | 25 | Issue [#96](https://github.com/vienggd/Food-order/issues/96), `docs/labs/lab-07/impact.md`, PR [#103](https://github.com/vienggd/Food-order/pull/103) | 4; App. A1–A3 pp. 13–16 |
+| B | Implementation and regression-safe delivery | 50 | PR [#112](https://github.com/vienggd/Food-order/pull/112), `evidence/red.txt`, `green.txt`, `regression.txt`; live checks L1–L8 PASS (`evidence/live-checks.md`) | 5–6; App. B1–B5 pp. 17–28 |
+| C | Metrics | 15 | `docs/labs/lab-07/metrics.md` (snapshot 28 Nov 08:45, after the release) | 7; App. C1 pp. 29–30 |
+| D | Readiness and retrospective | 10 | summary table below; details in `docs/labs/lab-07/readiness.md`; live-check evidence in `evidence/live/` | 8–12; App. D1 pp. 30–33 |
 
 ## Team
 
@@ -179,7 +179,7 @@ Full checklist, rollback, defects, technical debt, verdict and retrospective: `d
 
 **Technical debt (readiness.md section 6).** The 15 limit is written twice (server and client), medium; CI does not start on staging-branch PRs, medium; BR-01b is now in the living docs (PR #211, #214), done; E2E screenshots overwrite the Sprint 1 PNGs, low.
 
-**Verdict: READY and released** for the maintained scope (C-1 plus preserved Sprint 1 behaviour): release `704a66b` is deployed as `food-order-00011-9nh`, CI and Deploy demo are green, live checks L1–L8 PASS. Nothing is open for the maintained scope (the TA allowed newer deploys on the Lab 5 URL on 25 Nov); Sprint 3 items are listed under Limitations. Rollback target if ever needed: `df6db99` / `food-order-00010-7vp`.
+**Verdict: READY and released** for the maintained scope (C-1 plus preserved Sprint 1 behaviour): release `704a66b` is deployed as `food-order-00011-9nh`, CI and Deploy demo are green, live checks L1–L8 PASS. Nothing is open for the maintained scope; Sprint 3 items are listed under Limitations. Rollback target if ever needed: `df6db99` / `food-order-00010-7vp`.
 
 **Retrospective (short).** Helped: reviewing the impact table and contract before any code caught the unreachable 20-line tests early. Hurt: a local E2E run overwrote the Sprint 1 screenshots (cleanup `8f6110f`), and CI does not start on staging branch PRs. Change for the final release: parameterize the screenshot folder and check `git status` for stray PNGs before every push.
 
@@ -207,9 +207,7 @@ These appendices put the assessed material directly in this PDF (handout §4.1).
 
 ### Appendix A1 — TA approval of change C-1 (25 Nov 2026)
 
-![TA approval part 1 — Prapatsorn Sangrod (TA), 25 Nov 2026](evidence/ta-approval-1.png)
-
-![TA approval part 2 — approver and date](evidence/ta-approval-2.png)
+![TA approval of change C-1 in the TA's chat, read left column then right column. Approver: Prapatsorn Sangrod (TA), 25 November 2026 (bottom right). The TA approves the C-1 rule change and asks for its own Issue, branch and PR, contract and tests before code, RED on the old commit then GREEN, and full evidence in each PDF. Cropped from the two phone screenshots `evidence/ta-approval-1.png` and `-2.png` (overlap removed).](evidence/ta-approval.png)
 
 ### Appendix A2 — Impact analysis
 
