@@ -14,6 +14,12 @@ const OUT = process.argv[2] ?? "docs/labs/lab-07/lab7_sec131_Est.pdf";
 const commit = execSync("git rev-parse --short HEAD").toString().trim();
 
 let md = readFileSync(SRC, "utf8");
+// Expand sibling markdown includes (<!-- INCLUDE: file.md -->): drop the top H1 and demote headings one level.
+md = md.replace(/<!--\s*INCLUDE:\s*([^\s>]+)\s*-->/g, (_m, rel) => {
+  let inc = readFileSync(resolve(dirname(SRC), rel), "utf8").replace(/\r\n/g, "\n");
+  inc = inc.replace(/^# [^\n]*\n+/, "").replace(/^(#{1,5}) /gm, (_h, hs) => hs + "# ");
+  return inc.trim();
+});
 const keys = [...md.matchAll(/!\[Figure @([\w-]+)\./g)].map((m) => m[1]);
 const numbers = new Map([...new Set(keys)].map((k, i) => [k, i + 1]));
 const unknown = [];
