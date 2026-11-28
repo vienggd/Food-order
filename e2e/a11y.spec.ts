@@ -26,7 +26,7 @@ test.describe("NFR-09 axe: no critical or serious violations", () => {
 
   test("TEST-A11Y-01 login page", async ({ page }) => {
     await page.goto("/login");
-    await expect(page.getByRole("heading", { name: "Sign in" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Sign in", exact: true })).toBeVisible();
     expect(await seriousViolations(page)).toEqual([]);
   });
 
@@ -42,7 +42,7 @@ test.describe("NFR-09 axe: no critical or serious violations", () => {
     await expect(page.getByText(`#${orderId}`).first()).toBeVisible();
     expect(await seriousViolations(page), "my orders").toEqual([]);
     await page.goto(`/orders/${orderId}`);
-    await expect(page.getByRole("heading", { name: `Order #${orderId}` })).toBeVisible();
+    await expect(page.getByRole("heading", { name: `Order #${orderId}`, exact: true })).toBeVisible();
     expect(await seriousViolations(page), "order detail").toEqual([]);
   });
 
@@ -51,10 +51,10 @@ test.describe("NFR-09 axe: no critical or serious violations", () => {
     await expect(page.getByTestId(`order-${orderId}`)).toBeVisible();
     expect(await seriousViolations(page), "queue").toEqual([]);
     await page.goto("/operator/menu");
-    await expect(page.getByRole("heading", { name: "Menu items" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Menu items", level: 1, exact: true })).toBeVisible();
     expect(await seriousViolations(page), "menu items").toEqual([]);
     await page.goto("/operator/sales");
-    await expect(page.getByRole("heading", { name: /Sales/ }).first()).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Sales summary", level: 1, exact: true })).toBeVisible();
     expect(await seriousViolations(page), "sales").toEqual([]);
   });
 });
