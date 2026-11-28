@@ -1,16 +1,17 @@
 # Lab 7 — Maintenance change C-1: at most 15 items per order
 
-CPE 334 · Semester 1/2026 · Section 131 · **Group EN-033_P4 (team Est)** · Campus Café Pre-order (Food-order).
+CPE 334 · Semester 1/2026 · Section 131 · **Group EN-033_P4 (team Est)** · Theme 4 (Ordering system) · Campus Café Pre-order (Food-order).
+Repository https://github.com/vienggd/Food-order · deployed https://food-order-d4jdyxqbca-as.a.run.app (Cloud Run revision `food-order-00011-9nh`) · accepted Sprint 1 baseline `v0.1.0-sprint1` / pre-change commit `b71cdb2` · submitted `main` release `704a66b` (tag `v0.3.0-rc1` on the final docs commit).
 **Status 28 Nov 2026 08:45 (+07).** Parts A–D are filled. C-1 is released to `main` (`704a66b`), deployed (revision `food-order-00011-9nh`) and live checks L1–L8 all passed. What is still open is listed under Limitations.
 
 ## Contents
 
-| Part | Title | Points | Where |
-|---|---|---|---|
-| A | Change impact and contract | 25 | Issue [#96](https://github.com/vienggd/Food-order/issues/96), `docs/labs/lab-07/impact.md`, PR [#103](https://github.com/vienggd/Food-order/pull/103) |
-| B | Implementation and regression-safe delivery | 50 | PR [#112](https://github.com/vienggd/Food-order/pull/112), `evidence/red.txt`, `green.txt`, `regression.txt`; live checks L1–L8 PASS (`evidence/live-checks.md`) |
-| C | Metrics | 15 | `docs/labs/lab-07/metrics.md` (snapshot 28 Nov 08:45, after the release) |
-| D | Readiness and retrospective | 10 | summary table below; details in `docs/labs/lab-07/readiness.md`; live-check evidence in `evidence/live/` |
+| Part | Title | Points | Where | Pages |
+|---|---|---|---|---|
+| A | Change impact and contract | 25 | Issue [#96](https://github.com/vienggd/Food-order/issues/96), `docs/labs/lab-07/impact.md`, PR [#103](https://github.com/vienggd/Food-order/pull/103) | 4; App. A1–A3 pp. 13–17 |
+| B | Implementation and regression-safe delivery | 50 | PR [#112](https://github.com/vienggd/Food-order/pull/112), `evidence/red.txt`, `green.txt`, `regression.txt`; live checks L1–L8 PASS (`evidence/live-checks.md`) | 5–6; App. B1–B5 pp. 18–29 |
+| C | Metrics | 15 | `docs/labs/lab-07/metrics.md` (snapshot 28 Nov 08:45, after the release) | 7; App. C1 p. 30 |
+| D | Readiness and retrospective | 10 | summary table below; details in `docs/labs/lab-07/readiness.md`; live-check evidence in `evidence/live/` | 8–12; App. D1 pp. 31–34 |
 
 ## Team
 
@@ -185,16 +186,419 @@ Full checklist, rollback, defects, technical debt, verdict and retrospective: `d
 
 | Work | Owner | Reviewer |
 |---|---|---|
-| Change request, impact, contract, RED/GREEN code, metrics, this report | ninja | vieng |
-| Readiness, live-check evidence, reviews of all Lab 7 PRs | vieng | ninja |
+| Change request, impact, C-1 contract (PR #103), RED → fix → GREEN (PR #112), metrics, report Parts A–C, live checks L2–L8 (signed in by hand) | ninja | vieng (requested changes on #103 before any code; ran the tests on #112 before approving) |
+| TA approval request and evidence (PR #108), readiness checklist (PR #109, #114), merge of released `main` into `lab7` with conflict resolution (PR #211), release PR #216, live checks L1 + L8 (anonymous), report appendices and final PDF | vieng | ninja |
 
 ## AI use
 
-Both students used Claude (worker sessions) for drafts of the impact table, tests, code and this report. Every PR was reviewed and merged by the other student's side; the TA approval and decisions are the students'.
+Both students used AI assistants (Claude Code sessions, plus Antigravity on vieng's side) for drafts of the impact table, tests, code, live-check clicking and this report. Every PR was reviewed and merged by the other student's side; the TA approval and decisions are the students'.
 
 ## Limitations
 
-- Open items: the TA answer on deploying to the Lab 5 URL (owner: vieng); #131 and #133 (Sprint 3).
+- Open items: #131 and #133 (accessibility enhancements, scheduled in Sprint 3 with an open PR).
 - CI did not run on the staging PRs into `lab7`, so their test evidence is from local runs; CI ran once on the release PR. E2E is not part of CI.
 - Live-check results for L1, L3, L5 are API responses without a screenshot; the others have screenshots in `evidence/live/`.
 - The 15-item cap makes the old 20-line limit unreachable (kept in the schema).
+
+## Appendices
+
+These appendices put the assessed material directly in this PDF (handout §4.1).
+
+### Appendix A1 — TA approval of change C-1 (25 Nov 2026)
+
+![TA approval part 1 — Prapatsorn Sangrod (TA), 25 Nov 2026](evidence/ta-approval-1.png)
+
+![TA approval part 2 — approver and date](evidence/ta-approval-2.png)
+
+### Appendix A2 — Impact analysis
+
+<!-- INCLUDE: impact.md -->
+
+### Appendix A3 — Revised contract sections for C-1 (SRS/SDS/AC/STS)
+
+<!-- INCLUDE: contract-C-1.md -->
+
+### Appendix B1 — RED output on the pre-change code
+
+```text
+RED run, 25 Nov 2026. Production code = pre-change behaviour of main b71cdb2.
+Check: git diff b71cdb2 --stat -- server/src client/src ':!*.test.ts'  =>  0 lines (0 = production code identical to b71cdb2)
+Node v24.14.0, vitest vitest/3.2.7 win32-x64 node-v24.14.0, playwright Version 1.64.1
+
+== server: cd server && npx vitest run tests/orders.test.ts ==
+   ✓ Lab 7 C-1 BR-01b at most 15 items in total > TEST-L7-1 total 14 (10 + 4) is accepted  310ms
+   ✓ Lab 7 C-1 BR-01b at most 15 items in total > TEST-L7-2 total 15 (10 + 5) is accepted 259ms
+   × Lab 7 C-1 BR-01b at most 15 items in total > TEST-L7-3 total 16 (10 + 6) is rejected with the C-1 message and details, nothing saved 256ms
+     → expected 201 to be 400 // Object.is equality
+   × Lab 7 C-1 BR-01b at most 15 items in total > TEST-L7-3 total 16 (8 + 8) is rejected with the C-1 message and details, nothing saved 260ms
+     → expected 201 to be 400 // Object.is equality
+   ✓ Lab 7 C-1 BR-01b at most 15 items in total > TEST-L7-3 a single line of 11 is still rejected by the per-line rule, nothing saved 262ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  tests/orders.test.ts > Lab 7 C-1 BR-01b at most 15 items in total > TEST-L7-3 total 16 (10 + 6) is rejected with the C-1 message and details, nothing saved
+ FAIL  tests/orders.test.ts > Lab 7 C-1 BR-01b at most 15 items in total > TEST-L7-3 total 16 (8 + 8) is rejected with the C-1 message and details, nothing saved
+    235|   ])("TEST-L7-3 total 16 (%s) is rejected with the C-1 message and det…
+ Test Files  1 failed (1)
+      Tests  2 failed | 33 passed (35)
+
+== client: cd client && npx vitest run ==
+   × Lab 7 C-1 cart limit of 15 items in total > TEST-L7-4 total never goes above 15; + is refused at 15; every + on the menu is disabled only at 15 5ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  src/lib/cart.test.ts > Lab 7 C-1 cart limit of 15 items in total > TEST-L7-4 total never goes above 15; + is refused at 15; every + on the menu is disabled only at 15
+AssertionError: expected 19 to be 15 // Object.is equality
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 6 passed (7)
+
+== e2e: npx playwright test e2e/orders.spec.ts -g TEST-L7-5 ==
+  x  1 [phone] › e2e\orders.spec.ts:20:7 › F-03 place order › TEST-L7-5 at 15 items the cart shows a warning and + is disabled; the order is still placed (5.9s)
+  x  2 [desktop] › e2e\orders.spec.ts:20:7 › F-03 place order › TEST-L7-5 at 15 items the cart shows a warning and + is disabled; the order is still placed (5.8s)
+  1) [phone] › e2e\orders.spec.ts:20:7 › F-03 place order › TEST-L7-5 at 15 items the cart shows a warning and + is disabled; the order is still placed 
+    Error: expect(locator).toBeVisible() failed
+    Error: element(s) not found
+      - Expect "toBeVisible" getByRole('region', { name: 'Cart' }).getByText(/at most 15 items in total/i) with timeout 5000ms
+    > 29 |     await expect(cart.getByText(/at most 15 items in total/i)).toBeVisible();
+  2) [desktop] › e2e\orders.spec.ts:20:7 › F-03 place order › TEST-L7-5 at 15 items the cart shows a warning and + is disabled; the order is still placed 
+    Error: expect(locator).toBeVisible() failed
+    Error: element(s) not found
+      - Expect "toBeVisible" getByRole('region', { name: 'Cart' }).getByText(/at most 15 items in total/i) with timeout 5000ms
+    > 29 |     await expect(cart.getByText(/at most 15 items in total/i)).toBeVisible();
+```
+
+### Appendix B2 — GREEN output and Sprint 1 regression
+
+```text
+GREEN run, 25 Nov 2026, after the fix (fix commit follows the RED commit 1b9e604 and the contract follow-up 41031b7). Node v24.14.0, vitest 3.2.7, playwright Version 1.64.1
+
+== server: cd server && npx vitest run tests/orders.test.ts ==
+   ✓ F-03 POST /api/orders > TEST-F03-05 BR-02 boundary: 15 different lines are accepted (20 lines need 20 items, above the C-1 limit)  322ms
+   ✓ Lab 7 C-1 BR-01b at most 15 items in total > TEST-L7-2 total 15 (10 + 5) is accepted  304ms
+   ✓ Lab 7 C-1 BR-01b at most 15 items in total > TEST-L7-3 details.total is the real sum: 10 + 10 gives total 20  304ms
+   ✓ Lab 7 C-1 BR-01b at most 15 items in total > TEST-L7-3 16 lines of 1 are rejected (total 16), nothing saved  316ms
+ Test Files  1 passed (1)
+      Tests  37 passed (37)
+
+== client: cd client && npx vitest run ==
+ Test Files  3 passed (3)
+      Tests  7 passed (7)
+
+== e2e: npx playwright test e2e/orders.spec.ts -g TEST-L7-5 ==
+  ok 1 [phone] › e2e\orders.spec.ts:20:7 › F-03 place order › TEST-L7-5 at 15 items the cart shows a warning and + is disabled; the order is still placed (1.0s)
+  ok 2 [desktop] › e2e\orders.spec.ts:20:7 › F-03 place order › TEST-L7-5 at 15 items the cart shows a warning and + is disabled; the order is still placed (804ms)
+  2 passed (11.2s)
+```
+
+```text
+Regression run, 25 Nov 2026, on the fix commit. Same suites as Sprint 1 plus the new tests. No existing test deleted or weakened; 3 old tests got reachable numbers (impact.md section 3).
+Baseline before the change (b71cdb2 code, vieng and ninja runs): server 8 files / 71 tests pass, client 3 files / 6 tests pass.
+
+== selected suites (orders, operator, auth): cd server && npx vitest run tests/orders.test.ts tests/operator.test.ts tests/auth.test.ts ==
+ Test Files  3 passed (3)
+      Tests  58 passed (58)
+
+== all unit/API tests: npm test ==
+ Test Files  8 passed (8)
+      Tests  78 passed (78)
+ Test Files  3 passed (3)
+      Tests  7 passed (7)
+
+== all E2E: npx playwright test ==
+  26 passed (28.3s)
+```
+
+### Appendix B3 — Code diff of the change (PR #112)
+
+```text
+Code change for C-1 (PR #112, source files only; tests are in Appendix B1/B2)
+
+diff --git a/client/src/lib/cart.test.ts b/client/src/lib/cart.test.ts
+index a958aa2..826ede0 100644
+--- a/client/src/lib/cart.test.ts
++++ b/client/src/lib/cart.test.ts
+@@ -1,5 +1,5 @@
+ import { describe, it, expect } from "vitest";
+-import { canAddFromMenu, cartReducer, emptyCart, MAX_LINES, type Cart } from "./cart";
++import { canAddFromMenu, cartReducer, emptyCart, MAX_ITEMS, MAX_LINES, type Cart } from "./cart";
+ 
+ const item = (id: number, price = 1000) => ({ id, name: `Item ${id}`, price });
+ const apply = (cart: Cart, ...actions: Parameters<typeof cartReducer>[1][]) => actions.reduce(cartReducer, cart);
+@@ -20,9 +20,8 @@ describe("cartReducer", () => {
+     cart = apply(cart, { type: "setQty", menuItemId: 1, quantity: 10 }, { type: "add", item: item(1) });
+     expect(cart.lines[0].quantity).toBe(10); // + at 10 does nothing
+ 
+-    let full = emptyCart;
+-    for (let i = 1; i <= MAX_LINES; i++) full = apply(full, { type: "add", item: item(i) });
+-    expect(full.lines).toHaveLength(20);
++    // 20 lines built directly: the reducer itself stops at 15 items (C-1)
++    const full: Cart = { lines: Array.from({ length: MAX_LINES }, (_, i) => ({ menuItemId: i + 1, name: `Item ${i + 1}`, price: 1000, quantity: 1 })) };
+     expect(apply(full, { type: "add", item: item(21) }).lines).toHaveLength(20);
+   });
+ 
+@@ -33,11 +32,30 @@ describe("cartReducer", () => {
+     expect(apply(cart, { type: "clear" }).lines).toEqual([]);
+   });
+ 
+-  it("TEST-F03-23 at 20 lines every menu + is disabled", () => {
++  it("TEST-F03-23 at 15 items every menu + is disabled (was 20 lines; 20 lines are no longer reachable)", () => {
+     let cart = emptyCart;
+-    for (let i = 1; i < MAX_LINES; i++) cart = apply(cart, { type: "add", item: item(i) });
+-    expect(canAddFromMenu(cart)).toBe(true);
+-    cart = apply(cart, { type: "add", item: item(MAX_LINES) });
++    for (let i = 1; i < MAX_ITEMS; i++) cart = apply(cart, { type: "add", item: item(i) });
++    expect(canAddFromMenu(cart)).toBe(true); // 14 lines of 1
++    cart = apply(cart, { type: "add", item: item(MAX_ITEMS) });
++    expect(canAddFromMenu(cart)).toBe(false); // 15
++    const twenty: Cart = { lines: Array.from({ length: MAX_LINES }, (_, i) => ({ menuItemId: i + 1, name: "x", price: 1, quantity: 1 })) };
++    expect(canAddFromMenu(twenty)).toBe(false);
++  });
++});
++
++// Lab 7, change C-1: at most 15 items in total.
++describe("Lab 7 C-1 cart limit of 15 items in total", () => {
++  const itemCount = (c: Cart) => c.lines.reduce((n, l) => n + l.quantity, 0);
++  it("TEST-L7-4 total never goes above 15; + is refused at 15; every + on the menu is disabled only at 15", () => {
++    let cart = apply(emptyCart, { type: "add", item: item(1) }, { type: "add", item: item(2) });
++    cart = apply(cart, { type: "setQty", menuItemId: 1, quantity: 10 }, { type: "setQty", menuItemId: 2, quantity: 4 });
++    expect(itemCount(cart)).toBe(14);
++    expect(itemCount(apply(cart, { type: "add", item: item(2) }))).toBe(15); // the 15th is allowed
++    cart = apply(cart, { type: "setQty", menuItemId: 2, quantity: 9 }); // asks for 19 in total
++    expect(itemCount(cart)).toBe(15); // capped
++    expect(itemCount(apply(cart, { type: "add", item: item(2) }))).toBe(15); // + at 15 does nothing
++    expect(itemCount(apply(cart, { type: "add", item: item(3) }))).toBe(15); // a new item is refused too
+     expect(canAddFromMenu(cart)).toBe(false);
++    expect(canAddFromMenu(apply(cart, { type: "setQty", menuItemId: 2, quantity: 4 }))).toBe(true); // 14
+   });
+ });
+diff --git a/client/src/lib/cart.ts b/client/src/lib/cart.ts
+index 8c54c31..79efb06 100644
+--- a/client/src/lib/cart.ts
++++ b/client/src/lib/cart.ts
+@@ -1,10 +1,12 @@
+ // Client cart (F-03). Only for convenience: the server re-checks every rule (BR-01..BR-04).
+ export const MAX_QTY = 10; // BR-01
+ export const MAX_LINES = 20; // BR-02
++export const MAX_ITEMS = 15; // BR-01b (Lab 7, C-1): items in total over all lines
+ 
+ export type CartLine = { menuItemId: number; name: string; price: number; quantity: number };
+ export type Cart = { lines: CartLine[] };
+ export const emptyCart: Cart = { lines: [] };
++export const itemCount = (cart: Cart) => cart.lines.reduce((n, l) => n + l.quantity, 0);
+ 
+ type Item = { id: number; name: string; price: number };
+ export type CartAction =
+@@ -20,14 +22,16 @@ export function cartReducer(cart: Cart, action: CartAction): Cart {
+     case "add": {
+       const line = cart.lines.find((l) => l.menuItemId === action.item.id);
+       if (line) return cartReducer(cart, { type: "setQty", menuItemId: line.menuItemId, quantity: line.quantity + 1 });
+-      if (cart.lines.length >= MAX_LINES) return cart;
++      if (cart.lines.length >= MAX_LINES || itemCount(cart) >= MAX_ITEMS) return cart;
+       const { id, name, price } = action.item;
+       return { lines: [...cart.lines, { menuItemId: id, name, price, quantity: 1 }] };
+     }
+-    case "setQty":
+-      return {
+-        lines: cart.lines.map((l) => (l.menuItemId === action.menuItemId ? { ...l, quantity: clampQty(action.quantity) } : l)),
+-      };
++    case "setQty": {
++      // the other lines keep their quantity; this line may only use what is left of the 15 (never below 1)
++      const others = itemCount(cart) - (cart.lines.find((l) => l.menuItemId === action.menuItemId)?.quantity ?? 0);
++      const q = Math.max(1, Math.min(clampQty(action.quantity), MAX_ITEMS - others));
++      return { lines: cart.lines.map((l) => (l.menuItemId === action.menuItemId ? { ...l, quantity: q } : l)) };
++    }
+     case "remove":
+       return { lines: cart.lines.filter((l) => l.menuItemId !== action.menuItemId) };
+     case "clear":
+@@ -38,4 +42,5 @@ export function cartReducer(cart: Cart, action: CartAction): Cart {
+ export const estimatedTotal = (cart: Cart) => cart.lines.reduce((sum, l) => sum + l.price * l.quantity, 0);
+ 
+ // ui-spec S2: at 20 lines every + on the menu is disabled (lines in the cart change only with their stepper).
+-export const canAddFromMenu = (cart: Cart) => cart.lines.length < MAX_LINES;
++export const canAddFromMenu = (cart: Cart) => cart.lines.length < MAX_LINES && itemCount(cart) < MAX_ITEMS;
++export const atItemLimit = (cart: Cart) => itemCount(cart) >= MAX_ITEMS;
+diff --git a/client/src/pages/MenuPage.tsx b/client/src/pages/MenuPage.tsx
+index 3695e2e..c4ac29c 100644
+--- a/client/src/pages/MenuPage.tsx
++++ b/client/src/pages/MenuPage.tsx
+@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
+ import { useLocation, useNavigate } from "react-router-dom";
+ import { api, ApiError, NETWORK_MESSAGE } from "../api";
+ import { useCart } from "../cart";
+-import { canAddFromMenu, estimatedTotal, MAX_QTY } from "../lib/cart";
++import { atItemLimit, canAddFromMenu, estimatedTotal, MAX_ITEMS, MAX_QTY } from "../lib/cart";
+ import { formatBaht } from "../lib/money";
+ import type { Order } from "../lib/orders";
+ 
+@@ -99,7 +99,8 @@ export function MenuPage() {
+   const count = cart.lines.reduce((n, l) => n + l.quantity, 0);
+   const total = estimatedTotal(cart);
+   const full = !canAddFromMenu(cart);
+-  const fullMsg = "Cart is full (20 different items max).";
++  const atLimit = atItemLimit(cart);
++  const fullMsg = atLimit ? "" : "Cart is full (20 different items max).";
+ 
+   async function placeOrder() {
+     setSubmitting(true);
+@@ -185,7 +186,7 @@ export function MenuPage() {
+                   <button
+                     aria-label={`More ${l.name}`}
+                     title={l.quantity >= MAX_QTY ? "Max 10 per item." : undefined}
+-                    disabled={submitting || l.quantity >= MAX_QTY}
++                    disabled={submitting || l.quantity >= MAX_QTY || atLimit}
+                     onClick={() => dispatch({ type: "setQty", menuItemId: l.menuItemId, quantity: l.quantity + 1 })}
+                   >
+                     +
+@@ -210,7 +211,12 @@ export function MenuPage() {
+           ))}
+         </ul>
+       )}
+-      {full && <div className="msg info">{fullMsg}</div>}
++      {atLimit && (
++        <div className="msg info" role="status">
++          Limit reached: an order can have at most {MAX_ITEMS} items in total.
++        </div>
++      )}
++      {full && !atLimit && <div className="msg info">{fullMsg}</div>}
+       <p className="muted">Pickup: ASAP</p>
+       <div className="cart-total">
+         <span>Estimated total</span>
+@@ -236,7 +242,7 @@ export function MenuPage() {
+             <p className="muted">{load.items.length} items · sold-out items can't be added</p>
+           </div>
+         )}
+-        {full && <p className="hint">{fullMsg}</p>}
++        {full && !atLimit && <p className="hint">{fullMsg}</p>}
+         <MenuList
+           load={load}
+           reload={reload}
+diff --git a/server/src/orders/routes.ts b/server/src/orders/routes.ts
+index 07255f4..a75572e 100644
+--- a/server/src/orders/routes.ts
++++ b/server/src/orders/routes.ts
+@@ -9,6 +9,8 @@ import { dbId, MAX_DB_ID } from "../ids.js";
+ export const ordersRouter = Router();
+ ordersRouter.use(requireRole("CUSTOMER"));
+ 
++const MAX_ORDER_ITEMS = 15; // BR-01b
++
+ // Strict: any extra key (price, unitPrice, total, customerId...) is a 400 (BR-04).
+ const placeBody = z.strictObject({
+   items: z
+@@ -27,6 +29,16 @@ type BadItem = { menuItemId: number; reason: "DUPLICATE" | "NOT_FOUND" | "SOLD_O
+ ordersRouter.post("/", async (req, res) => {
+   const { items } = placeBody.parse(req.body);
+ 
++  // BR-01b (Lab 7, C-1): at most 15 items in total over all lines.
++  const total = items.reduce((n, i) => n + i.quantity, 0);
++  if (total > MAX_ORDER_ITEMS) {
++    throw new AppError(400, "VALIDATION_ERROR", `An order can have at most ${MAX_ORDER_ITEMS} items in total`, {
++      field: "lines",
++      max: MAX_ORDER_ITEMS,
++      total,
++    });
++  }
++
+   const seen = new Set<number>();
+   const duplicates: BadItem[] = [];
+   for (const { menuItemId } of items) {
+```
+
+### Appendix B4 — Issue/PR review text, CI and deploy results
+
+```text
+Issue/PR review text and CI/deploy results for C-1 (from GitHub via gh)
+
+PR #103 L7-1: contract for C-1 - order has at most 15 items in total
+  author NinjoMUDA -> lab7; merged by vienggd at 2026-11-25T03:11:40Z as 9d976df
+  checks: 
+  review by vienggd (CHANGES_REQUESTED) 2026-11-25T03:10:03Z:
+    Checked against the 4 TA answers and the Lab 7 rules. Almost everything is right; one thing is missing.
+    
+    OK:
+    - Answer 1: 15 = total of all items, 10+5 ok, 10+6 rejected, per-line 1-10 stays (impact.md, F-03 BR-01b, AC-L7-01/02).
+    - Answer 2: 400 VALIDATION_ERROR, message "An order can have at most 15 items in total", details {field:"lines", max:15, total} (error table, AC-L7-02, TEST-L7-3).
+    - Answer 3: warning at 15 and + disabled (AC-L7-04, TEST-L7-4/5).
+    - Answer 4: no order editing, N/A (impact table).
+    - SRS BR-01 text updated, system-sds rule table and flow step 3 updated, traceability row updated (still "Pending").
+    - ACs and tests cover 15 ok (TEST-L7-2), 14 ok (-1), 10+6 and 8+8 rejected (-3a/b), per-line 11 still rejected (-3c).
+    
+    Needs change:
+    1. The test plan does not say where the RED step runs. Please add a short "RED / GREEN plan" in impact.md (or the F-03 test spec): TEST-L7-1..5 are committed first and run on the baseline code b71cdb2 behaviour (before the fix); TEST-L7-2/3/4/5 must FAIL there (red.txt), -1 passes on the old code; then the fix commit; then GREEN (green.txt) plus full regression. Also name where red.txt / green.txt are stored (e.g. docs/labs/lab-07/evidence/).
+    
+    Small, not blocking: TEST-L7-1..5 rows sit between TEST-F03-24 and -19; fine, just keep the order in the later test file.
+  review by vienggd (APPROVED) 2026-11-25T03:11:35Z:
+    Re-checked: section 5 RED/GREEN plan added. What I checked: 4 TA answers, BR-01/BR-01b text, AC-L7-01..04, TEST-L7-1..5, SDS and traceability.
+
+PR #112 L7-1: C-1 at most 15 items in total (RED, fix, GREEN)
+  author NinjoMUDA -> lab7; merged by vienggd at 2026-11-25T03:28:06Z as 43a9a68
+  checks: 
+  review by vienggd (APPROVED) 2026-11-25T03:28:02Z:
+    What I checked: commit order (RED 1b9e604, contract follow-up 41031b7, fix, then cleanup commits); red.txt shows only L7-3, L7-4, L7-5 failing on b71cdb2 code; I ran npm test on the latest head 93b2738: server 78 pass, client 7 pass. Fix returns 400 VALIDATION_ERROR with the agreed message and details; cart caps at 15, warns, disables +. Sprint 1 screenshots restored.
+
+PR #211 L7-6: merge released main into lab7 before release
+  author vienggd -> lab7; merged by NinjoMUDA at 2026-11-27T17:04:56Z as cf6bde2
+  checks: 
+  review by NinjoMUDA (APPROVED) 2026-11-27T17:04:52Z:
+    What I checked (head 2bcf439, I ran it locally):
+    - Code diff of the PR head against main df6db99 is only C-1: server/src/orders/routes.ts (15-item check, 400 with message and details), client cart.ts and MenuPage.tsx, plus TEST-L7 tests. No Sprint 2 file changed, so nothing from Sprint 2 was lost in the conflict.
+    - MenuPage.tsx: the 'Limit reached ... 15 items' warning, atLimit (+ disabled) and the Sprint 2 SlotPicker are all there.
+    - npm run build ok. npm test: server 15 files / 184 tests pass, client 4 files / 9 tests pass (real Postgres).
+    - Living docs: BR-01 C-1 text in docs/srs.md, docs/features.md, docs/traceability.md.
+    - CI: no checks on this PR (CI starts on PRs into main).
+    Not blocking: docs/system-sds.md (living) does not mention C-1 yet (it still says quantity 1-10 at the schema line and the rules table). I will port it in a small follow-up PR.
+
+PR #214 L7-6: port C-1 into living docs/system-sds.md
+  author NinjoMUDA -> lab7; merged by vienggd at 2026-11-27T17:08:53Z as f81cb5a
+  checks: 
+  review by vienggd (APPROVED) 2026-11-27T17:08:49Z:
+    What I checked (vieng's head): system-sds.md now states the C-1 15-item total in the rule table, the place-order flow step 3, and the order_lines quantity row (no DB constraint, no migration) — matches the code in orders/routes.ts and the living SRS/traceability from #211.
+
+PR #216 Release: Lab 7 change C-1 (max 15 items per order)
+  author vienggd -> main; merged by NinjoMUDA at 2026-11-27T17:13:46Z as 704a66b
+  checks: test-and-docker=SUCCESS
+  review by NinjoMUDA (CHANGES_REQUESTED) 2026-11-27T17:09:40Z:
+    One fix before release; the rest looks good.
+    
+    Checked: main fully contained in lab7 (0 missing commits); code diff is only C-1 (orders/routes.ts check, MenuPage warning, orders.test.ts, e2e/orders.spec.ts); Lab 7 docs, evidence and PDF script added; no secrets in added lines.
+    
+    Blocking: the PR edits the frozen Deliverable 1 copies, docs/sprint_1/srs.md, system-sds.md, traceability.md and sprints/sprint-1/F-03-orders.md. Their banner says 'Frozen as submitted for Deliverable 1. Do not edit.' C-1 is already in the living docs (docs/srs.md, system-sds.md, traceability.md, features.md, via #211/#214). As agreed earlier, spec edits go to the living docs at merge, so please restore the frozen copies to main's version:
+    git checkout origin/main -- docs/sprint_1/srs.md docs/sprint_1/system-sds.md docs/sprint_1/traceability.md docs/sprint_1/sprints/sprint-1/F-03-orders.md
+    If the Lab 7 report links to those files for the spec change, point the links to the living docs instead (docs/srs.md etc.).
+  review by NinjoMUDA (APPROVED) 2026-11-27T17:13:42Z:
+    What I checked (re-review on 2f080a8):
+    - The 4 frozen Sprint 1 copies now have 0 diff against main, so my change request is fixed.
+    - The C-1 contract rows are kept in docs/labs/lab-07/contract-C-1.md, and impact.md section 6 points to where the rule lives now.
+    - main is fully contained in lab7. The code diff is only C-1: server check, MenuPage warning, API/unit/e2e tests.
+    - No secrets in added lines.
+    - CI test-and-docker: pass.
+    Approved for the Lab 7 release.
+
+PR #229 L7-7: Lab 7 live checks L1-L8 PASS, release facts, final metrics (28 Nov)
+  author NinjoMUDA -> lab7; merged by vienggd at 2026-11-28T07:36:30Z as f5bb6a4
+  checks: 
+  review by vienggd (APPROVED) 2026-11-28T07:36:26Z:
+    What I checked (vieng's head): live-checks.md L1-L8 match the head-chat reports and the screenshots (#18 placed 15 items ฿925.00, 16 rejected 400 with C-1 message/details, cart warning + disabled +, line of 11 -> 400, old #13 unchanged, staff accept #18, bob 404, alice 403, anonymous 401). Read all 9 screenshots at full size: app screens only, demo accounts, no passwords or URL bars. readiness/report/metrics agree with 704a66b / food-order-00011-9nh / run 46040158850; Group EN-033_P4 on page 1.
+
+Deploy demo run 46040158850 (704a66b): success -> Cloud Run food-order-00011-9nh, bundle assets/index-CDaqMZLn.js, /api/ready ready + db connected
+```
+
+### Appendix B5 — Post-deployment checks L1–L8
+
+<!-- INCLUDE: evidence/live-checks.md -->
+
+![L4 — cart at 15 items: warning shown, + disabled. food-order-00011-9nh, 28 Nov 01:19:39, expected = actual, PASS (manual in browser, ninja signed in)](evidence/live/L4-cart-15-warning.png)
+
+![L2 — 15-item order #18 placed (฿925.00). 01:19:43, PASS](evidence/live/L2-order-18-placed.png)
+
+![L2/L6 — My orders lists new #18 and older orders. 01:20, PASS](evidence/live/L2-L6-my-orders-list.png)
+
+![L6 — order #13 from before the change opens unchanged. 01:20:08, PASS](evidence/live/L6-old-order-13.png)
+
+![L7 — staff accepts #18: "Order #18 accepted." 08:39:21, PASS](evidence/live/L7-staff-accept-18-toast.jpg)
+
+![L8 — bob opens alice's order #18: "Order not found." (404), PASS](evidence/live/L8-bob-alice-order-404.jpg)
+
+### Appendix C1 — Metric definitions and sources
+
+<!-- INCLUDE: metrics.md -->
+
+### Appendix D1 — Readiness checklist
+
+<!-- INCLUDE: readiness.md -->
