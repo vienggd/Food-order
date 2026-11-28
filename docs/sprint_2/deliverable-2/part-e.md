@@ -2,6 +2,24 @@
 
 Campus Café Pre-order — Team **Est** (`vienggd/Food-order`). Author: **vieng** (`vienggd`), Issue **#192**.
 
+## E.0 Integrated release candidate, deployment and readiness (rubric Part E)
+
+**Candidate on `main`.** The submitted candidate integrates Sprint 1 (`v0.1.0-sprint1`), the Lab 6 fixes (`39bda5e`), Sprint 2 with early Sprint 3 F-09/F-11 (`v0.2.0-sprint2` = `df6db99`) and the Lab 7 change C-1 (`704a66b`). It is tagged **`v0.3.0-rc1`** on the report commit.
+
+| Step | Evidence | Result |
+|---|---|---|
+| Sprint 2 release PR `#210` (`sprint2` → `main`) | reviewed + merged by `NinjoMUDA`, CI `test-and-docker` | SUCCESS → `df6db99`, tag `v0.2.0-sprint2` |
+| Deploy Sprint 2 | GitHub Actions *Deploy demo* run `46037590468` | SUCCESS → Cloud Run `food-order-00010-7vp`, `/api/ready` ready + db connected |
+| Lab 7 release PR `#216` (`lab7` → `main`, after merging released `main` into `lab7` in `#211`) | CI `test-and-docker` | SUCCESS → `704a66b` |
+| Deploy Lab 7 | *Deploy demo* run `46040158850` | SUCCESS → Cloud Run `food-order-00011-9nh` (bundle `index-CDaqMZLn.js`) |
+| Build + full suite on the integrated `lab7` head before release | `npm run build`; `npm test` (real Postgres) | build OK; server **184/184**, client **9/9** pass, 0 failed, 0 skipped |
+| Post-deploy checks, no login (28 Nov 00:21 UTC+7) | `curl` on the live URL | `/api/health` `{ok:true}`; `/api/ready` ready + db connected; anonymous `GET /api/orders`, `GET /api/operator/orders`, `POST /api/orders` → **401** |
+| Post-deploy critical journey + persistence (signed in by hand, screenshots) | Lab 7 live checks L2–L8 | **PASS**, 28 Nov on `food-order-00011-9nh` (ninja signed in by hand, AI clicked; screenshots in `docs/labs/lab-07/evidence/live/`): L2 alice places 15 items → order #18 PLACED ฿925.00; L3 10 + 6 → 400 C-1 message, no order saved; L4 cart warns at 15 and disables +; L5 one line ×11 → 400 (max 10 per line); L6 order #13 from 26 Nov still lists and opens (persistence across releases); L7 staff accepts #18 (PLACED → ACCEPTED); L8 alice → operator API 403, bob → alice's #18 404 |
+
+**Cross-feature checks.** The C-1 total (max 15 items) runs in the same handler as the Sprint 2 slot picker (F-09) and payment (F-08): TEST-L7-1..5 and the F-08/F-09 suites pass together on the merged head; the MenuPage merge kept both the 15-item warning and the slot picker (#211).
+
+**Readiness review (28 Nov).** READY as a release candidate for the delivered scope: Sprint 1 + Sprint 2 complete and verified, F-09/F-11 implemented and tested, Lab 6 defects closed and accepted by EN-009_P3, Lab 7 C-1 live. Not yet in the candidate (disclosed, owners and dates in Part C §5): F-10 sales summary and F-12 login rate limit (vieng, in progress on `sprint3-vieng`), F-09 picker E2E TEST-F09-15..17 and NFR-09 accessibility checks (ninja), deferred Lab 6 enhancements `#131/#133` (`#130` is fixed and closed). Setup and reproduction: Part B §B.1. Final release `v1.0.0`, UAT re-test and the ≤ 4-minute video by 13 Dec (Part C §5).
+
 ## E.1 Contract-before-code & TDD workflow in Sprint 2 / Sprint 3
 
 Both students enforced strict **contract before code** and **red-before-green TDD** on every Sprint 2 and implemented Sprint 3 feature. Engineering contracts (`docs/sprint_2/sprints/F-05..F-12.md`) were reviewed and merged into `sprint2` before any application code or migration touched a feature branch.
@@ -26,17 +44,18 @@ Both students enforced strict **contract before code** and **red-before-green TD
 | Work area | `vieng` (Garunyapas Danpitakkul, `vienggd`) | `ninja` (Dechayut Panyawutvorakul, `NinjoMUDA`) |
 |---|---|---|
 | **Sprint 1** | `F-01` Auth, `F-04` Accept Queue, `srs.md`, `F-01/F-04` E2E, `PR #46` release (`v0.1.0-sprint1`) | `F-02` Menu, `F-03` Orders, `features.md` / `traceability.md`, SDS schema/API, `F-02/F-03` E2E |
-| **Lab 5 & Lab 6** | Cloud Run + Cloud SQL CI/CD, Lab 6 test plan/triage/fixes (`#121–#126, #128, #129, #132`), `PR #168/#181` | Reviewed release PRs, Lab 6 Part B UAT execution on partner app (`EN-009_P3#126` Accepted), `#141–#148` |
-| **Sprint 2** | Schema S2-1 (`#95`), `F-05` Menu Admin, `F-08` Payment + `BR-16` + `BR-15` (`#115, #136, #154`), `#132` port (`#176`) | `F-06` Cancel & Reject (`#120, #144`), `F-07` Fulfilment (`#144`), reviewed all `vieng` PRs |
-| **Sprint 3 & D2** | `F-10` & `F-12` (rate limit) contracts (`#106`), `main -> sprint2` sync (`#191`), D2 Parts A, B, E + `@2x` screenshots + PDF generator (`#192`) | `F-09` & `F-11` contracts (`#118`), `F-09` cut-off/slots (`#147`), `F-11` filter/search (`#151, #158`), D2 Parts C & D + living docs v3 (`#190`) |
+| **Lab 5 & Lab 6** | Cloud Run + Cloud SQL CI/CD, Lab 6 test plan, UAT cases and handoff, triage and RED→GREEN fixes (`#121–#126, #128, #129, #132`), releases `PR #168/#181`, Part B runs `UAT-01/04/06` and re-tests `#151–#155` | Reviewed and merged the Lab 6 fix and release PRs (`#138` with substantive change requests, `#168`, `#181`), Lab 6 Part B UAT execution on the partner app (`EN-009_P3#126` Accepted), outgoing findings `#141–#148` |
+| **Sprint 2** | Schema S2-1 (`#95`), `F-05` Menu Admin, `F-08` Payment + `BR-16` + `BR-15` (`#115, #136, #154`), `#132` port (`#176`) | `F-06` Cancel & Reject (`#120, #144`), `F-07` Fulfilment (`#144`), reviewed and merged every `vieng` Sprint 2 PR |
+| **Lab 7** | TA approval record (`#108`), readiness checklist (`#109`, `#114`), reviewed contract `#103` (changes requested first) and the RED→GREEN PR `#112` after running the tests, release sync `#211` and release `#216` | Change request + impact, C-1 contract (`#103`), RED→fix→GREEN (`#112`), metrics and report (`#167`, `#189`, `#201`), living-doc fix `#214`, live checks L2–L8 |
+| **Sprint 3 & D2** | `F-10` & `F-12` (rate limit) contracts (`#106`), reviewed and merged ninja's `F-06/F-07` and `F-09/F-11` contract PRs (`#102`, `#118`), `main -> sprint2` sync (`#191`), D2 Parts A, B, E + `@2x` screenshots + PDF generator (`#192`), `F-10` in progress (RED committed 28 Nov) | `F-09` & `F-11` contracts (`#118`), `F-09` cut-off/slots (`#147`), `F-11` filter/search (`#151, #158`), D2 Parts C & D + living docs v3 (`#190`) |
 
 ## E.4 AI-use declaration
 
-Both students used AI coding assistants (Claude Code sessions for `ninja` and `vieng`, plus Antigravity with Playwright browser tools for `vieng` during Lab 6 verification and Deliverable 2 drafting) strictly for drafting specs, test suites, implementation code, code-review checklists, and markdown assembly. Every change flowed through GitHub PRs reviewed and approved by the partner's side; no secrets, tokens, or `SEED_PASSWORD` values were stored in commits, Issues, or PDFs.
+Both students used AI coding assistants (Claude Code sessions for `ninja` and `vieng`, plus Antigravity with Playwright browser tools for `vieng` during Lab 6 verification and Deliverable 2 drafting) strictly for drafting specs, test suites, implementation code, code-review checklists, and markdown assembly. Every change flowed through GitHub PRs reviewed and approved by the partner's side; no `SEED_PASSWORD`, tokens or keys are in commits, Issues or this PDF. One Lab 6 chat screenshot that showed a partner team's shared test password was caught in review by `ninja`'s side within minutes; the PR (`#212`) was closed, its branch deleted, and the submitted report shows the line blacked out.
 
 ## E.5 Known limitations and plan confirmation
 
-1. **Unimplemented Sprint 3 scope:** `F-10` Sales Summary (`AC-10.1..10.9`), `F-12` login rate limiting (`NFR-08`, `AC-12.1..12.8`) & axe/keyboard checks (`NFR-09`), and `F-09` picker E2E (`TEST-F09-15..17`) remain specified and scheduled in **Part C §5** (`29–30 Nov`).
+1. **Unimplemented Sprint 3 scope:** `F-10` Sales Summary (`AC-10.1..10.9`), `F-12` login rate limiting (`NFR-08`, `AC-12.1..12.8`) & axe/keyboard checks (`NFR-09`), and `F-09` picker E2E (`TEST-F09-15..17`) are specified and scheduled in **Part C §5** (`29–30 Nov`); `F-10` is already in progress test-first (RED tests committed on `sprint3-vieng`, 28 Nov).
 2. **Sprint 2 release order:** `sprint2` was intentionally held on staging until EN-009_P3 signed the Lab 6 acceptance (`songt888#129`, 27 Nov), so `main` stayed stable for their re-test. It was then released the same night as `v0.2.0-sprint2` (`df6db99`, PR `#210`, Cloud Run `food-order-00010-7vp`); Lab 7 change C-1 followed as `food-order-00011-9nh`.
 3. **Desktop Queue vs UI Spec S8:** Currently ships the 7-column semantic table (`Order | Status | Customer | Items | Placed | Total | Action`); team decision on keeping the semantic table or building the S8 card board is scheduled for `29 Nov`.
 4. **Confirmed remaining schedule:** We confirm the **Part C §5** schedule (`vieng`: `F-10` + `F-12` rate limit `29–30 Nov`; `ninja`: `F-09` E2E + `NFR-09` axe `30 Nov`; final UAT/regression `12–13 Dec`; exam window `1–11 Dec` protected).
