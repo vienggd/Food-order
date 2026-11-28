@@ -1,6 +1,6 @@
-# Release notes — Sprint 3 (draft)
+# Release notes — Sprint 3
 
-Status: **draft for the final delivery**, written on 28 Nov 2026 from `sprint3` at `a6c9645`; updated after PR #237 and PR #239 were merged (`2dd7f21`). Nothing here is released: `main` and the live URL are not changed by Sprint 3 yet, and no tag is made. Version and tag are decided by vieng.
+Status: **release candidate**, 28 Nov 2026. Final `sprint3` is `0ec0cf7` (after PRs #237, #239, #241). vieng decided to release it to `main` through a reviewed release PR; the tag `v0.4.0-sprint3` is added on the `main` merge commit after the deploy succeeds. `v1.0.0` is kept for the final delivery on 13 Dec.
 
 ## What is new on `sprint3`
 
@@ -19,9 +19,18 @@ Database change: new table `login_failures` (migration `20261127173631_add_login
 - F-12 review found a real hole: 20 parallel wrong logins all got 401 because the count was read before the failure was saved. The contract was amended first (v1.1: AC-12.9, TEST-12.9), then a failing test, then the fix (a per-email advisory lock around count, password check and insert).
 - Each PR was reviewed by the other student's side before merging with a merge commit.
 
-## Tests (regression on `sprint3` `a6c9645`, fresh test database, real Postgres)
+## Tests
 
-Full output: `docs/sprint_3/evidence/regression-a6c9645.txt`.
+**Final run on `sprint3` `0ec0cf7`** (ninja, 28 Nov 2026; separate worktree, clean `npm ci`, test databases dropped and recreated):
+
+| Suite | Result |
+|---|---|
+| `npm run build` | OK |
+| Server (Vitest + Supertest, 17 files) | 201 passed, 0 failed |
+| Client (Vitest, 4 files) | 9 passed, 0 failed |
+| Playwright (phone and desktop) | **96 passed, 8 skipped, 0 failed, 0 flaky** (3.7 min); TEST-A11Y-03 passes on both viewports |
+
+**Earlier run on `sprint3` `a6c9645`** (vieng's side, fresh test database, real Postgres), kept as recorded. Full output: `docs/sprint_3/evidence/regression-a6c9645.txt`.
 
 | Suite | Result |
 |---|---|
@@ -32,9 +41,9 @@ Full output: `docs/sprint_3/evidence/regression-a6c9645.txt`.
 
 ## Known gaps and things to say honestly
 
-1. **One flaky E2E test, now fixed.** TEST-A11Y-03 (desktop) failed once in the regression run on `a6c9645`: its locator `getByRole("heading", { name: "Menu items" })` matched two headings. It was a test-selector problem, not a product bug. PR #239 (`2dd7f21`) fixed the locator on `sprint3`. The evidence file `regression-a6c9645.txt` is kept as recorded (it still shows the one failure); a new full run on the final `sprint3` is still to do before quoting all green.
+1. **One flaky E2E test, fixed and re-verified.** TEST-A11Y-03 (desktop) failed once in the regression run on `a6c9645`: its locator `getByRole("heading", { name: "Menu items" })` matched two headings. It was a test-selector problem, not a product bug. PR #239 (`2dd7f21`) fixed the locator on `sprint3`. The evidence file `regression-a6c9645.txt` is kept as recorded (it still shows the one failure); the final run on `0ec0cf7` above is all green (0 failed).
 2. **8 skipped Playwright tests** are the single-viewport tests: TEST-L6-122..126, TEST-L6-129, TEST-L6-132 and TEST-A11Y-06. Each runs only in the viewport it was written for and skips in the other project.
-3. **Not released.** Sprint 3 is on `sprint3` only. A release candidate, tag, deploy and a live check (login rate limit and sales on the live URL) are still to do and are vieng's decision.
+3. **Release in progress.** Release PR `sprint3` → `main`, then deploy, tag `v0.4.0-sprint3`, live checks (login rate limit and sales on the live URL) and the partner re-test of Lab 6 #131 / #133. Until the deploy finishes, the live URL still runs the Lab 7 candidate `v0.3.0-rc1`.
 4. **Rate limit is per email, not per IP** (BR-21, by design). An attacker rotating emails is not slowed by it. Failed-login rows are only removed by a successful login of that email; old rows are ignored but not deleted.
 5. **Keyboard-only checking** is automated for dialogs, the cart and the login page; other screens are not covered by an automated keyboard test.
 6. **Documents owned by the other side** (traceability matrix, feature list, UI spec S8) are updated by ninja; this file does not claim their status.
