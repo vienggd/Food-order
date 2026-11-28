@@ -384,7 +384,7 @@ Setup and runbook: `docs/labs/lab-05/deployment.md`, `runbook.md`. The Sprint 2 
 
 - **Accessibility (NFR-09):** `e2e/a11y.spec.ts` runs axe (`@axe-core/playwright`, a dev dependency only) on the login page, the customer screens and the operator screens, and fails on any critical or serious violation. It also checks dialogs by keyboard (Tab stays inside, Escape closes, focus returns to the opening button), the cart focus on a phone and the linked, announced and cleared login errors.
 - **Frozen E2E clock:** see `E2E_CLOCK_NOW` in 7.1.
-- **Known gap:** in the regression run on `a6c9645` (`docs/sprint_3/evidence/regression-a6c9645.txt`) TEST-A11Y-03 failed once on desktop with a locator that matched two "Menu items" headings; it passes when run alone. It is a test-selector problem, not a product defect, and is listed in the release notes.
+- **Flaky test, fixed:** in the regression run on `a6c9645` (`docs/sprint_3/evidence/regression-a6c9645.txt`, kept as recorded) TEST-A11Y-03 failed once on desktop because its locator matched two "Menu items" headings. It was a test-selector problem, not a product defect; PR #239 (`2dd7f21`) fixed the locator.
 
 ## Change log
 

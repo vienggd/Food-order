@@ -1,6 +1,6 @@
 # Release notes — Sprint 3 (draft)
 
-Status: **draft for the final delivery**, written on 28 Nov 2026 from `sprint3` at `a6c9645`. Nothing here is released: `main` and the live URL are not changed by Sprint 3 yet, and no tag is made. Version and tag are decided by vieng.
+Status: **draft for the final delivery**, written on 28 Nov 2026 from `sprint3` at `a6c9645`; updated after PR #237 and PR #239 were merged (`2dd7f21`). Nothing here is released: `main` and the live URL are not changed by Sprint 3 yet, and no tag is made. Version and tag are decided by vieng.
 
 ## What is new on `sprint3`
 
@@ -32,7 +32,7 @@ Full output: `docs/sprint_3/evidence/regression-a6c9645.txt`.
 
 ## Known gaps and things to say honestly
 
-1. **One flaky E2E test.** TEST-A11Y-03 (desktop) failed once in the full run: its locator `getByRole("heading", { name: "Menu items" })` matched two headings. It passes when run alone and in earlier full runs. It is a test-selector problem, not a product bug; it should be fixed before the final regression is quoted as all green.
+1. **One flaky E2E test, now fixed.** TEST-A11Y-03 (desktop) failed once in the regression run on `a6c9645`: its locator `getByRole("heading", { name: "Menu items" })` matched two headings. It was a test-selector problem, not a product bug. PR #239 (`2dd7f21`) fixed the locator on `sprint3`. The evidence file `regression-a6c9645.txt` is kept as recorded (it still shows the one failure); a new full run on the final `sprint3` is still to do before quoting all green.
 2. **8 skipped Playwright tests** are the single-viewport tests: TEST-L6-122..126, TEST-L6-129, TEST-L6-132 and TEST-A11Y-06. Each runs only in the viewport it was written for and skips in the other project.
 3. **Not released.** Sprint 3 is on `sprint3` only. A release candidate, tag, deploy and a live check (login rate limit and sales on the live URL) are still to do and are vieng's decision.
 4. **Rate limit is per email, not per IP** (BR-21, by design). An attacker rotating emails is not slowed by it. Failed-login rows are only removed by a successful login of that email; old rows are ignored but not deleted.
