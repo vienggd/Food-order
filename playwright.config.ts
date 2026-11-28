@@ -2,7 +2,9 @@ import { defineConfig, devices } from "@playwright/test";
 
 // End-to-end tests (Issue #10). Own database and ports, so dev data and dev servers are untouched.
 export const E2E_DATABASE_URL = "postgresql://cafe:cafe@localhost:5433/cafe_e2e";
-const env = { DATABASE_URL: E2E_DATABASE_URL, PORT: "3100", API_PORT: "3100" };
+// Fixed server clock for the pickup slot tests (F-09): 10:00 Bangkok on a fixed day. Read by server/src/orders/slots.ts outside production.
+export const E2E_CLOCK_NOW = "2026-12-01T10:00:00+07:00";
+const env = { DATABASE_URL: E2E_DATABASE_URL, PORT: "3100", API_PORT: "3100", E2E_CLOCK_NOW };
 
 export default defineConfig({
   testDir: "e2e",

@@ -22,7 +22,7 @@ export function SlotPicker({ value, onChange, reloadKey }: { value: string; onCh
         {slots?.map((s) => (
           <option key={s.start} value={s.start} disabled={s.state !== "open"}>
             {hhmm(s.start)}
-            {s.state === "closed" ? " (closed)" : s.state === "full" ? " (full)" : ""}
+            {s.state === "closed" ? " — Closed" : s.state === "full" ? " — Full" : ""}
           </option>
         ))}
       </select>
