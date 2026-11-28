@@ -1,0 +1,53 @@
+RED: NFR-09 axe + keyboard + UAT findings #130 #131 #133, before any UI fix (sprint3-ninja-a11y)
+command: npx playwright test e2e/a11y.spec.ts   (phone + desktop)
+  ok  1 [phone] › e2e\a11y.spec.ts:27:7 › NFR-09 axe: no critical or serious violations › TEST-A11Y-01 login page (907ms)
+  x   2 [phone] › e2e\a11y.spec.ts:33:7 › NFR-09 axe: no critical or serious violations › TEST-A11Y-02 customer: menu, cart, my orders, order detail (1.3s)
+  ok  3 [phone] › e2e\a11y.spec.ts:49:7 › NFR-09 axe: no critical or serious violations › TEST-A11Y-03 operator: queue, menu items, sales (2.1s)
+  x   4 [phone] › e2e\a11y.spec.ts:69:7 › NFR-09 keyboard: dialogs › TEST-A11Y-04 cancel dialog: Escape closes it and focus returns to the Cancel order button (5.7s)
+  x   5 [phone] › e2e\a11y.spec.ts:83:7 › NFR-09 keyboard: dialogs › TEST-A11Y-05 reject dialog: Tab stays inside the dialog, Escape returns focus to Reject (639ms)
+  x   6 [phone] › e2e\a11y.spec.ts:102:7 › UAT findings › TEST-A11Y-06 #130 opening Cart on a phone moves keyboard focus into the cart (682ms)
+  x   7 [phone] › e2e\a11y.spec.ts:112:7 › UAT findings › TEST-A11Y-07 #131 login field errors are linked to their inputs and announced (431ms)
+  x   8 [phone] › e2e\a11y.spec.ts:126:7 › UAT findings › TEST-A11Y-08 #133 the email error clears when the email is corrected (5.5s)
+  ok  9 [desktop] › e2e\a11y.spec.ts:27:7 › NFR-09 axe: no critical or serious violations › TEST-A11Y-01 login page (835ms)
+  x  10 [desktop] › e2e\a11y.spec.ts:33:7 › NFR-09 axe: no critical or serious violations › TEST-A11Y-02 customer: menu, cart, my orders, order detail (1.2s)
+  ok 11 [desktop] › e2e\a11y.spec.ts:49:7 › NFR-09 axe: no critical or serious violations › TEST-A11Y-03 operator: queue, menu items, sales (2.2s)
+  x  12 [desktop] › e2e\a11y.spec.ts:69:7 › NFR-09 keyboard: dialogs › TEST-A11Y-04 cancel dialog: Escape closes it and focus returns to the Cancel order button (5.7s)
+  x  13 [desktop] › e2e\a11y.spec.ts:83:7 › NFR-09 keyboard: dialogs › TEST-A11Y-05 reject dialog: Tab stays inside the dialog, Escape returns focus to Reject (649ms)
+  -  14 [desktop] › e2e\a11y.spec.ts:102:7 › UAT findings › TEST-A11Y-06 #130 opening Cart on a phone moves keyboard focus into the cart
+  x  15 [desktop] › e2e\a11y.spec.ts:112:7 › UAT findings › TEST-A11Y-07 #131 login field errors are linked to their inputs and announced (397ms)
+  x  16 [desktop] › e2e\a11y.spec.ts:126:7 › UAT findings › TEST-A11Y-08 #133 the email error clears when the email is corrected (5.5s)
+    - Expected  - 1
+    - Array []
+    +   "color-contrast (serious): .sold-out > div > .menu-name | .sold-out > div > .menu-price | .sold",
+    Error: expect(locator).toBeFocused() failed
+      - Expect "toBeFocused" getByRole('button', { name: 'Cancel order' }) with timeout 5000ms
+      - waiting for getByRole('button', { name: 'Cancel order' })
+           - unexpected value "inactive"
+    Error: Tab press 2 left the dialog
+    > 93 |       expect(await dialog.evaluate((d) => d.contains(document.activeElement)), `Tab press ${i + 1} left the dialog`).toBe(true);
+    Error: aria-describedby
+      119 |       const id = await input.getAttribute("aria-describedby");
+    > 120 |       expect(id, "aria-describedby").toBeTruthy();
+    Error: expect(locator).toHaveCount(expected) failed
+      - Expect "toHaveCount" getByText('Enter a valid email.') with timeout 5000ms
+      - waiting for getByText('Enter a valid email.')
+           - unexpected value "1"
+    - Expected  - 1
+    - Array []
+    +   "color-contrast (serious): .sold-out > div > .menu-name | .sold-out > div > .menu-price | .sold",
+    Error: expect(locator).toBeFocused() failed
+      - Expect "toBeFocused" getByRole('button', { name: 'Cancel order' }) with timeout 5000ms
+      - waiting for getByRole('button', { name: 'Cancel order' })
+           - unexpected value "inactive"
+    Error: Tab press 2 left the dialog
+    > 93 |       expect(await dialog.evaluate((d) => d.contains(document.activeElement)), `Tab press ${i + 1} left the dialog`).toBe(true);
+    Error: aria-describedby
+      119 |       const id = await input.getAttribute("aria-describedby");
+    > 120 |       expect(id, "aria-describedby").toBeTruthy();
+    Error: expect(locator).toHaveCount(expected) failed
+      - Expect "toHaveCount" getByText('Enter a valid email.') with timeout 5000ms
+      - waiting for getByText('Enter a valid email.')
+           - unexpected value "1"
+  11 failed
+  1 skipped
+  4 passed (49.2s)

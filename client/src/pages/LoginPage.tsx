@@ -78,9 +78,18 @@ export function LoginPage() {
           value={email}
           disabled={busy}
           aria-invalid={!!fieldErrors.email}
-          onChange={(e) => setEmail(e.target.value)}
+          aria-describedby={fieldErrors.email ? "email-error" : undefined}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            // #133: the message goes away as soon as the email is valid again
+            if (fieldErrors.email && EMAIL.test(e.target.value)) setFieldErrors((f) => ({ ...f, email: undefined }));
+          }}
         />
-        {fieldErrors.email && <p className="field-error">{fieldErrors.email}</p>}
+        {fieldErrors.email && (
+          <p id="email-error" className="field-error" role="alert">
+            {fieldErrors.email}
+          </p>
+        )}
         <label className="label" htmlFor="password">
           Password
         </label>
@@ -92,9 +101,17 @@ export function LoginPage() {
           value={password}
           disabled={busy}
           aria-invalid={!!fieldErrors.password}
-          onChange={(e) => setPassword(e.target.value)}
+          aria-describedby={fieldErrors.password ? "password-error" : undefined}
+          onChange={(e) => {
+            setPassword(e.target.value);
+            if (fieldErrors.password && e.target.value) setFieldErrors((f) => ({ ...f, password: undefined }));
+          }}
         />
-        {fieldErrors.password && <p className="field-error">{fieldErrors.password}</p>}
+        {fieldErrors.password && (
+          <p id="password-error" className="field-error" role="alert">
+            {fieldErrors.password}
+          </p>
+        )}
         <button className="btn" type="submit" disabled={busy}>
           {busy ? "Logging in…" : "Log in"}
         </button>
