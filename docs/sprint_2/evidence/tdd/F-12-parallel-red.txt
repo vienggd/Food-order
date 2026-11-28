@@ -1,0 +1,10 @@
+   ✓ F-12 login rate limit > TEST-12.1 four wrong passwords are 401 and the fifth attempt with the right password still works  759ms
+   ✓ F-12 login rate limit > TEST-12.2 after five wrong passwords even the right password gets 429 with Retry-After and no cookie  618ms
+   ✓ F-12 login rate limit > TEST-12.3 a locked email does not lock another email  720ms
+   ✓ F-12 login rate limit > TEST-12.4 the lock ends 15 minutes after the fifth failure  688ms
+   ✓ F-12 login rate limit > TEST-12.5 a successful login clears the count (BR-20)  995ms
+   ✓ F-12 login rate limit > TEST-12.6 an unknown email is counted too, so 429 does not reveal whether an account exists  609ms
+   × F-12 login rate limit > TEST-12.9 twenty wrong logins at the same time: exactly five 401, fifteen 429, five rows saved 1845ms
+   ✓ F-12 login rate limit > TEST-12.7 email letter case does not matter (BR-21)  606ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 7 passed (8)

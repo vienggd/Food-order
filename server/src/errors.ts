@@ -7,6 +7,7 @@ export type ErrorCode =
   | "FORBIDDEN"
   | "NOT_FOUND"
   | "INVALID_STATE"
+  | "RATE_LIMITED"
   | "INTERNAL_ERROR";
 
 // Throw this from any route; the error handler turns it into the shared JSON shape.

@@ -27,6 +27,7 @@ Depends on: F-01 login. Adds error code `RATE_LIMITED` → HTTP 429.
 - Unknown emails are counted too, so the answer does not show whether an account exists.
 - Failures are kept in a database table so they survive a restart and work with more than one server instance.
 - Failures count when they are less than 15 minutes old. The 5th failure within that time starts the lock; the lock lasts 15 minutes from that 5th failure (the 4th does not lock).
+- Concurrency: counting and recording a failure happen in one database transaction that holds a per-email advisory lock (`pg_advisory_xact_lock`), so parallel requests for one email are handled one after the other and cannot pass the limit.
 - Other endpoints are not limited in Sprint 3.
 
 ### Permissions
@@ -59,6 +60,7 @@ Sessions, cookies, roles, every other route.
 | AC-12.6 | 5 wrong logins for an unknown email | 429 after the 5th, same as a real one |
 | AC-12.7 | Email written in different upper/lower case | counted as the same email |
 | AC-12.8 | UI: locked login | message shown, button disabled |
+| AC-12.9 | 20 wrong logins for one email sent at the same time | exactly 5 get 401 and 15 get 429; 5 failure rows are saved (a parallel burst cannot get past the limit) |
 
 ## 8. Test specification
 
@@ -71,9 +73,10 @@ Sessions, cookies, roles, every other route.
 | TEST-12.5 | AC-12.5 | API | seed | 4 wrong, correct, 4 wrong | no 429 |
 | TEST-12.6 | AC-12.6 | API | no such user | 5 wrong | 429 on the 5th |
 | TEST-12.7 | AC-12.7 | API | seed | mixed-case emails ×5 | 429 |
+| TEST-12.9 | AC-12.9 | API | seed | 20 wrong logins for alice in parallel (`Promise.all`) | five 401, fifteen 429; 5 rows in `login_failures` |
 | TEST-12.8 | AC-12.8 | E2E | seed | 5 wrong logins in the UI | message; button disabled |
 
-TDD: TEST-12.1..12.7 committed failing first, then code.
+TDD: TEST-12.1..12.7 and TEST-12.9 committed failing first, then code.
 
 ## 9. Definition of Done
 Sprint 1 definition of done. Status when this contract is merged: **planned** (not implemented). Failed or skipped tests must be listed.
@@ -83,3 +86,4 @@ Sprint 1 definition of done. Status when this contract is merged: **planned** (n
 | Date | Version | Change | Why |
 |---|---|---|---|
 | 25 Nov 2026 | 1 | First contract | Sprint 3 contracts for Deliverable 2 part C (Issue #93) |
+| 28 Nov 2026 | 1.1 | Added AC-12.9 / TEST-12.9 and the concurrency rule | PR #223 review (ninja): 20 parallel wrong logins all got 401 |

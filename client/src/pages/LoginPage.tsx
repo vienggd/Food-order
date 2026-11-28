@@ -1,9 +1,11 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { ApiError, NETWORK_MESSAGE } from "../api";
 import { homeFor, useAuth } from "../auth";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+let lockMs = 0; // set from the 429 answer (Retry-After)
 
 export function LoginPage() {
   const { user, loading, notice, login } = useAuth();
@@ -13,6 +15,13 @@ export function LoginPage() {
   const [fieldErrors, setFieldErrors] = useState<{ email?: string; password?: string }>({});
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [locked, setLocked] = useState(false); // F-12: 429, the button stays off until the lock ends
+
+  useEffect(() => {
+    if (!locked) return;
+    const t = setTimeout(() => setLocked(false), lockMs);
+    return () => clearTimeout(t);
+  }, [locked]);
 
   if (!loading && user) return <Navigate to={homeFor(user.role)} replace />;
 
@@ -32,10 +41,15 @@ export function LoginPage() {
       navigate(homeFor(u.role), { replace: true });
     } catch (err) {
       setPassword("");
+      if (err instanceof ApiError && err.status === 429) {
+        const secs = Number((err.details as { retryAfterSeconds?: number } | null)?.retryAfterSeconds ?? 900);
+        lockMs = secs * 1000;
+        setLocked(true);
+      }
       setError(
         err instanceof ApiError && err.status === 401
           ? "Incorrect email or password."
-          : err instanceof ApiError && err.status === 400
+          : err instanceof ApiError && (err.status === 400 || err.status === 429)
             ? err.message
             : NETWORK_MESSAGE,
       );
@@ -112,7 +126,7 @@ export function LoginPage() {
             {fieldErrors.password}
           </p>
         )}
-        <button className="btn" type="submit" disabled={busy}>
+        <button className="btn" type="submit" disabled={busy || locked}>
           {busy ? "Logging in…" : "Log in"}
         </button>
         <p className="no-signup">Accounts are created by the café. No sign-up.</p>

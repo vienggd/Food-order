@@ -5,6 +5,6 @@ import { assertLocalTestDb } from "./global-setup.js";
 export async function resetDb() {
   assertLocalTestDb(process.env.DATABASE_URL!);
   await prisma.$executeRawUnsafe(
-    'TRUNCATE "order_lines", "orders", "sessions", "menu_items", "users" RESTART IDENTITY CASCADE',
+    'TRUNCATE "order_lines", "orders", "sessions", "login_failures", "menu_items", "users" RESTART IDENTITY CASCADE',
   );
 }
