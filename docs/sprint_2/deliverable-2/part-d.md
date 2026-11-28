@@ -34,7 +34,7 @@ Every `TEST-…` ID in the four feature families' test specifications was looked
 | 5 | The SDS endpoint table said F-07, F-09, F-11 were "contract only"; the `GET /api/slots` response shape (`{ slots: […] }`) did not match the code and the F-09 contract (`[ { start, state, remaining } ]`). | `system-sds.md` 4.4 | Statuses and shape corrected; `pickupSlot` added to the order request. |
 | 6 | The SDS data model had no `orders.pickup_slot` column and no note on the slot lock. | `system-sds.md` 3.2 | Added with the migration name. |
 | 7 | The SDS screens list had S5 only for F-04 and no menu-admin screen. | `system-sds.md` 2.1 | S2–S5 list the Sprint 2/3 features; S6 `/operator/menu` added. |
-| 8 | The SDS said "Planned GCP deployment"; the service is live since Lab 5. | `system-sds.md` 7.4 | Now states the live revision `food-order-00009-jd9` (= `main` `39bda5e`) and that Sprint 2/3 code is not deployed yet. |
+| 8 | The SDS said "Planned GCP deployment"; the service is live since Lab 5. | `system-sds.md` 7.4 | Now states the live service and revision (updated 28 Nov: Sprint 2 and C-1 deployed, see Part E §E.0). |
 | 9 | The SRS decision DEC-05 said "Sprint 1 allows only PLACED → ACCEPTED". | `srs.md` | Reworded; DEC-09 (advance carries `from`), DEC-10 (slot lock), DEC-11 (LIKE escaping) recorded. |
 | 10 | The feature inventory still listed F-06, F-07 as "In progress/Specified" and F-11 with no business rules. | `features.md` | Statuses updated; F-11 now lists BR-25..BR-27. |
 
@@ -58,7 +58,7 @@ From `docs/traceability.md` section 4:
 - Requirements with no code and no test yet: FR-17, BR-17, BR-18, BR-19 (F-10); NFR-08, BR-20, BR-21 (F-12); NFR-09 (axe and keyboard check).
 - FR-16 is partly verified (server rules pass, picker E2E missing).
 - NFR-07 is a manual check (no secrets in Git); it is the only requirement verified by hand.
-- Nothing from Sprint 2 or 3 is on `main`; "Pass" means on the staging branch. Planned final verification and dates: Part C section 5.
+- This audit ran on the staging branch (`d10fac1`, 27 Nov). On 28 Nov that work was released to `main` (`df6db99`) and is in the candidate `v0.3.0-rc1`. **Update 28 Nov:** F-10 (AC-10.1..10.9) is now implemented and its 9 API tests plus TEST-10.9 pass on `sprint3` (PR #221); it reaches `main` with the Sprint 3 release. Planned final verification and dates: Part C section 5.
 
 ## 5. Two selected test excerpts
 

@@ -1,9 +1,9 @@
 # Lab 7 — Release readiness for change C-1 (vieng side)
 
 Change: an order has at most **15 items in total** (BR-01b). Per-line 1–10 stays. Issue #96. TA approved 25 Nov 2026 (screenshots in `evidence/ta-approval-1.png`, `-2.png`).
-Baseline before the change: `main` `b71cdb2` (Lab 5 release). Version accepted in Lab 6 and current `main`: `39bda5e` / Cloud Run revision `food-order-00009-jd9` (earlier Lab 6 release `163fdb7` / `food-order-00008-v6c`).
+Baseline before the change: `main` `b71cdb2` (Lab 5 release). Version accepted in Lab 6: `39bda5e` / Cloud Run revision `food-order-00009-jd9` (earlier Lab 6 release `163fdb7` / `food-order-00008-v6c`). Release with C-1: `704a66b` / `food-order-00011-9nh`; the later docs-only releases on `main` redeploy the same app bundle `assets/index-CDaqMZLn.js`.
 
-Status key: [x] done, [ ] not done yet. Fill in the "Result" column when the check is run.
+Status key: [x] done, [ ] not done yet. Every row below has been run; results are dated.
 
 ## 1. Before release (checklist)
 
@@ -27,13 +27,13 @@ Status key: [x] done, [ ] not done yet. Fill in the "Result" column when the che
 The change is code only (no migration, no data change), so rollback is safe and fast.
 
 1. **Trigger:** after deploy, any live check in section 4 fails, or valid orders (≤ 15 items) are rejected, or the smoke test fails.
-2. **Rollback:** run the `deploy` workflow manually (`workflow_dispatch`) with `image_tag` = full 40-char commit SHA of the previous good image (`39bda5e1922a3bf07c5bfc0daec3359a9d396eed`, the Lab 6 release, revision `food-order-00009-jd9`). This runs `deploy/release.sh` with `ROLLBACK=true`: verify image → update service. No migration, no seed.
+2. **Rollback:** run the `deploy` workflow manually (`workflow_dispatch`) with `image_tag` = full 40-char commit SHA of the previous good image (now the Sprint 2 release `df6db99e2f2640f914cb7d4bacc7af73b675530a`, revision `food-order-00010-7vp`; before Sprint 2 was released this was the Lab 6 release `39bda5e`). This runs `deploy/release.sh` with `ROLLBACK=true`: verify image → update service. No migration, no seed.
 3. **Check after rollback:** `/api/health` ok, `/api/ready` db connected, smoke test passes, a 16-item order is accepted again (old behaviour).
 4. Data: nothing to undo. Orders placed with the new rule are valid under the old rule too (≤ 15 items).
 
-## 3. Deploy steps (for the heads, after the TA answer about the Lab 5 URL)
+## 3. Deploy steps (as run on 27–28 Nov)
 
-Do not deploy before the heads decide. Nothing goes to `main` until then.
+The TA approved deploying newer versions to the Lab 5 Cloud Run URL on 25 Nov (same reply as the C-1 approval). vieng released to `main` after the Lab 6 re-test, Sprint 2 first, then Lab 7.
 
 1. All Lab 7 PRs merged into `lab7`; section 1 all ticked.
 2. Heads open the release PR `lab7` → `main` (merge commit) and merge it after approval.
@@ -78,7 +78,7 @@ Deferred engineering work that creates future cost or risk (distinct from known 
 |---|---|---|---|
 | Duplicated `15`-item cap constant in `server/src/orders/routes.ts` and `client/src/lib/cart.ts` | A future limit change must update two files or client and server could drift | Medium | Guarded by `TEST-L7-1..5`; extract a shared constant/config if order limits expand in Sprint 3 (owner: vieng / ninja) |
 | `ci-docker.yml` triggers on `main` and `lab-5` PRs (and `workflow_call`), not on `lab7`, `sprint2`, or `lab6` | Staging PRs rely on local test runs until the `main` release PR | Medium | Keep mandatory local `npm test` + `npm run test:e2e` on every PR; CI runs on the `main` release PR (owner: vieng) |
-| Lab 7 contract changes live in `docs/sprint_1/*` on `lab7`, while living docs live in `docs/*` on `sprint2` | Merging `lab7` into `main` must carry BR-01b into living SRS, SDS, and traceability | Low | Port BR-01b into `docs/srs.md`, `docs/system-sds.md`, and `docs/traceability.md` in the `lab7` → `main` release PR (owner: ninja + vieng) |
+| Lab 7 contract changes live in `docs/sprint_1/*` on `lab7`, while living docs live in `docs/*` on `sprint2` | Merging `lab7` into `main` must carry BR-01b into living SRS, SDS, and traceability | Done | **Paid off 27–28 Nov:** BR-01b ported into `docs/srs.md`, `docs/traceability.md`, `docs/features.md` (PR #211, vieng) and `docs/system-sds.md` (PR #214, ninja); the frozen `docs/sprint_1/*` copies were restored and the C-1 rows kept in `contract-C-1.md` |
 | `e2e/helpers.ts` (`shot()`) writes all E2E screenshots into `docs/sprint_1/evidence/screenshots/` | Running Lab 7 E2E overwrites Sprint 1 PNGs unless restored manually | Low | Restore Sprint 1 PNGs after runs; parameterize the screenshot output directory before the final release (owner: vieng) |
 
 ## 7. Release readiness verdict (maintained Sprint 1 scope)
@@ -86,9 +86,9 @@ Deferred engineering work that creates future cost or risk (distinct from known 
 **Verdict before the release: NOT READY** (as of 27 Nov 2026). **Updated 28 Nov 2026: READY and released** (see section 10). This assesses only the maintained Sprint 1 scope (change C-1 + preserved Sprint 1 behavior), not completion of the full three-sprint product.
 
 Outstanding items required before `READY`:
-1. **TA answer on Question 3** (permission to deploy newer versions to the Lab 5 Cloud Run URL while Lab 5 is graded) — owner: **vieng**.
+1. ~~TA answer on Question 3~~ — **done 25 Nov**: the TA allowed newer versions on the Lab 5 Cloud Run URL (asked by vieng).
 2. ~~Lab 6 UAT triage, fixes, and partner re-test~~ — **done**: 9 of 9 accepted defects fixed, re-tested and in `main` (`39bda5e`); 3 enhancements deferred to Sprint 3.
-3. ~~Release integration & live verification~~ — **done 28 Nov**: release PR #216, CI green, deployed as `food-order-00011-9nh`, live checks `L1`–`L8` PASS. Left: final metrics (done 28 Nov 08:45) and the Lab 7 PDF — owner: **ninja**.
+3. ~~Release integration & live verification~~ — **done 28 Nov**: release PR #216, CI green, deployed as `food-order-00011-9nh`, live checks `L1`–`L8` PASS. Final metrics (ninja, done 28 Nov 08:45) and the Lab 7 PDF with appendices (vieng, done 28 Nov).
 
 ## 8. Retrospective
 
@@ -98,10 +98,10 @@ Outstanding items required before `READY`:
 
 ## 9. Owner and notes
 
-- vieng side: this file, live checks, review of ninja's RED / GREEN PRs.
-- ninja side: change request, impact.md, contract, RED/GREEN code, metrics, Lab 7 PDF.
+- vieng side: this file, TA approval request, review of ninja's contract and RED / GREEN PRs (changes requested on #103 before code), live checks L1 and L8 (anonymous), sync with Sprint 2 (#211), release PR #216, report appendices and final PDF.
+- ninja side: change request, impact.md, contract, RED/GREEN code, metrics, live checks L2–L8 (signed in by hand), review of vieng's PRs.
 - Local test databases used: own names `cafe_l7`, `cafe_l7_test` on the shared Docker Postgres (port 5433); `server/.env` is not committed.
 
 ## 10. Post-release update (28 Nov 2026)
 
-Release PR #216 merged (`main` `704a66b`), CI & Docker Build success on the release PR, Deploy demo success, revision `food-order-00011-9nh`. Live checks L1–L8 all PASS (section 4, `evidence/live-checks.md`). Sprint 2 was released first (`df6db99`, tag `v0.2.0-sprint2`, revision `food-order-00010-7vp`), and BR-01b is in the living docs (PR #211, #214). Open from section 7: the TA answer on Question 3 (owner: vieng).
+Release PR #216 merged (`main` `704a66b`), CI & Docker Build success on the release PR, Deploy demo success, revision `food-order-00011-9nh`. Live checks L1–L8 all PASS (section 4, `evidence/live-checks.md`). Sprint 2 was released first (`df6db99`, tag `v0.2.0-sprint2`, revision `food-order-00010-7vp`), and BR-01b is in the living docs (PR #211, #214). Nothing from section 7 is open. The Lab 7 docs were released to `main` in PR #232 (approved and merged by ninja's side); the submitted tag `v0.3.0-rc1` is on the report commit (see the PDF footer).

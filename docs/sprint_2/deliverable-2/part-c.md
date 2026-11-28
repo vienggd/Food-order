@@ -1,7 +1,7 @@
 # Deliverable 2, Part C: Sprint 3 contracts and working progress
 
 Campus Café Pre-order. Issue #186. Author: ninja (NinjoMUDA). Reviewer: vieng (vienggd).
-Tested version: `sprint2` (PR #190/#191 merged, synced with `main` `39bda5e`, 27 Nov 2026), the staging branch. Nothing from Sprint 2 or Sprint 3 is on `main` yet (`main` = `39bda5e`; live Cloud Run revision `food-order-00009-jd9` = Lab 6 release with `#132` fix, Deploy demo `45890211288`).
+Tested version: `sprint2` (PR #190/#191 merged, synced with `main` `39bda5e`, 27 Nov 2026), the staging branch. Sections 1–4 are the snapshot written on 27 Nov, before the release. **Update 28 Nov:** `sprint2` (with Sprint 3 F-09 and F-11) was released to `main` (PR #210, `df6db99`, tag `v0.2.0-sprint2`) and is part of the submitted candidate `v0.3.0-rc1`, so the F-09 server rules and F-11 are now **Accepted**. Section 5 shows the current status of each remaining item.
 
 Status words: **Planned** (in a plan) → **Specified** (contract merged) → **In progress** (some code) → **Implemented** (code merged in `sprint2`) → **Tested** (its test ran and passed; command and commit named) → **Accepted** (released on `main`). A test that does not exist is never counted.
 
@@ -23,9 +23,9 @@ These four contracts cover every baseline requirement that is not in Sprint 1 or
 | Feature | Status on `sprint2` `d10fac1` | AC implemented | AC with a passing test | AC without a test |
 |---|---|---|---|---|
 | F-09 | **Implemented, tested for the server rules**; UI picker implemented, UI tests missing | AC-F09-01..14; AC-F09-15..17 (minimal picker) | AC-F09-01..14 | AC-F09-15, -16, -17 |
-| F-10 | **Specified** only. No code | none | none | AC-10.1..10.9 |
+| F-10 | **Specified** only on 27 Nov. **28 Nov: implemented and tested on `sprint3` (PR #221), see §5** | none | none | AC-10.1..10.9 |
 | F-11 | **Implemented and tested** (customer filter and operator search) | AC-F11-01..17 | AC-F11-01..17 | none |
-| F-12 | **Specified** only. No code | none | none | AC-12.1..12.8, NFR-09 checks |
+| F-12 | **Specified** only on 27 Nov. **28 Nov: rate limit in review (PR #223), NFR-09 checks in PR #227, see §5** | none | none | AC-12.1..12.8, NFR-09 checks |
 
 Meaningful Sprint 3 rules and workflows implemented and tested on a real PostgreSQL database: the **F-09 pickup-slot cut-off rule** (BR-23) with capacity (BR-24), and **F-11 order search and filter**.
 
@@ -79,17 +79,17 @@ TDD evidence:
 
 ## 5. Remaining work to 13 December
 
-Rule from the handout: the product should be substantially complete by 29 Nov; exams are 1–11 Dec, so main workflows are not left for the last days. Owners and dates are **proposed by ninja and need vieng's confirmation** in the sprint2 chat. "Tested commit" is the last commit on which the passing part ran.
+Rule from the handout: the product should be substantially complete by 29 Nov; exams are 1–11 Dec, so main workflows are not left for the last days. Owners and dates were proposed by ninja and **confirmed by vieng** (sprint2 chat; Part E §E.5). Status updated 28 Nov. "Tested commit" is the last commit on which the passing part ran.
 
 | Feature / AC or defect | Current status and tested commit | Missing AC, verification or fix | Owner | Target date | Depends on |
 |---|---|---|---|---|---|
-| F-09 AC-F09-15..17 (picker UI) | Picker implemented; AC-F09-01..14 pass on `d10fac1`; UI not tested | Write TEST-F09-15, -16, -17 (RED first); fix the picker if they fail: disabled closed and full slots, "Pickup 10:30" on detail, 409 text under the picker with cart kept | ninja | 29 Nov | server clock hook (exists) |
-| F-10 Sales summary, AC-10.1..10.9 | Specified (contract #106). No code | Whole feature: `GET /api/operator/sales`, `/operator/sales` page, nav link, TEST-10.1..10.9 (RED first), evidence file | vieng (contract owner); ninja reviews | server 29 Nov, UI 30 Nov | F-07 `pickedUpAt` (done), F-08 `paymentStatus` (done) |
-| F-12 login rate limit, AC-12.1..12.8, BR-20, BR-21, NFR-08 | Specified (contract #106). No code | Failure counter per email, 429 + `Retry-After`, UI lock message, TEST-12.1..12.8 | vieng | 30 Nov | none |
-| F-12 error states and accessibility, NFR-09 | Specified. Loading, empty and error states already exist on the Sprint 1 and 2 screens and are tested by E2E | Playwright + axe check on login, menu, cart, orders, order detail, operator queue and menu admin (no serious or critical violations); keyboard check of the reject and cancel dialogs; record the results | ninja | 30 Nov | none |
+| F-09 AC-F09-15..17 (picker UI) | Picker implemented; AC-F09-01..14 pass on `d10fac1` and are in `main`. **28 Nov:** TEST-F09-15..17 written with a fixed E2E clock, PR #226 (ninja) open, reviewed by vieng's side | Write TEST-F09-15, -16, -17 (RED first); fix the picker if they fail: disabled closed and full slots, "Pickup 10:30" on detail, 409 text under the picker with cart kept | ninja | 29 Nov | server clock hook (exists) |
+| F-10 Sales summary, AC-10.1..10.9 | **Implemented and tested on `sprint3`** (PR #221 by vieng, approved by ninja, merged 28 Nov 00:48 +07): RED `d6496b0` (8 of 9 failed) → GREEN `0082f33` (sales API 9 tests pass), UI `c67ec03` (TEST-10.9 passes on phone and desktop). Not yet on `main`, so not in `v0.3.0-rc1` | Full regression on `sprint3`, release to `main` with Sprint 3 | vieng (contract owner); ninja reviews | server 29 Nov, UI 30 Nov | F-07 `pickedUpAt` (done), F-08 `paymentStatus` (done) |
+| F-12 login rate limit, AC-12.1..12.8, BR-20, BR-21, NFR-08 | **In progress, in review:** PR #223 (vieng): RED `059da4f` (5 of 7 failed) → GREEN `c081f18`; server 200 / client 9 / Playwright 75 passed. ninja's review found that parallel wrong-password logins can pass the limit | Fix the parallel-login race (new AC-12.9 / TEST-12.9), re-review by ninja, merge into `sprint3` | vieng | 30 Nov | none |
+| F-12 error states and accessibility, NFR-09 | Specified. Loading, empty and error states already exist on the Sprint 1 and 2 screens and are tested by E2E | Playwright + axe check on login, menu, cart, orders, order detail, operator queue and menu admin (no serious or critical violations); keyboard check of the reject and cancel dialogs; record the results | ninja (**28 Nov:** PR #227 open, also fixes Lab 6 enhancements #130/#131/#133) | 30 Nov | none |
 | Desktop operator board (ui-spec S8) | Not built; the tabbed table ships | Decide: build the 4-column board, or revise ui-spec S8 with a recorded reason | ninja + vieng | decide 29 Nov; build, if chosen, 30 Nov | none |
-| Lab 6 UAT re-test (9 fixes) | All 9/9 fixes re-tested PASS on `main` `39bda5e` (`food-order-00009-jd9`); #121–#126, #128, #129, #132 closed | Paste Nattakit's signed `Accepted` block into `lab6` docs and close `#101` | vieng (paste + export) | 27–28 Nov | EN-009_P3 Nattakit sign-off |
-| Sprint 2 + 3 release to `main` and GCP deploy | `sprint2` is ahead of `main`; vieng holds `main` until the Lab 6 re-test is done | Release PR `sprint2` → `main`, tag, deploy through the Lab 5 pipeline, post-deploy check of login → order → accept → pay → pick up, and persistence | vieng decides; ninja reviews | 30 Nov | all rows above merged |
+| Lab 6 UAT re-test (9 fixes) | **Done 28 Nov:** all 9/9 fixes re-tested PASS on `main` `39bda5e`; EN-009_P3 signed Accepted; #121–#126, #128, #129, #132 and #101 closed | none | vieng (paste + export) | 27–28 Nov | EN-009_P3 Nattakit sign-off |
+| Sprint 2 + 3 release to `main` and GCP deploy | **Done 27–28 Nov:** PR #210 → `df6db99`, tag `v0.2.0-sprint2`, revision `food-order-00010-7vp`; then Lab 7 C-1 (`704a66b`, `food-order-00011-9nh`) and the candidate tag `v0.3.0-rc1`; live checks in Part E §E.0 | Next release: `sprint3` → `main` with F-10, F-12 and the F-09 E2E, tag `v1.0.0` | vieng decides; ninja reviews | 30 Nov | all rows above merged |
 | Final traceability and regression | Part D matrix shows gaps for F-10, F-12, AC-F09-15..17 | Re-run the full suite on the release commit; update the matrix to Pass; NFR checks | ninja + vieng | 12 Dec | release done |
 | Final video (≤ 4 min), UAT re-tests, final release | Not started | Record the video, final UAT, tag | both | 12–13 Dec | previous rows |
 
