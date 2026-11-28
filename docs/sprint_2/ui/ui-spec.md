@@ -147,7 +147,8 @@ Client checks are only for convenience; the server is the source of truth and it
   - `POST /api/operator/orders/:id/advance` → moves exactly one step; returns the updated order.
 - **Layout:**
   - **Phone:** a 3-part switch with counts: **New** (PLACED) · **In progress** (ACCEPTED + PREPARING) · **Ready** (READY). The selected tab is kept in the URL (`?tab=new|progress|ready`).
-  - **Desktop:** a board with 4 columns: **Placed · Accepted · Preparing · Ready**, each with a count. Orders move one column to the right per step. **Refresh queue** button at the top.
+  - **Desktop (revised 28 Nov 2026, as shipped):** the same **New / In progress / Ready** switch as on the phone, and below it one semantic table (`<table>` with `<th scope="col">`) with 7 columns: **Order | Status | Customer | Items | Placed | Total | Action**, one row per order, the next action in the last column. The phone shows each row as a card. **Refresh queue** button at the top. A search form (order number or customer name, status, **Search**, **Clear**; F-11) sits above the switch.
+  - **Why the 4-column card board was dropped:** both teams agreed to revise this spec instead of building it (DEC-12 (`srs.md`)). The table is already built and tested (phone 375 px and desktop 1280 px E2E; TEST-L6-132 checks that the 7 headers line up with the 7 cells), it passes the axe check and the keyboard checks in PR #227 (TEST-A11Y-01..08), and it is the lower risk before the exam period 1–11 Dec. The earlier board sketch is kept in `design/desktop-operator-queue.html` for history.
 - **Card fields:** order number · customer name, placed time, items summary, status badge + payment badge, total, then **only the next action**:
 
   | Status | Buttons |
@@ -210,7 +211,7 @@ Client checks are only for convenience; the server is the source of truth and it
 | `design/phone-operator-queue.html` | S8: tabs, reject sheet and validation, next steps, unpaid pickup, 409s |
 | `design/phone-operator-menu.html` | S9: list, sold-out switch, add/edit, validation, duplicate name |
 | `design/desktop-customer-orders.html` | S6 + S7 side by side, cancel dialog, ready-unpaid, rejected |
-| `design/desktop-operator-queue.html` | S8 board, reject dialog, 409 |
+| `design/desktop-operator-queue.html` | S8 board sketch (not built; the desktop ships the 7-column table, see S8), reject dialog, 409 |
 | `design/desktop-operator-menu.html` | S9 table + edit panel, duplicate name |
 
 Every page fits from 320 px to 1440 px wide with no sideways scrolling (checked in the browser).

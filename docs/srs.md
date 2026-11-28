@@ -86,11 +86,11 @@ Each rule is enforced by the server, whatever the client sends. Money is stored 
 | BR-14 | A customer can pay only their own order, once (UNPAID → PAID), and not when it is CANCELLED, REJECTED or PICKED_UP. (F-08) | 404 for someone else's order; 409 INVALID_STATE |
 | BR-15 | An order can become PICKED_UP only when its payment is PAID. (F-08, enforced in the F-07 advance route) | 409 INVALID_STATE "not paid yet" |
 | BR-16 | Cancelling or rejecting a PAID order sets its payment to REFUNDED in the same step. (F-08, enforced in the F-06 routes) | — |
-| BR-17 | Only orders that are PICKED_UP and PAID count as sales. (F-10, Sprint 3, planned) | — |
-| BR-18 | Sales days are Asia/Bangkok calendar days, by the time of pickup. (F-10, Sprint 3, planned) | — |
-| BR-19 | The top items are the 3 with the most quantity sold; ties are broken by name. (F-10, Sprint 3, planned) | — |
-| BR-20 | A successful login clears that email's failed-login count. (F-12, Sprint 3, planned) | — |
-| BR-21 | Failed logins are counted per email (lower-case), not per IP address. (F-12, Sprint 3, planned) | — |
+| BR-17 | Only orders that are PICKED_UP and PAID count as sales. (F-10, Sprint 3, implemented in PR #221) | — |
+| BR-18 | Sales days are Asia/Bangkok calendar days, by the time of pickup. (F-10, Sprint 3, implemented in PR #221) | — |
+| BR-19 | The top items are the 3 with the most quantity sold; ties are broken by name. (F-10, Sprint 3, implemented in PR #221) | — |
+| BR-20 | A successful login clears that email's failed-login count. (F-12, Sprint 3, implemented in PR #223) | — |
+| BR-21 | Failed logins are counted per email (lower-case), not per IP address. (F-12, Sprint 3, implemented in PR #223) | — |
 | BR-22 | Pickup slots are 15 minutes apart within opening hours (08:00–16:45, 36 slots), today only (Asia/Bangkok). (F-09, Sprint 3, implemented) | 400 VALIDATION_ERROR (`details.field = pickupSlot`) |
 | BR-23 | Orders for a pickup slot close 15 minutes before the slot starts (`now < slotStart - 15 min`). (F-09, Sprint 3, implemented) | 400 VALIDATION_ERROR (`details.field = pickupSlot`) |
 | BR-24 | Each pickup slot holds at most 10 active orders; cancelled and rejected orders free their place; ASAP orders do not count. (F-09, Sprint 3, implemented) | 409 INVALID_STATE |
@@ -111,6 +111,13 @@ Each rule is enforced by the server, whatever the client sends. Money is stored 
 | NFR-07 | **Deployable and configurable.** | All settings (database URL, seed password, port) come from environment variables; 0 secrets in Git; app runs as one container (Express serves the built React app). | Review + `git grep` for secrets each release; container build in Lab 5 | 1 (design), 2 (Lab 5) |
 | NFR-08 | **Login rate limit.** | After 5 failed logins for one email within 15 minutes, further attempts get 429 for 15 minutes. | API test | 3 |
 | NFR-09 | **Accessibility.** | Every Sprint 1–3 screen has no critical or serious issues in an automated accessibility check (axe), and works by keyboard only. | Playwright + axe check; manual keyboard check | 3 |
+
+Status of the two Sprint 3 non-functional requirements (28 Nov 2026, on `sprint3`):
+
+| ID | Status | Evidence |
+|---|---|---|
+| NFR-08 | Implemented (F-12, PR #223). 5 failed logins for one email (lower-cased, unknown emails included) within 15 minutes lock that email for 15 minutes from the 5th failure: 429 `RATE_LIMITED`, `Retry-After`, `details.retryAfterSeconds`; a successful login clears the count (BR-20, BR-21). AC-12.9: 20 parallel wrong logins give exactly five 401 and fifteen 429. | AC-12.1..12.9; TEST-12.1..12.7 and TEST-12.9 (API), TEST-12.8 (E2E) |
+| NFR-09 | Implemented as an automated check (F-12 hardening, PR #227): axe finds no critical or serious violation on the login page, the customer screens (menu, cart, my orders, order detail) and the operator screens (queue, menu items, sales). Found and fixed: sold-out items had too little contrast. Dialogs trap Tab and return focus; the cart takes focus on a phone (#130); login errors are linked, announced and cleared (#131, #133). The automated keyboard checks cover dialogs, the cart and login; any other keyboard-only checking is manual and is not part of this status. | TEST-A11Y-01..08 (Playwright) |
 
 ## 7. Assumptions
 
@@ -138,6 +145,7 @@ Each rule is enforced by the server, whatever the client sends. Money is stored 
 | DEC-09 | The advance request carries `from` (the status the operator saw) and the update is conditional on it. | A stale button press cannot move an order twice (BR-13). |
 | DEC-10 | Slot capacity is checked inside the order transaction under a per-slot `pg_advisory_xact_lock`. | Parallel orders cannot overfill a slot (BR-24). |
 | DEC-11 | Order search escapes `%`, `_` and `\` before the name match. | Prisma `contains` passes them to SQL LIKE; found by TEST-F11-12. |
+| DEC-12 | The desktop operator queue stays the 7-column semantic table (Order, Status, Customer, Items, Placed, Total, Action) with the New / In progress / Ready switch, instead of the 4-column card board in ui-spec S8. | Built and tested (phone and desktop E2E, TEST-L6-132); passes the NFR-09 axe and keyboard checks (#227); lower risk before the 1–11 Dec exams. Agreed by vieng and ninja, 28 Nov 2026. ui-spec S8 is revised in PR #237. |
 
 ## 9. Questions and resolution
 
@@ -158,3 +166,5 @@ Each rule is enforced by the server, whatever the client sends. Money is stored 
 | 25 Nov 2026 | 2 | Added BR-08..BR-21 (Sprint 2 and Sprint 3 rules) from the feature contracts F-05, F-06, F-07, F-08, F-10, F-12 | Deliverable 2 part D: living SRS |
 | 26 Nov 2026 | 2.1 | Added BR-22..BR-24 (pickup slots, cut-off, slot capacity) from merged contract F-09 (PR #118) | Sync living SRS with PR #118 (S2-8b) |
 | 27 Nov 2026 | 3 | Added BR-25..BR-27 (F-11; they were in the F-11 contract but missing here); BR-22..BR-24 marked implemented; DEC-05 wording; added DEC-09..DEC-11 (Issue #186) | Deliverable 2 part D audit against `sprint2` `d10fac1` |
+| 28 Nov 2026 | 4 | BR-17..BR-21 now say implemented (F-10 in PR #221, F-12 in PR #223); status table for NFR-08 and NFR-09 (AC-12.9, TEST-A11Y-01..08) | Sprint 3 finish |
+| 28 Nov 2026 | 4.1 | Added DEC-12 (desktop operator queue stays the 7-column table with the New / In progress / Ready switch; ui-spec S8 revised in PR #237) | Agreed by vieng and ninja |

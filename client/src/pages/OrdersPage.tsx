@@ -283,7 +283,7 @@ export function OrderDetailPage({ onLoaded }: { onLoaded?: (order: Order) => voi
           <StatusPill status={order.status} />
         </div>
         <p className="muted">
-          Placed {formatPlacedTime(order.createdAt)} · Pickup: {order.pickupSlot ? formatPlacedTime(order.pickupSlot).split(" ").pop() : "ASAP"}
+          Placed {formatPlacedTime(order.createdAt)} · Pickup {order.pickupSlot ? formatPlacedTime(order.pickupSlot).split(" ").pop() : "ASAP"}
         </p>
         <table className="lines">
           <tbody>

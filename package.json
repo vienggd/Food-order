@@ -16,6 +16,7 @@
     "evidence": "node scripts/evidence.mjs"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.1",
     "@playwright/test": "^1.64.1",
     "concurrently": "^9.2.1",
     "marked": "^15.0.12"

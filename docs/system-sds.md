@@ -173,7 +173,7 @@ PLACED ──cancel──► CANCELLED                                          
 
 Payment is a separate field (`payment_status`, F-08): `UNPAID → PAID` by the customer (BR-14), `PAID → REFUNDED` automatically when a paid order is cancelled or rejected (BR-16). An order can become PICKED_UP only when PAID (BR-15).
 
-Planned for Sprint 3 (F-12): table `login_failures(id, email, created_at)`, index `(email, created_at)`; not built yet.
+Sprint 3 (F-12): table `login_failures(id, email, created_at)` with index `(email, created_at)`, migration `20261127173631_add_login_failures`. One row per failed login, keyed by the lower-cased email (unknown emails too). Rows older than 15 minutes are ignored (never counted) and are removed together with the rest of that email's rows by the next successful login.
 
 The enum already holds every status so later sprints need no enum migration. Allowed moves live in one transition table read by `canTransition(from, to)` (DEC-05); Sprint 1 allows only `PLACED → ACCEPTED`. Payment status (F-08) will be a separate column (DEC-08).
 
@@ -271,9 +271,9 @@ Details, all error cases and tests are in the feature contracts (`docs/sprint_1/
 | `POST /api/operator/orders/:id/reject` | `{ reason }` | 200 Order (REJECTED; a PAID order becomes REFUNDED, BR-16) | 400, 401, 403, 404, 409 | F-06 (implemented) |
 | `POST /api/operator/orders/:id/advance` | `{ from }` | 200 Order (next step) | 400, 401, 403, 404, 409 | F-07 (implemented; BR-15 checked in the same update) |
 | `GET /api/slots` | — | 200 `[ { start, state: open, closed or full, remaining } ]` (36 slots) | 401, 403 | F-09 (implemented) |
-| `GET /api/operator/sales?from&to` | — | 200 `{ days, topItems }` | 400, 401, 403 | F-10 (contract only, **not implemented**) |
+| `GET /api/operator/sales?from&to` | — | 200 `{ days, topItems }` | 400, 401, 403 | F-10 (implemented, PR #221) |
 
-Order JSON (4.3) gained `paymentStatus`, `paidAt`, `refundedAt` in Sprint 2 (F-08); the order list items gained `paymentStatus`. `pickupSlot` (F-09) is on the order JSON. `POST /api/auth/login` gets a 429 `RATE_LIMITED` answer in Sprint 3 (F-12, **not implemented yet**).
+Order JSON (4.3) gained `paymentStatus`, `paidAt`, `refundedAt` in Sprint 2 (F-08); the order list items gained `paymentStatus`. `pickupSlot` (F-09) is on the order JSON. `POST /api/auth/login` now also answers 429 `RATE_LIMITED` with a `Retry-After` header and `details.retryAfterSeconds` (F-12, PR #223, see 6.1).
 
 Later sprints add endpoints with the same conventions (planned paths in section 5.2).
 
@@ -305,10 +305,10 @@ Later sprints add endpoints with the same conventions (planned paths in section 
 | Advance one step (prepare / ready / picked up) | `POST /api/operator/orders/:id/advance` | ✘ 401 | ✘ 403 | ✔ | any order in the right status | 2 |
 | Pay (simulated) | `POST /api/orders/:id/pay` | ✘ 401 | ✔ own | ✘ 403 | own orders | 2 |
 | Pickup slots | `GET /api/slots` | ✘ 401 | ✔ | ✘ 403 | today's slot availability | 3 |
-| Sales summary | `GET /api/operator/sales` | ✘ 401 | ✘ 403 | ✔ | all orders (totals only) | 3 |
+| Sales summary | `GET /api/operator/sales?from&to` | ✘ 401 | ✘ 403 | ✔ | PICKED_UP and PAID orders only; totals and the top 3 items | 3 (implemented) |
 | Search / filter orders | `GET /api/orders?status=…` / `GET /api/operator/orders?q=…&status=…` | ✘ 401 | ✔ own | ✔ all | as above | 3 |
 
-Sprint 2–3 paths are the ones in the feature contracts (`docs/sprint_2/sprints/`). Implemented on `sprint2` at `d10fac1`: menu management (F-05), cancel and reject (F-06), advance (F-07), pay, refund and the paid-before-pickup rule (F-08), pickup slots (F-09) and search/filter (F-11). Not implemented: sales summary (F-10) and login rate limit (F-12).
+Sprint 2–3 paths are the ones in the feature contracts (`docs/sprint_2/sprints/`). Implemented on `sprint2` at `d10fac1`: menu management (F-05), cancel and reject (F-06), advance (F-07), pay, refund and the paid-before-pickup rule (F-08), pickup slots (F-09) and search/filter (F-11). Sprint 3 on `sprint3` (`a6c9645`) adds the sales summary (F-10, PR #221) and the login rate limit (F-12, PR #223).
 
 ## 6. Authentication and sessions
 
@@ -324,6 +324,14 @@ Sprint 2–3 paths are the ones in the feature contracts (`docs/sprint_2/sprints
 | Fixed expiry | 8 h from login, not extended by activity (simple to test, enough for a café shift). |
 | Login rate limit | Sprint 3 (NFR-08). |
 
+### 6.1 Login rate limit (F-12, NFR-08)
+
+- **Rule:** 5 failed logins for one email within 15 minutes lock that email for 15 minutes from the 5th failure. Counting is per lower-cased email, not per IP (BR-21). Unknown emails are counted too, so 429 does not show whether an account exists. A successful login deletes that email's failures (BR-20).
+- **Where:** `server/src/auth/routes.ts`, `POST /api/auth/login`. A locked email is refused **before** the password is checked, even with the right password: 429 `RATE_LIMITED`, message "Too many failed logins. Try again in N minutes.", header `Retry-After` and `details.retryAfterSeconds` (at most 900).
+- **Concurrency:** counting, the password check and saving the failure run in one database transaction that first takes `pg_advisory_xact_lock(hashtext(email))`. Requests for the same email therefore run one after the other, so a parallel burst cannot pass the limit (AC-12.9: 20 parallel wrong logins give five 401 and fifteen 429). This is the same approach as the per-slot lock for F-09. Requests for different emails do not wait for each other.
+- **Client:** the login page shows the server message and keeps **Log in** disabled for `retryAfterSeconds`.
+- **Data:** table `login_failures` (section 3.2). Tests empty it with the other tables.
+
 ## 7. Configuration and deployment
 
 ### 7.1 Environment variables (`server/.env`, from `server/.env.example`)
@@ -335,6 +343,7 @@ Sprint 2–3 paths are the ones in the feature contracts (`docs/sprint_2/sprints
 | `SEED_PASSWORD` | Password of seeded accounts | chosen by each developer | Secret Manager; never shown on screen |
 | `PORT` | HTTP port | 3000 | set by Cloud Run |
 | `NODE_ENV` | `production` turns on the `Secure` cookie flag (Express serving the built client is added with the Dockerfile in Lab 5) | unset | `production` |
+| `E2E_CLOCK_NOW` | Test only (Playwright): freezes the server clock used for pickup slots (F-09) so open and closed slots do not depend on the real time. Set by `playwright.config.ts` to `2026-12-01T10:00:00+07:00`. **Ignored when `NODE_ENV` is `production`**, so it cannot change a deployed server. | set only by the E2E run | not set |
 
 ### 7.2 Secrets
 - Real values live only in `server/.env` (git-ignored) locally and in **Secret Manager** in GCP.
@@ -371,6 +380,12 @@ Setup and runbook: `docs/labs/lab-05/deployment.md`, `runbook.md`. Releases so f
 | Releases | GitHub Actions: CI on every PR (tests + Docker build); on merge to `main` build, push, run migrate job, deploy by image digest, smoke test `/api/health`. Rollback = redeploy an earlier image. |
 | Cost / safety | Budget alert first; teardown script after the course. |
 
+### 7.5 Quality checks added in Sprint 3
+
+- **Accessibility (NFR-09):** `e2e/a11y.spec.ts` runs axe (`@axe-core/playwright`, a dev dependency only) on the login page, the customer screens and the operator screens, and fails on any critical or serious violation. It also checks dialogs by keyboard (Tab stays inside, Escape closes, focus returns to the opening button), the cart focus on a phone and the linked, announced and cleared login errors.
+- **Frozen E2E clock:** see `E2E_CLOCK_NOW` in 7.1.
+- **Flaky test, fixed:** in the regression run on `a6c9645` (`docs/sprint_3/evidence/regression-a6c9645.txt`, kept as recorded) TEST-A11Y-03 failed once on desktop because its locator matched two "Menu items" headings. It was a test-selector problem, not a product defect; PR #239 (`2dd7f21`) fixed the locator.
+
 ## Change log
 
 | Date | Version | Change | Why |
@@ -382,3 +397,4 @@ Setup and runbook: `docs/labs/lab-05/deployment.md`, `runbook.md`. Releases so f
 | 25 Nov 2026 | 2 | Sprint 2 schema (3.2, 3.3), Sprint 2–3 endpoints (4.4), permission matrix paths (5.2) | Deliverable 2 part D |
 | 26 Nov 2026 | 2.1 | Added `GET /api/slots`, F-11 filter query params, and F-06 server status in 4.4 and 5.2 | Sync living SDS with PRs #118 and #120 (S2-8b) |
 | 27 Nov 2026 | 3 | 2.1 screens S2..S6 list the Sprint 2/3 features; 3.2 `pickup_slot`; 4.4 endpoint statuses corrected (F-06, F-07, F-09, F-11 implemented; F-10, F-12 not), real `GET /api/slots` shape, `status` and `q` params, `pickupSlot` in the order request; 5.2 note; 7.4 deployment is live (Lab 5), not planned (Issue #186) | Deliverable 2 part D audit against `sprint2` `d10fac1` |
+| 28 Nov 2026 | 4 | 3.2 `login_failures` built; 4.4 sales and 429 implemented; 5.2 sales row; new 6.1 login rate limit (per-email advisory lock); 7.1 `E2E_CLOCK_NOW`; new 7.5 quality checks (axe) | Sprint 3 finish |

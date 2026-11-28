@@ -8,7 +8,7 @@ export default async function setup() {
   assertLocalE2eDb(E2E_DATABASE_URL);
   const env = { ...process.env, DATABASE_URL: E2E_DATABASE_URL };
   execSync("npx prisma migrate deploy", { cwd: "server", env, stdio: "inherit" });
-  await db.$executeRawUnsafe('TRUNCATE "order_lines", "orders", "sessions", "menu_items", "users" RESTART IDENTITY CASCADE');
+  await db.$executeRawUnsafe('TRUNCATE "order_lines", "orders", "sessions", "login_failures", "menu_items", "users" RESTART IDENTITY CASCADE');
   execSync("npx tsx prisma/seed.ts", { cwd: "server", env, stdio: "inherit" });
   await db.$disconnect();
 }

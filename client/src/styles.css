@@ -124,11 +124,12 @@ button[disabled] { cursor: not-allowed; }
 .banner-sub { margin: 0; font-size: 13px; color: #d9e4d3; }
 .menu-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
 .menu-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: #fff; border-radius: var(--radius); box-shadow: var(--card-shadow); padding: 14px 16px; }
-.menu-item.sold-out { opacity: 0.55; }
+.menu-item.sold-out { background: #f1e9de; } /* not opacity: it dropped text contrast below 4.5:1 (NFR-09) */
+.menu-item.sold-out .menu-name { color: var(--muted); }
 .menu-name { font-weight: 800; margin: 0; }
 .menu-price { margin: 2px 0 0; color: var(--muted); }
 .badge { display: inline-block; font-size: 11px; font-weight: 700; border-radius: 999px; padding: 2px 8px; margin: 6px 6px 0 0; }
-.badge.sold { background: #e3d9cf; color: var(--muted); }
+.badge.sold { background: #e3d9cf; color: #54463a; }
 .badge.in-cart { background: #dce5d6; color: var(--forest); }
 .add { flex: none; width: 44px; height: 44px; border-radius: 50%; border: 0; background: var(--forest); color: #fff; font-size: 22px; font-weight: 700; }
 .add[disabled] { background: #e3d9cf; color: var(--muted); }

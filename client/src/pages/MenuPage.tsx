@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { SlotPicker } from "../components/SlotPicker";
 import { useLocation, useNavigate } from "react-router-dom";
 import { api, ApiError, NETWORK_MESSAGE } from "../api";
@@ -92,6 +92,11 @@ export function MenuPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const showCartOnPhone = location.hash === "#cart";
+  const cartRef = useRef<HTMLElement>(null);
+  // #130: when the cart view opens, keyboard focus moves into it, so the next Tab reaches its first control.
+  useEffect(() => {
+    if (showCartOnPhone) cartRef.current?.focus();
+  }, [showCartOnPhone]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<{ text: string; retry: boolean } | null>(null);
   const [badLines, setBadLines] = useState<Record<number, string>>({});
@@ -140,7 +145,7 @@ export function MenuPage() {
   }
 
   const cartPanel = (
-    <section className="cart" aria-label="Cart">
+    <section className="cart" aria-label="Cart" ref={cartRef} tabIndex={-1}>
       <div className="cart-head">
         <div>
           <h2 className="title">Your cart</h2>
