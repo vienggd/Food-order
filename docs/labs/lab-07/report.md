@@ -1,7 +1,7 @@
 # Lab 7 — Maintenance change C-1: at most 15 items per order
 
 CPE 334 · Semester 1/2026 · Section 131 · **Group EN-033_P4 (team Est)** · Theme 4 (Ordering system) · Campus Café Pre-order (Food-order).
-Repository https://github.com/vienggd/Food-order · deployed https://food-order-d4jdyxqbca-as.a.run.app (Cloud Run revision `food-order-00011-9nh`) · accepted Sprint 1 baseline `v0.1.0-sprint1` / pre-change commit `b71cdb2` · submitted `main` release `704a66b` (tag `v0.3.0-rc1` on the final docs commit).
+Repository https://github.com/vienggd/Food-order · deployed https://food-order-d4jdyxqbca-as.a.run.app (Cloud Run revision `food-order-00011-9nh`) · accepted Sprint 1 baseline `v0.1.0-sprint1` / pre-change commit `b71cdb2` · release with the change `704a66b` · submitted `main` release tag `v0.3.0-rc1` = the report commit in the footer (docs-only release PR #232 on top of `704a66b`, same app bundle).
 **Status 28 Nov 2026 08:45 (+07).** Parts A–D are filled. C-1 is released to `main` (`704a66b`), deployed (revision `food-order-00011-9nh`) and live checks L1–L8 all passed. What is still open is listed under Limitations.
 
 ## Contents
@@ -35,6 +35,7 @@ Repository https://github.com/vienggd/Food-order · deployed https://food-order-
 | Fix commit | C-1 server check + cart | `7de5285` | done 25 Nov |
 | Release to `main` | Lab 7 release PR #216 (`lab7` → `main`, merge commit) | `704a66b` | done 28 Nov 00:13 +07 (27 Nov 17:13:46 UTC) |
 | Deployed revision | Cloud Run revision `food-order-00011-9nh`, bundle `assets/index-CDaqMZLn.js` | Deploy demo run `46040158850` | done, success (CI on the release PR: run `46039698561`, success) |
+| Submitted release | Docs-only release PR #232 (`lab7` → `main`: live checks #229, appendices #230), approved and merged by ninja's side | tag `v0.3.0-rc1` = report commit (footer) | done 28 Nov, Deploy demo success, same bundle `index-CDaqMZLn.js` |
 | Later-sprint changes | Sprint 2 was released to `main` first (`df6db99`, tag `v0.2.0-sprint2`, revision `food-order-00010-7vp`); `lab7` merged `main` in PR #211 and BR-01b was ported into the living docs (PR #211, #214) | `2bcf439` | done 27 Nov |
 
 ## Answer Part A: Change impact and contract
@@ -178,7 +179,7 @@ Full checklist, rollback, defects, technical debt, verdict and retrospective: `d
 
 **Technical debt (readiness.md section 6).** The 15 limit is written twice (server and client), medium; CI does not start on staging-branch PRs, medium; BR-01b is now in the living docs (PR #211, #214), done; E2E screenshots overwrite the Sprint 1 PNGs, low.
 
-**Verdict: READY and released** for the maintained scope (C-1 plus preserved Sprint 1 behaviour): release `704a66b` is deployed as `food-order-00011-9nh`, CI and Deploy demo are green, live checks L1–L8 PASS. Open: the TA answer on deploying to the Lab 5 URL (owner: vieng) and the Sprint 3 items below. Rollback target if ever needed: `df6db99` / `food-order-00010-7vp`.
+**Verdict: READY and released** for the maintained scope (C-1 plus preserved Sprint 1 behaviour): release `704a66b` is deployed as `food-order-00011-9nh`, CI and Deploy demo are green, live checks L1–L8 PASS. Nothing is open for the maintained scope (the TA allowed newer deploys on the Lab 5 URL on 25 Nov); Sprint 3 items are listed under Limitations. Rollback target if ever needed: `df6db99` / `food-order-00010-7vp`.
 
 **Retrospective (short).** Helped: reviewing the impact table and contract before any code caught the unreachable 20-line tests early. Hurt: a local E2E run overwrote the Sprint 1 screenshots (cleanup `8f6110f`), and CI does not start on staging branch PRs. Change for the final release: parameterize the screenshot folder and check `git status` for stray PNGs before every push.
 

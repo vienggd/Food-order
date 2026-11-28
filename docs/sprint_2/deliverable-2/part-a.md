@@ -28,7 +28,7 @@ Between Deliverable 1 (`v0.1.0-sprint1`) and this Deliverable 2:
 |---|---|---|---|
 | Sprint 1 | `F-01` Auth, `F-02` Menu, `F-03` Place Order, `F-04` Accept Queue | Yes (`F-01`..`F-04`) | Yes (61 Sprint 1 tests + Lab 6 regressions pass on `sprint2`) |
 | Sprint 2 | `F-05` Menu Admin, `F-06` Cancel/Reject, `F-07` Fulfilment, `F-08` Payment/Refund/BR-15 | Yes (`F-05`..`F-08`, 75 AC) | Yes (all API, unit, and E2E tests pass on `sprint2`) |
-| Sprint 3 | `F-09` Pickup Slots, `F-10` Sales Summary, `F-11` Search/Filter, `F-12` Rate Limit & A11y | **Partly ahead**: `F-09` (server + picker) & `F-11` (full); `F-10` & `F-12` specified | `F-11` 17/17 AC pass; `F-09` 14/14 server AC pass (`TEST-F09-15..17` pending); `F-10`/`F-12` pending |
+| Sprint 3 | `F-09` Pickup Slots, `F-10` Sales Summary, `F-11` Search/Filter, `F-12` Rate Limit & A11y | **Partly ahead**: `F-09` (server + picker) & `F-11` (full); `F-10` implemented and tested on `sprint3` (PR #221); `F-12` in review (PR #223) | `F-11` 17/17 AC pass; `F-09` 14/14 server AC pass (`TEST-F09-15..17` in PR #226); `F-10` 9/9 tests pass on `sprint3`, not yet on `main` |
 
 ## A.4 Key design decisions and risks heading into Sprint 3
 
