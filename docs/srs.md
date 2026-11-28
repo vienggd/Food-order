@@ -145,6 +145,7 @@ Status of the two Sprint 3 non-functional requirements (28 Nov 2026, on `sprint3
 | DEC-09 | The advance request carries `from` (the status the operator saw) and the update is conditional on it. | A stale button press cannot move an order twice (BR-13). |
 | DEC-10 | Slot capacity is checked inside the order transaction under a per-slot `pg_advisory_xact_lock`. | Parallel orders cannot overfill a slot (BR-24). |
 | DEC-11 | Order search escapes `%`, `_` and `\` before the name match. | Prisma `contains` passes them to SQL LIKE; found by TEST-F11-12. |
+| DEC-12 | The desktop operator queue stays the 7-column semantic table (Order | Status | Customer | Items | Placed | Total | Action) instead of the 4-column card board in ui-spec S8. | It is tested and passed the NFR-09 axe and keyboard checks (#227); lower risk before the 1–11 Dec exams. Agreed by vieng and ninja, 28 Nov 2026. |
 
 ## 9. Questions and resolution
 
@@ -166,3 +167,4 @@ Status of the two Sprint 3 non-functional requirements (28 Nov 2026, on `sprint3
 | 26 Nov 2026 | 2.1 | Added BR-22..BR-24 (pickup slots, cut-off, slot capacity) from merged contract F-09 (PR #118) | Sync living SRS with PR #118 (S2-8b) |
 | 27 Nov 2026 | 3 | Added BR-25..BR-27 (F-11; they were in the F-11 contract but missing here); BR-22..BR-24 marked implemented; DEC-05 wording; added DEC-09..DEC-11 (Issue #186) | Deliverable 2 part D audit against `sprint2` `d10fac1` |
 | 28 Nov 2026 | 4 | BR-17..BR-21 now say implemented (F-10 in PR #221, F-12 in PR #223); status table for NFR-08 and NFR-09 (AC-12.9, TEST-A11Y-01..08) | Sprint 3 finish |
+| 28 Nov 2026 | 4.1 | Added DEC-12 (desktop operator queue stays the 7-column table; ui-spec S8 is updated by ninja and cites this decision) | Agreed by vieng and ninja |
