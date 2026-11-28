@@ -1,6 +1,6 @@
 # Release notes — Sprint 3
 
-Status: **release candidate**, 28 Nov 2026. Final `sprint3` is `0ec0cf7` (after PRs #237, #239, #241). vieng decided to release it to `main` through a reviewed release PR; the tag `v0.4.0-sprint3` is added on the `main` merge commit after the deploy succeeds. `v1.0.0` is kept for the final delivery on 13 Dec.
+Status: **Released**, 28 Nov 2026. Release PR #245 (`sprint3` → `main`, approved and merged by ninja's side) → `main` `17211cf`, tag **`v0.4.0-sprint3`**, Deploy demo run `46151557649` success → Cloud Run revision **`food-order-00019-gpq`** (`/api/ready` ready, db connected). `v1.0.0` is kept for the final delivery on 13 Dec.
 
 ## What is new on `sprint3`
 
@@ -39,11 +39,26 @@ Database change: new table `login_failures` (migration `20261127173631_add_login
 | Client (Vitest, 4 files) | 9 passed |
 | Playwright (phone and desktop) | 95 passed, 8 skipped, **1 failed** (see known gaps) |
 
+## Live checks after the release (revision `food-order-00019-gpq`, `main` `17211cf`, 28 Nov 2026)
+
+No AI typed a password. vieng's side used only made-up emails (`*@example.test`), so no real account was locked; staff was signed in by hand by ninja.
+
+| # | Check | Side | Result |
+|---|---|---|---|
+| S1 | `GET /api/health`, `/api/ready` | vieng | PASS: `{"ok":true}`; ready, db connected |
+| S2 | Anonymous `GET /api/orders`, `GET /api/operator/sales` | vieng | PASS: both 401 |
+| S3 | F-12: wrong logins for one made-up email | vieng | PASS: tries 1–5 → 401 `UNAUTHENTICATED`; tries 6–7 → 429 `RATE_LIMITED`, `Retry-After: 900`, "Too many failed logins. Try again in 15 minutes." |
+| S4 | AC-12.9: 20 parallel wrong logins for a new made-up email (13:56 UTC) | vieng | PASS: exactly 5 × 401 and 15 × 429 |
+| S5 | Staff session and sales API | ninja | PASS: `/api/auth/me` 200, role OPERATOR; `GET /api/operator/sales` 200 with default range 22–28 Nov, `days: []`, `topItems: []` |
+| S6 | Sales page `/operator/sales` | ninja | PASS: default range, the note "Only orders that are picked up and paid count. Days are Bangkok days.", empty state "No sales in this period." (correct: all live orders are UNPAID) |
+| S7 | Staff journey on order #18 (Alice, ฿925.00) | ninja | PASS: search 18 → Start preparing → Mark ready (toasts shown); **Mark picked up** stays disabled with "Waiting for payment. The customer pays in the app." (BR-15 holds); #18 left READY, UNPAID |
+| S8 | Lab 6 re-test #131 (login errors linked and announced) and #133 (error clears) | ninja | PASS: `aria-describedby` + `role=alert`; error and `aria-invalid` clear after correcting; both Issues closed |
+
 ## Known gaps and things to say honestly
 
 1. **One flaky E2E test, fixed and re-verified.** TEST-A11Y-03 (desktop) failed once in the regression run on `a6c9645`: its locator `getByRole("heading", { name: "Menu items" })` matched two headings. It was a test-selector problem, not a product bug. PR #239 (`2dd7f21`) fixed the locator on `sprint3`. The evidence file `regression-a6c9645.txt` is kept as recorded (it still shows the one failure); the final run on `0ec0cf7` above is all green (0 failed).
 2. **8 skipped Playwright tests** are the single-viewport tests: TEST-L6-122..126, TEST-L6-129, TEST-L6-132 and TEST-A11Y-06. Each runs only in the viewport it was written for and skips in the other project.
-3. **Release in progress.** Release PR `sprint3` → `main`, then deploy, tag `v0.4.0-sprint3`, live checks (login rate limit and sales on the live URL) and the partner re-test of Lab 6 #131 / #133. Until the deploy finishes, the live URL still runs the Lab 7 candidate `v0.3.0-rc1`.
+3. **Sales shown live only in its empty state.** On the live data no order is both PAID and PICKED_UP, so `/operator/sales` correctly shows "No sales in this period." The non-empty totals and top 3 are proven by TEST-10.1..10.9 on `sprint3`; a live paid + picked-up order (two sign-ins by hand) is planned before the final video.
 4. **Rate limit is per email, not per IP** (BR-21, by design). An attacker rotating emails is not slowed by it. Failed-login rows are only removed by a successful login of that email; old rows are ignored but not deleted.
 5. **Keyboard-only checking** is automated for dialogs, the cart and the login page; other screens are not covered by an automated keyboard test.
 6. **Documents owned by the other side** (traceability matrix, feature list, UI spec S8) are updated by ninja; this file does not claim their status.
