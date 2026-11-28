@@ -1,0 +1,74 @@
+Issue/PR review text and CI/deploy results for C-1 (from GitHub via gh)
+
+PR #103 L7-1: contract for C-1 - order has at most 15 items in total
+  author NinjoMUDA -> lab7; merged by vienggd at 2026-11-25T03:11:40Z as 9d976df
+  checks: 
+  review by vienggd (CHANGES_REQUESTED) 2026-11-25T03:10:03Z:
+    Checked against the 4 TA answers and the Lab 7 rules. Almost everything is right; one thing is missing.
+    
+    OK:
+    - Answer 1: 15 = total of all items, 10+5 ok, 10+6 rejected, per-line 1-10 stays (impact.md, F-03 BR-01b, AC-L7-01/02).
+    - Answer 2: 400 VALIDATION_ERROR, message "An order can have at most 15 items in total", details {field:"lines", max:15, total} (error table, AC-L7-02, TEST-L7-3).
+    - Answer 3: warning at 15 and + disabled (AC-L7-04, TEST-L7-4/5).
+    - Answer 4: no order editing, N/A (impact table).
+    - SRS BR-01 text updated, system-sds rule table and flow step 3 updated, traceability row updated (still "Pending").
+    - ACs and tests cover 15 ok (TEST-L7-2), 14 ok (-1), 10+6 and 8+8 rejected (-3a/b), per-line 11 still rejected (-3c).
+    
+    Needs change:
+    1. The test plan does not say where the RED step runs. Please add a short "RED / GREEN plan" in impact.md (or the F-03 test spec): TEST-L7-1..5 are committed first and run on the baseline code b71cdb2 behaviour (before the fix); TEST-L7-2/3/4/5 must FAIL there (red.txt), -1 passes on the old code; then the fix commit; then GREEN (green.txt) plus full regression. Also name where red.txt / green.txt are stored (e.g. docs/labs/lab-07/evidence/).
+    
+    Small, not blocking: TEST-L7-1..5 rows sit between TEST-F03-24 and -19; fine, just keep the order in the later test file.
+  review by vienggd (APPROVED) 2026-11-25T03:11:35Z:
+    Re-checked: section 5 RED/GREEN plan added. What I checked: 4 TA answers, BR-01/BR-01b text, AC-L7-01..04, TEST-L7-1..5, SDS and traceability.
+
+PR #112 L7-1: C-1 at most 15 items in total (RED, fix, GREEN)
+  author NinjoMUDA -> lab7; merged by vienggd at 2026-11-25T03:28:06Z as 43a9a68
+  checks: 
+  review by vienggd (APPROVED) 2026-11-25T03:28:02Z:
+    What I checked: commit order (RED 1b9e604, contract follow-up 41031b7, fix, then cleanup commits); red.txt shows only L7-3, L7-4, L7-5 failing on b71cdb2 code; I ran npm test on the latest head 93b2738: server 78 pass, client 7 pass. Fix returns 400 VALIDATION_ERROR with the agreed message and details; cart caps at 15, warns, disables +. Sprint 1 screenshots restored.
+
+PR #211 L7-6: merge released main into lab7 before release
+  author vienggd -> lab7; merged by NinjoMUDA at 2026-11-27T17:04:56Z as cf6bde2
+  checks: 
+  review by NinjoMUDA (APPROVED) 2026-11-27T17:04:52Z:
+    What I checked (head 2bcf439, I ran it locally):
+    - Code diff of the PR head against main df6db99 is only C-1: server/src/orders/routes.ts (15-item check, 400 with message and details), client cart.ts and MenuPage.tsx, plus TEST-L7 tests. No Sprint 2 file changed, so nothing from Sprint 2 was lost in the conflict.
+    - MenuPage.tsx: the 'Limit reached ... 15 items' warning, atLimit (+ disabled) and the Sprint 2 SlotPicker are all there.
+    - npm run build ok. npm test: server 15 files / 184 tests pass, client 4 files / 9 tests pass (real Postgres).
+    - Living docs: BR-01 C-1 text in docs/srs.md, docs/features.md, docs/traceability.md.
+    - CI: no checks on this PR (CI starts on PRs into main).
+    Not blocking: docs/system-sds.md (living) does not mention C-1 yet (it still says quantity 1-10 at the schema line and the rules table). I will port it in a small follow-up PR.
+
+PR #214 L7-6: port C-1 into living docs/system-sds.md
+  author NinjoMUDA -> lab7; merged by vienggd at 2026-11-27T17:08:53Z as f81cb5a
+  checks: 
+  review by vienggd (APPROVED) 2026-11-27T17:08:49Z:
+    What I checked (vieng's head): system-sds.md now states the C-1 15-item total in the rule table, the place-order flow step 3, and the order_lines quantity row (no DB constraint, no migration) — matches the code in orders/routes.ts and the living SRS/traceability from #211.
+
+PR #216 Release: Lab 7 change C-1 (max 15 items per order)
+  author vienggd -> main; merged by NinjoMUDA at 2026-11-27T17:13:46Z as 704a66b
+  checks: test-and-docker=SUCCESS
+  review by NinjoMUDA (CHANGES_REQUESTED) 2026-11-27T17:09:40Z:
+    One fix before release; the rest looks good.
+    
+    Checked: main fully contained in lab7 (0 missing commits); code diff is only C-1 (orders/routes.ts check, MenuPage warning, orders.test.ts, e2e/orders.spec.ts); Lab 7 docs, evidence and PDF script added; no secrets in added lines.
+    
+    Blocking: the PR edits the frozen Deliverable 1 copies, docs/sprint_1/srs.md, system-sds.md, traceability.md and sprints/sprint-1/F-03-orders.md. Their banner says 'Frozen as submitted for Deliverable 1. Do not edit.' C-1 is already in the living docs (docs/srs.md, system-sds.md, traceability.md, features.md, via #211/#214). As agreed earlier, spec edits go to the living docs at merge, so please restore the frozen copies to main's version:
+    git checkout origin/main -- docs/sprint_1/srs.md docs/sprint_1/system-sds.md docs/sprint_1/traceability.md docs/sprint_1/sprints/sprint-1/F-03-orders.md
+    If the Lab 7 report links to those files for the spec change, point the links to the living docs instead (docs/srs.md etc.).
+  review by NinjoMUDA (APPROVED) 2026-11-27T17:13:42Z:
+    What I checked (re-review on 2f080a8):
+    - The 4 frozen Sprint 1 copies now have 0 diff against main, so my change request is fixed.
+    - The C-1 contract rows are kept in docs/labs/lab-07/contract-C-1.md, and impact.md section 6 points to where the rule lives now.
+    - main is fully contained in lab7. The code diff is only C-1: server check, MenuPage warning, API/unit/e2e tests.
+    - No secrets in added lines.
+    - CI test-and-docker: pass.
+    Approved for the Lab 7 release.
+
+PR #229 L7-7: Lab 7 live checks L1-L8 PASS, release facts, final metrics (28 Nov)
+  author NinjoMUDA -> lab7; merged by vienggd at 2026-11-28T07:36:30Z as f5bb6a4
+  checks: 
+  review by vienggd (APPROVED) 2026-11-28T07:36:26Z:
+    What I checked (vieng's head): live-checks.md L1-L8 match the head-chat reports and the screenshots (#18 placed 15 items ฿925.00, 16 rejected 400 with C-1 message/details, cart warning + disabled +, line of 11 -> 400, old #13 unchanged, staff accept #18, bob 404, alice 403, anonymous 401). Read all 9 screenshots at full size: app screens only, demo accounts, no passwords or URL bars. readiness/report/metrics agree with 704a66b / food-order-00011-9nh / run 46040158850; Group EN-033_P4 on page 1.
+
+Deploy demo run 46040158850 (704a66b): success -> Cloud Run food-order-00011-9nh, bundle assets/index-CDaqMZLn.js, /api/ready ready + db connected
