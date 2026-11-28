@@ -14,7 +14,7 @@ Campus Café Pre-order — Team **Est** (`vienggd/Food-order`). Author: **vieng*
 | Deploy Lab 7 | *Deploy demo* run `46040158850` | SUCCESS → Cloud Run `food-order-00011-9nh` (bundle `index-CDaqMZLn.js`) |
 | Build + full suite on the integrated `lab7` head before release | `npm run build`; `npm test` (real Postgres) | build OK; server **184/184**, client **9/9** pass, 0 failed, 0 skipped |
 | Post-deploy checks, no login (28 Nov 00:21 UTC+7) | `curl` on the live URL | `/api/health` `{ok:true}`; `/api/ready` ready + db connected; anonymous `GET /api/orders`, `GET /api/operator/orders`, `POST /api/orders` → **401** |
-| Post-deploy critical journey + persistence (signed in by hand, screenshots) | Lab 7 live checks L2–L8 | __LIVE_CHECKS__ |
+| Post-deploy critical journey + persistence (signed in by hand, screenshots) | Lab 7 live checks L2–L8 | **PASS**, 28 Nov on `food-order-00011-9nh` (ninja signed in by hand, AI clicked; screenshots in `docs/labs/lab-07/evidence/live/`): L2 alice places 15 items → order #18 PLACED ฿925.00; L3 10 + 6 → 400 C-1 message, no order saved; L4 cart warns at 15 and disables +; L6 order #13 from 26 Nov still lists and opens (persistence across releases); L7 staff accepts #18 (PLACED → ACCEPTED); L8 alice → operator API 403, bob → alice's #18 404 |
 
 **Cross-feature checks.** The C-1 total (max 15 items) runs in the same handler as the Sprint 2 slot picker (F-09) and payment (F-08): TEST-L7-1..5 and the F-08/F-09 suites pass together on the merged head; the MenuPage merge kept both the 15-item warning and the slot picker (#211).
 
