@@ -10,7 +10,9 @@ const BANGKOK_OFFSET_MS = 7 * 60 * 60 * 1000; // UTC+7, no daylight saving
 const MIN_MS = 60_000;
 
 // Tests replace the clock with a fixed time; the server never trusts the client's idea of "now".
-export const clock = { now: () => new Date() };
+// The E2E server sets E2E_CLOCK_NOW to freeze it; the variable is ignored in production.
+const frozen = process.env.NODE_ENV !== "production" && process.env.E2E_CLOCK_NOW ? new Date(process.env.E2E_CLOCK_NOW) : null;
+export const clock = { now: () => (frozen ? new Date(frozen) : new Date()) };
 
 // Start times (UTC) of today's slots in Bangkok: 08:00, 08:15 ... 16:45.
 export function todaySlots(now: Date = clock.now()): Date[] {
