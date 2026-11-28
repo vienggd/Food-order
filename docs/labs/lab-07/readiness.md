@@ -33,7 +33,7 @@ The change is code only (no migration, no data change), so rollback is safe and 
 
 ## 3. Deploy steps (as run on 27–28 Nov)
 
-The TA approved deploying newer versions to the Lab 5 Cloud Run URL on 25 Nov (same reply as the C-1 approval). vieng released to `main` after the Lab 6 re-test, Sprint 2 first, then Lab 7.
+vieng released to `main` after the Lab 6 re-test: Sprint 2 first, then Lab 7.
 
 1. All Lab 7 PRs merged into `lab7`; section 1 all ticked.
 2. Heads open the release PR `lab7` → `main` (merge commit) and merge it after approval.
@@ -83,12 +83,14 @@ Deferred engineering work that creates future cost or risk (distinct from known 
 
 ## 7. Release readiness verdict (maintained Sprint 1 scope)
 
-**Verdict before the release: NOT READY** (as of 27 Nov 2026). **Updated 28 Nov 2026: READY and released** (see section 10). This assesses only the maintained Sprint 1 scope (change C-1 + preserved Sprint 1 behavior), not completion of the full three-sprint product.
+**Verdict (28 Nov 2026): READY and released** for the maintained Sprint 1 scope (change C-1 + preserved Sprint 1 behaviour). This is not a claim that the full three-sprint product is complete.
 
-Outstanding items required before `READY`:
-1. ~~TA answer on Question 3~~ — **done 25 Nov**: the TA allowed newer versions on the Lab 5 Cloud Run URL (asked by vieng).
-2. ~~Lab 6 UAT triage, fixes, and partner re-test~~ — **done**: 9 of 9 accepted defects fixed, re-tested and in `main` (`39bda5e`); 3 enhancements deferred to Sprint 3.
-3. ~~Release integration & live verification~~ — **done 28 Nov**: release PR #216, CI green, deployed as `food-order-00011-9nh`, live checks `L1`–`L8` PASS. Final metrics (ninja, done 28 Nov 08:45) and the Lab 7 PDF with appendices (vieng, done 28 Nov).
+On 27 Nov the verdict was NOT READY because two items were still open. Both are now done:
+
+| Item | Done | Evidence |
+|---|---|---|
+| Lab 6 fixes re-tested by the partner team | 27 Nov | 9 of 9 accepted defects PASS and closed, in `main` `39bda5e`; 3 enhancements moved to Sprint 3 |
+| Release and live checks | 28 Nov | release PR #216 (`704a66b`), CI and Deploy demo green, revision `food-order-00011-9nh`, live checks L1–L8 PASS (section 4) |
 
 ## 8. Retrospective
 

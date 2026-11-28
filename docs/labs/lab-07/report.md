@@ -179,7 +179,7 @@ Full checklist, rollback, defects, technical debt, verdict and retrospective: `d
 
 **Technical debt (readiness.md section 6).** The 15 limit is written twice (server and client), medium; CI does not start on staging-branch PRs, medium; BR-01b is now in the living docs (PR #211, #214), done; E2E screenshots overwrite the Sprint 1 PNGs, low.
 
-**Verdict: READY and released** for the maintained scope (C-1 plus preserved Sprint 1 behaviour): release `704a66b` is deployed as `food-order-00011-9nh`, CI and Deploy demo are green, live checks L1–L8 PASS. Nothing is open for the maintained scope (the TA allowed newer deploys on the Lab 5 URL on 25 Nov); Sprint 3 items are listed under Limitations. Rollback target if ever needed: `df6db99` / `food-order-00010-7vp`.
+**Verdict: READY and released** for the maintained scope (C-1 plus preserved Sprint 1 behaviour): release `704a66b` is deployed as `food-order-00011-9nh`, CI and Deploy demo are green, live checks L1–L8 PASS. Nothing is open for the maintained scope; Sprint 3 items are listed under Limitations. Rollback target if ever needed: `df6db99` / `food-order-00010-7vp`.
 
 **Retrospective (short).** Helped: reviewing the impact table and contract before any code caught the unreachable 20-line tests early. Hurt: a local E2E run overwrote the Sprint 1 screenshots (cleanup `8f6110f`), and CI does not start on staging branch PRs. Change for the final release: parameterize the screenshot folder and check `git status` for stray PNGs before every push.
 
